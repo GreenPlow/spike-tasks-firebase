@@ -3,7 +3,7 @@ services:
     # go server
     go_server:
         build: ./server
-        container_name: spike_list_go_server
+        container_name: spike_task_go_server
         depends_on:
             - 'mongo'
         environment:
@@ -33,7 +33,7 @@ services:
             # react client
     react_client:
         build: ./client
-        container_name: spike_list_react_client
+        container_name: spike_task_react_client
         stdin_open: true
         depends_on:
             - 'mongo'
