@@ -30,3 +30,17 @@ services:
         ports:
             - '8081:8081'
         restart: always
+            # react client
+    react_client:
+        build: ./client
+        container_name: spike_list_react_client
+        stdin_open: true
+        depends_on:
+            - 'mongo'
+            - 'go_server'
+        ports:
+            - '3000:3000'
+        volumes:
+            - '/opt/react-client/node_modules'
+            - './client:/opt/react-client'
+            
