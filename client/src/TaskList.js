@@ -1,8 +1,17 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Card, Header, Form, Input, Icon } from "semantic-ui-react";
+import { Card, Header, Form, Input, Icon, Button } from "semantic-ui-react";
 
 let endpoint = "http://localhost:8000";
+
+function RadioButton(props) {
+  return <div class="field">
+    <div class="ui radio checkbox">
+      <input type="radio" name={props.name} checked={props.checked} tabindex="0" class="hidden"></input>
+      <label>{props.name}</label>
+    </div>
+ </div>
+}
 
 class TaskList extends Component {
   constructor(props) {
@@ -50,6 +59,21 @@ class TaskList extends Component {
     }
   };
 
+  // addTask() {
+  //   const text = prompt("TODO text please!")
+  // }
+
+  // addTodo() {
+  //   const text = prompt("TODO text please!")
+  //   this.setState({
+  //     todos: [
+  //       // clone an array (makes a new one with the same values but difference references)
+  //       ...this.state.todos,
+  //       {id: id++, text: text, checked: false},
+  //     ], 
+  //   })
+  // }
+
   getTask = () => {
     axios.get(endpoint + "/api/task").then(res => {
       console.log(res);
@@ -86,7 +110,6 @@ class TaskList extends Component {
                       color="red"
                       onClick={() => this.deleteTask(item._id)}
                     />
-                    <span style={{ paddingRight: 10 }}>Delete</span>
                   </Card.Meta>
                 </Card.Content>
               </Card>
@@ -139,27 +162,25 @@ class TaskList extends Component {
         this.getTask();
       });
   };
+
   render() {
     return (
       <div>
-        <div className="row">
-          <Header className="header" as="h2">
-            TASK LIST
-          </Header>
+        <br></br>
+
+        <div id='new-task-group' class="ui segment">
+          <form class="ui form">
+            <div class="field">
+              <input type="text" name="task-description" placeholder="Type to enter a task description"></input>
+            </div>
+            <div class="inline fields">
+              <RadioButton name="Small" />
+              <RadioButton name="Medium" />
+              <RadioButton name="Large" />
+            </div>
+          </form>
         </div>
-        <div className="row">
-          <Form onSubmit={this.onSubmit}>
-            <Input
-              type="text"
-              name="task"
-              onChange={this.onChange}
-              value={this.state.task}
-              fluid
-              placeholder="Create Task"
-            />
-            {/* <Button >Create Task</Button> */}
-            </Form>
-        </div>
+
         <div className="row">
           <Card.Group>{this.state.items}</Card.Group>
         </div>
@@ -169,3 +190,27 @@ class TaskList extends Component {
 }
 
 export default TaskList;
+
+
+
+{/* <div id='new-task-group' class="ui segment">
+<form class="ui form">
+  <div class="field">
+    <input type="text" name="task-description" placeholder="Type to enter a task description"></input>
+  </div>
+  <div class="inline fields">
+    <div class="field">
+      <div class="ui radio checkbox">
+        <input type="radio" name="Small" checked="small" tabindex="0" class="hidden"></input>
+        <label>Small</label>
+      </div>
+    </div>
+    <div class="field">
+      <div class="ui radio checkbox">
+        <input type="radio" name="Small" checked="small" tabindex="0" class="hidden"></input>
+        <label>medium</label>
+      </div>    
+    </div>  
+  </div>
+</form>
+</div> */}
