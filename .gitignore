@@ -2,4 +2,3 @@ mongodata/
 tmp/
 .DS_Store
 /notes
-.gitignore
