@@ -5,7 +5,7 @@ import { Card, Header, Form, Input, Icon, Button } from "semantic-ui-react";
 let endpoint = "http://localhost:8000";
 
 function RadioButton(props) {
-    return ( <div class="field">
+    return ( <div class="field" >
     <div class="ui radio checkbox">
       <input type="radio" name={props.name} checked={props.checked} tabindex="0" class="hidden"></input>
       <label>{props.name}</label>
@@ -21,12 +21,17 @@ function RadioButton(props) {
     )
   }
 
-  function NewTaskForm () {
+  function NewTaskForm (props) {
     return (
       <div id='new-task-group' class="ui segment">
       <form class="ui form">
         <div class="field">
-          <input type="text" name="task-description" placeholder="Type to enter a task description"></input>
+          <input
+            type="text"
+            name="task-description"
+            placeholder="Type to enter a task description"
+            onChange={(e) => this.setState({ textValue: e.target.value })}>
+          </input>
         </div>
         <TaskSizeSelector />
       </form>
@@ -40,16 +45,46 @@ class TaskList extends Component {
 
     this.state = {
       task: "",
-      items: []
+      items: [],
+      textValue: ""
     };
   }
+
+//   onChange(i){
+//     this.setState({
+//       textValue:index
+//     });
+//  }
+
+//  onChange = event => {
+//   this.setState({
+//     [event.target.name]: event.target.value
+//   });
+// };
+setTextValue(input) {
+  this.setState({ textValue: input.target.value })
+  console.log(this.state.textValue)
+}
 
   render() {
 
     return (
       <div>
         <br></br>
-        < NewTaskForm />
+        <div id='new-task-group' class="ui segment">
+          <form class="ui form">
+            <div class="field">
+              <input
+                type="text"
+                name="task-description"
+                placeholder="Type to enter a task description"
+                onInput={(char) => this.setTextValue(char)}>
+                
+              </input>
+            </div>
+            <TaskSizeSelector />
+          </form>
+        </div>
         <div className="row">
           <Card.Group>{this.state.items}</Card.Group>
         </div>
