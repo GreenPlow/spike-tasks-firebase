@@ -7,16 +7,16 @@ let endpoint = "http://localhost:8000";
 function RadioButton(props) {
     return ( <div class="field" >
     <div class="ui radio checkbox">
-      <input type="radio" name={props.name} checked={props.checked} tabindex="0" class="hidden"></input>
+      <input type="radio" name={props.name} checked={props.checked} tabindex="0" disabled={props.disabled} class="hidden"></input>
       <label>{props.name}</label>
     </div>
  </div> )
   }
 
-  function TaskSizeSelector () {
+  function TaskSizeSelector (props) {
     return (
       <div class="inline fields" >
-        {["small", "medium", "large"].map(button => <RadioButton name={button} />)}
+        {["small", "medium", "large"].map(button => <RadioButton name={button} enabled={props.enabled}/>)}
       </div>
     )
   }
@@ -39,6 +39,7 @@ function RadioButton(props) {
     )
   }
 
+
 class TaskList extends Component {
   constructor(props) {
     super(props);
@@ -48,6 +49,10 @@ class TaskList extends Component {
       items: [],
       textValue: ""
     };
+  }
+
+  someMethod() {
+    console.log('test')
   }
 
 //   onChange(i){
@@ -61,13 +66,12 @@ class TaskList extends Component {
 //     [event.target.name]: event.target.value
 //   });
 // };
-setTextValue(input) {
-  this.setState({ textValue: input.target.value })
-  console.log(this.state.textValue)
-}
+// setTextValue(input) {
+//   this.setState({ textValue: input.target.value })
+//   console.log(this.state.textValue)
+// }
 
   render() {
-
     return (
       <div>
         <br></br>
@@ -78,26 +82,63 @@ setTextValue(input) {
                 type="text"
                 name="task-description"
                 placeholder="Type to enter a task description"
-                onInput={(char) => this.setTextValue(char)}>
-                
+                onChange={(event) => {
+                  const {value} = event.target;
+                  console.log(value)
+                  if (value.length > 0) {
+                    this.setState({ textValue: value});
+                  }
+                }}>
               </input>
             </div>
-            <TaskSizeSelector />
           </form>
         </div>
         <div className="row">
           <Card.Group>{this.state.items}</Card.Group>
         </div>
       </div>
-    );
+    )
   }
 }
+  //   return (
+  //     <div>
+  //       <br></br>
+  //       <div id='new-task-group' class="ui segment">
+  //         <form class="ui form">
+  //           <div class="field">
+  //             <input
+  //               type="text"
+  //               name="task-description"
+  //               placeholder="Type to enter a task description"
+  //               onInput={(char) => this.setTextValue(char)}>
+  //             </input>
+  //           </div>
+  //           <TaskSizeSelector />
+  //         </form>
+  //       </div>
+  //       <div className="row">
+  //         <Card.Group>{this.state.items}</Card.Group>
+  //       </div>
+  //     </div>
+  //   );
+  // }
+  // const 
+
+
+//               }
+
+// }
 
 export default TaskList;
+// onChange={(event) => {
+//   const { value } = event.target;
+//   if (value.length > 0) {
+//     this.setState({ textValue: value });
+//   }
+// }}
 
 
-
-{/* <div id='new-task-group' class="ui segment">
+/* <div id='new-task-group' class="ui segment">
 <form class="ui form">
   <div class="field">
     <input type="text" name="task-description" placeholder="Type to enter a task description"></input>
@@ -117,4 +158,4 @@ export default TaskList;
     </div>  
   </div>
 </form>
-</div> */}
+</div> */
