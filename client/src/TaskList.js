@@ -5,18 +5,19 @@ import { Card, Header, Form, Input, Icon, Button } from "semantic-ui-react";
 let endpoint = "http://localhost:8000";
 
 function RadioButton(props) {
-    return ( <div class="field" >
-    <div class="ui radio checkbox">
-      <input type="radio" name={props.name} checked={props.checked} tabindex="0" disabled={props.disabled} class="hidden"></input>
-      <label>{props.name}</label>
-    </div>
- </div> )
-  }
+    return (
+      <div class="field" >
+        <div class="ui radio checkbox">
+          <input type="radio" name={props.name} checked={props.checked} tabindex="0" disabled={props.disabled} class="hidden"></input>
+          <label>{props.name}</label>
+        </div>
+      </div> )
+    }
 
   function TaskSizeSelector (props) {
     return (
       <div class="inline fields" >
-        {["small", "medium", "large"].map(button => <RadioButton name={button} enabled={props.enabled}/>)}
+        {["small", "medium", "large"].map(buttonText => <RadioButton name={buttonText} enabled={props.enabled}/>)}
       </div>
     )
   }
@@ -24,18 +25,25 @@ function RadioButton(props) {
   function NewTaskForm (props) {
     return (
       <div id='new-task-group' class="ui segment">
-      <form class="ui form">
-        <div class="field">
-          <input
-            type="text"
-            name="task-description"
-            placeholder="Type to enter a task description"
-            onChange={(e) => this.setState({ textValue: e.target.value })}>
-          </input>
-        </div>
-        <TaskSizeSelector />
-      </form>
-    </div>
+        <form class="ui form">
+          <div class="field">
+            <input
+              type="text"
+              name="task-description"
+              placeholder="Type to enter a task description"
+              onChange={(event) => this.setState({ textValue: event.target.value })}>
+            </input>
+          </div>
+          <TaskSizeSelector />
+        </form>
+      </div>
+    )
+  }
+
+  function Time() {
+    const time = new Date().toLocaleTimeString()
+    return (
+      <div>{time}</div>
     )
   }
 
@@ -71,10 +79,19 @@ class TaskList extends Component {
 //   console.log(this.state.textValue)
 // }
 
+
+
+  // render() {
+  //   return(<span>first render</span>)
+  // }
+
+
   render() {
+
     return (
       <div>
         <br></br>
+        <Time />
         <div id='new-task-group' class="ui segment">
           <form class="ui form">
             <div class="field">
@@ -100,6 +117,8 @@ class TaskList extends Component {
     )
   }
 }
+setInterval(Time, 1000)
+
   //   return (
   //     <div>
   //       <br></br>
