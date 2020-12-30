@@ -63,31 +63,27 @@ class TaskList extends Component {
     console.log('test')
   }
 
-//   onChange(i){
-//     this.setState({
-//       textValue:index
-//     });
-//  }
+  //   onChange(i){
+  //     this.setState({
+  //       textValue:index
+  //     });
+  //  }
 
-//  onChange = event => {
-//   this.setState({
-//     [event.target.name]: event.target.value
-//   });
-// };
-// setTextValue(input) {
-//   this.setState({ textValue: input.target.value })
-//   console.log(this.state.textValue)
-// }
-
-
+  //  onChange = event => {
+  //   this.setState({
+  //     [event.target.name]: event.target.value
+  //   });
+  // };
+  // setTextValue(input) {
+  //   this.setState({ textValue: input.target.value })
+  //   console.log(this.state.textValue)
+  // }
 
   // render() {
   //   return(<span>first render</span>)
   // }
 
-
   render() {
-
     return (
       <div>
         <br></br>
@@ -119,62 +115,43 @@ class TaskList extends Component {
 }
 setInterval(Time, 1000)
 
-  //   return (
-  //     <div>
-  //       <br></br>
-  //       <div id='new-task-group' class="ui segment">
-  //         <form class="ui form">
-  //           <div class="field">
-  //             <input
-  //               type="text"
-  //               name="task-description"
-  //               placeholder="Type to enter a task description"
-  //               onInput={(char) => this.setTextValue(char)}>
-  //             </input>
-  //           </div>
-  //           <TaskSizeSelector />
-  //         </form>
-  //       </div>
-  //       <div className="row">
-  //         <Card.Group>{this.state.items}</Card.Group>
-  //       </div>
-  //     </div>
-  //   );
-  // }
-  // const 
-
-
-//               }
-
-// }
-
 export default TaskList;
-// onChange={(event) => {
-//   const { value } = event.target;
-//   if (value.length > 0) {
-//     this.setState({ textValue: value });
-//   }
-// }}
 
+{/* <html>
+  <input
+    type="text"
+    name="task-description"
+    placeholder="Type to enter a task description"
+    onInput={(char) => this.setTextValue(char)}>
+  </input>
 
-/* <div id='new-task-group' class="ui segment">
-<form class="ui form">
-  <div class="field">
-    <input type="text" name="task-description" placeholder="Type to enter a task description"></input>
-  </div>
-  <div class="inline fields">
+  onChange={(event) => {
+    const { value } = event.target;
+    if (value.length > 0) {
+      this.setState({ textValue: value });
+    }
+  }}
+
+  <div id='new-task-group' class="ui segment">
+  <form class="ui form">
     <div class="field">
-      <div class="ui radio checkbox">
-        <input type="radio" name="Small" checked="small" tabindex="0" class="hidden"></input>
-        <label>Small</label>
-      </div>
+      <input type="text" name="task-description" placeholder="Type to enter a task description"></input>
     </div>
-    <div class="field">
-      <div class="ui radio checkbox">
-        <input type="radio" name="Small" checked="small" tabindex="0" class="hidden"></input>
-        <label>medium</label>
-      </div>    
-    </div>  
+    <div class="inline fields">
+      <div class="field">
+        <div class="ui radio checkbox">
+          <input type="radio" name="Small" checked="small" tabindex="0" class="hidden"></input>
+          <label>Small</label>
+        </div>
+      </div>
+      <div class="field">
+        <div class="ui radio checkbox">
+          <input type="radio" name="Small" checked="small" tabindex="0" class="hidden"></input>
+          <label>medium</label>
+        </div>    
+      </div>  
+    </div>
+  </form>
   </div>
-</form>
-</div> */
+</html> */}
+
