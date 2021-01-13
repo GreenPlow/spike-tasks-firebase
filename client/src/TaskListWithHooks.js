@@ -1,74 +1,12 @@
-/* eslint-disable */
+
+/* eslint-disbale-all */
+import Task from "./Task"
+import {
+  createNewTask, 
+  getLatestTasksFromServer, 
+} from "./taskActions"
 import React, { useState, useEffect } from 'react';
-import axios from "axios";
-import { Card, Header, Form, Input, Icon } from "semantic-ui-react";
-
-function Row(props) {
-  const id = props.item._id;
-  const task = props.item.task;
-  const status = props.item.status;
-  let color = "yellow";
-
-  if (status) {
-    color = "green";
-  }
-
-  return (
-    <Card key={id} color={color} fluid>
-      <Card.Content>
-        <Card.Header textAlign="left">
-          <div style={{ wordWrap: "break-word" }}>{task}</div>
-        </Card.Header>
-        <Card.Meta textAlign="right">
-          <Icon
-            name="check circle"
-            color="green"
-          />
-          <span style={{ paddingRight: 10 }}>Done</span>
-          <Icon
-            name="undo"
-            color="yellow"
-          />
-          <span style={{ paddingRight: 10 }}>Undo</span>
-          <Icon
-            name="delete"
-            color="red"
-            onClick={() => onDelete(id)}
-          />
-          <span style={{ paddingRight: 10 }}>Delete</span>
-        </Card.Meta>
-      </Card.Content>
-    </Card>
-  );
-}
-
-let endpoint = "http://localhost:8000";
-
-async function getLatestTasksFromServer() {
-  const res = await axios.get(endpoint + "/api/task")
-  return res.data;
-}
-
-async function createNewTask (task) {
-  const url = endpoint + "/api/task";
-  const body = {task};
-  await axios.post(url, body, {headers: {"Content-Type": "application/x-www-form-urlencoded"}})
-}
-
-async function deleteTask (id) {
-  const url = endpoint + "/api/deleteTask/" + id;
-  await axios.delete(url, {headers: {"Content-Type": "application/x-www-form-urlencoded"}})
-}
-
-async function undoTask (id) {
-  const url = endpoint + "/api/undoTask/" + id;
-  await axios.put(url, {headers: {"Content-Type": "application/x-www-form-urlencoded"}})
-}
-
-async function updateTask (id) {
-  const url = endpoint + "/api/task/" + id;
-  await axios.put(url, {headers: {"Content-Type": "application/x-www-form-urlencoded"}})
-}
+import { Card, Header, Form, Input } from "semantic-ui-react";
 
 export default function TaskList () {
   // state for creating a new task
@@ -82,8 +20,12 @@ export default function TaskList () {
     }
   }
   
-  useEffect( async () => {
-    await getLatestTasksFromServerAndUpdateState();
+  useEffect(() => {
+    async function getLatest() {
+      await getLatestTasksFromServerAndUpdateState();
+    }
+
+    getLatest();
   }, []);
 
   function handleNewTask(e) {
@@ -94,11 +36,6 @@ export default function TaskList () {
     await createNewTask(newTask);
     await getLatestTasksFromServerAndUpdateState();
     setNewTask('');
-  }
-
-  async function onDelete (id) {
-    await deleteTask(id);
-    await getLatestTasksFromServerAndUpdateState();
   }
 
   return (
@@ -121,8 +58,10 @@ export default function TaskList () {
         </Form>
       </div>
       <div className="row">
-        <Card.Group>{tasks.map(item => <Row key={item._id} item={item} />)}</Card.Group>
+        <Card.Group>{tasks.map(item => <Task key={item._id} item={item} onModification={getLatestTasksFromServerAndUpdateState} />)}</Card.Group>
       </div>
     </div>
   );
 }
+
+/// setInterval every few minutes
