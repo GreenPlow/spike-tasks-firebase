@@ -29,8 +29,3 @@ async function updateTask (id) {
 }
 
 export {getLatestTasksFromServer, createNewTask, deleteTask, undoTask, updateTask}
-
-// https://developer.mozilla.org/en-US/docs/web/javascript/reference/statements/export
-
-// is using module exports a node practice?
-// module.exports = {}
