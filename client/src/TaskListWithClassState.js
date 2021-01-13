@@ -1,9 +1,11 @@
+/* eslint-disbale-all */
 import React, { Component } from "react";
 import axios from "axios";
 import { Card, Header, Form, Input, Icon } from "semantic-ui-react";
 
 let endpoint = "http://localhost:8000";
 
+/// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes
 class TaskList extends Component {
   constructor(props) {
     super(props);
@@ -167,5 +169,7 @@ class TaskList extends Component {
     );
   }
 }
+
+const inst = new TaskList()
 
 export default TaskList;
