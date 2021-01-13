@@ -1,5 +1,5 @@
 
-/* eslint-disbale-all */
+/* eslint-disable */
 import Task from "./Task"
 import {
   createNewTask, 
