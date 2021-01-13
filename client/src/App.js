@@ -5,7 +5,7 @@ import "./App.css";
 import { Container } from "semantic-ui-react";
 
 // import the TaskList component
-import TaskList from "./TaskListWithClassState";
+import TaskList from "./TaskListWithHooks";
 
 function App() {
   return (
