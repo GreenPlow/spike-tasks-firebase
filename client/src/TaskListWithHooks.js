@@ -1,4 +1,3 @@
-
 /* eslint-disable */
 import Task from "./Task"
 import {
@@ -6,6 +5,7 @@ import {
   getLatestTasksFromServer, 
 } from "./taskActions"
 import React, { useState, useEffect } from 'react';
+import "./TaskListWithHooks.css";
 import { Card, Header, Form, Input } from "semantic-ui-react";
 
 export default function TaskList () {
@@ -57,11 +57,9 @@ export default function TaskList () {
           />
         </Form>
       </div>
-      <div className="row">
-        <Card.Group>{tasks.map(item => <Task key={item._id} item={item} onModification={getLatestTasksFromServerAndUpdateState} />)}</Card.Group>
+      <div className="list-div">
+        <Card.Group>{tasks.map(item => <Task className="Box" key={item._id} item={item} onModification={getLatestTasksFromServerAndUpdateState} />)}</Card.Group>
       </div>
     </div>
   );
 }
-
-/// setInterval every few minutes
