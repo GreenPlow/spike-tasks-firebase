@@ -4,8 +4,8 @@ import "./App.css";
 // import the Container Component from the semantic-ui-react
 import { Container, Header } from "semantic-ui-react";
 
-import TaskList from "./TaskListWithHooks";
-import Time from "./Time";
+import TaskList from "./components/TaskListWithHooks";
+import Time from "./components/Time";
 
 function App() {
   return (
