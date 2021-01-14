@@ -2,11 +2,11 @@
 import React, { useState, useEffect } from 'react';
 
 function Time() {
-    let [time, setTime] = useState(new Date().toLocaleTimeString());
+    let [time, setTime] = useState(new Date());
 
     useEffect(() => {
       let id = setInterval(() => {
-        setTime(new Date().toLocaleTimeString())
+        setTime(new Date())
       }, 1000);
       return function cleanup() {
         clearInterval(id)
@@ -14,7 +14,7 @@ function Time() {
     })
 
     return (
-      <div>{time}</div>
+      <div>{time.toLocaleTimeString('default', {month: 'long', day: '2-digit'})}</div>
     )
   }
 
