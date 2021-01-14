@@ -6,7 +6,7 @@ import {
   getLatestTasksFromServer, 
 } from "./taskActions"
 import React, { useState, useEffect } from 'react';
-import { Card, Header, Form, Input } from "semantic-ui-react";
+import { Card, Form, Input } from "semantic-ui-react";
 
 export default function TaskList () {
   // state for creating a new task
@@ -40,11 +40,6 @@ export default function TaskList () {
 
   return (
     <div>
-      <div>
-        <Header className="header" as="h2">
-          TASK LIST
-        </Header>
-      </div>
       <div className="row">
         <Form onSubmit={onSubmit}>
           <Input
