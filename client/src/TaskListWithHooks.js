@@ -10,7 +10,6 @@ import { Card, Form, Input } from "semantic-ui-react";
 
 
 export default function TaskList () {
-  // state for creating a new task
   const [newTask, setNewTask] = useState('');
   const [tasks, setTasks] = useState([])
 
