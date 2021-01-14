@@ -52,7 +52,7 @@ export default function TaskList () {
           />
         </Form>
       </div>
-      <div className="list-div">
+      <div className="list">
         <Card.Group>{tasks.map(item => <Task key={item._id} item={item} onModification={getLatestTasksFromServerAndUpdateState} />)}</Card.Group>
       </div>
     </div>
