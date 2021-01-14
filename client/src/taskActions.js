@@ -13,6 +13,11 @@ async function createNewTask (task) {
   await axios.post(url, body, {headers: {"Content-Type": "application/x-www-form-urlencoded"}})
 }
 
+async function completeTask (id) {
+  const url = endpoint + "/api/completeTask/" + id;
+  await axios.put(url, {headers: {"Content-Type": "application/x-www-form-urlencoded"}})
+}
+
 async function deleteTask (id) {
   const url = endpoint + "/api/deleteTask/" + id;
   await axios.delete(url, {headers: {"Content-Type": "application/x-www-form-urlencoded"}})
@@ -28,4 +33,4 @@ async function updateTask (id) {
   await axios.put(url, {headers: {"Content-Type": "application/x-www-form-urlencoded"}})
 }
 
-export {getLatestTasksFromServer, createNewTask, deleteTask, undoTask, updateTask}
+export {getLatestTasksFromServer, createNewTask, completeTask, deleteTask, undoTask, updateTask}
