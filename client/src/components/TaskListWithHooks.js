@@ -3,7 +3,7 @@ import Task from "./Task"
 import {
   createNewTask, 
   getLatestTasksFromServer, 
-} from "./taskActions"
+} from "../taskActions"
 import "./TaskListWithHooks.css";
 import React, { useState, useEffect } from 'react';
 import { Card, Form, Input } from "semantic-ui-react";
