@@ -1,16 +1,14 @@
-/* eslint-disable */
-import Task from "./Task"
-import {
-  createNewTask, 
-  getLatestTasksFromServer, 
-} from "../taskActions"
-import "./TaskListWithHooks.css";
 import React, { useState, useEffect } from 'react';
-import { Card, Form, Input } from "semantic-ui-react";
 
+import Task from "./Task"
+import NewTask from "./NewTask"
 
-export default function TaskList () {
-  const [newTask, setNewTask] = useState('');
+import { getLatestTasksFromServer } from "../taskActions"
+import "./TaskListWithHooks.css";
+
+import { Card } from "semantic-ui-react";
+
+export default function TaskList() {
   const [tasks, setTasks] = useState([])
 
   async function getLatestTasksFromServerAndUpdateState() {
@@ -19,7 +17,7 @@ export default function TaskList () {
       setTasks(latestTasks)
     }
   }
-  
+
   useEffect(() => {
     async function getLatest() {
       await getLatestTasksFromServerAndUpdateState();
@@ -28,30 +26,10 @@ export default function TaskList () {
     getLatest();
   }, []);
 
-  function handleNewTask(e) {
-    setNewTask(e.target.value);
-  }
-
-  async function onSubmit () {
-    await createNewTask(newTask);
-    await getLatestTasksFromServerAndUpdateState();
-    setNewTask('');
-  }
-
   return (
+    // pass in the function callback as a named prop
     <div>
-      <div className="row">
-        <Form onSubmit={onSubmit}>
-          <Input
-            type="text"
-            name="task"
-            fluid
-            placeholder="Create Task"
-            value={newTask}
-            onChange={handleNewTask}
-          />
-        </Form>
-      </div>
+      <NewTask onCreateFinish={getLatestTasksFromServerAndUpdateState} />
       <div className="list">
         <Card.Group>{tasks.map(item => <Task key={item._id} item={item} onModification={getLatestTasksFromServerAndUpdateState} />)}</Card.Group>
       </div>
