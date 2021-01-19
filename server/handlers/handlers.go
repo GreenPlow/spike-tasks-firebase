@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
 	"github.com/GreenPlow/spike-list/server/models"
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson"
@@ -65,6 +66,7 @@ func CreateTask(w http.ResponseWriter, r *http.Request) {
 	var task models.TaskList
 	_ = json.NewDecoder(r.Body).Decode(&task)
 	insertOneTask(task)
+	// Write the response of the task
 	json.NewEncoder(w).Encode(task)
 }
 
@@ -119,7 +121,8 @@ func getAllTask() []primitive.M {
 		log.Fatal(err)
 	}
 
-	var results []primitive.M
+	// make a slice to ensure nil is not returned
+	results := make([]primitive.M, 0)
 	for cur.Next(context.Background()) {
 		var result bson.M
 		e := cur.Decode(&result)
