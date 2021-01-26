@@ -10,39 +10,44 @@ import { Card, Icon } from "semantic-ui-react";
 function Task(props) {
     const id = props.item._id;
     const task = props.item.task;
-    const status = props.item.status;
-    let color = "yellow";
+    // const status = props.item.status;
+    // let color = "yellow";
   
-    if (status) {
-      color = "green";
-    }
+    // if (status) {
+    //   color = "green";
+    // }
 
     async function onDelete (id) {
-      await deleteTask(id);
-      await props.onModification();
+    //   await deleteTask(id);
+    //   await props.onModification();
     }
 
     async function onDone (id) {
       await completeTask(id);
-      await props.onModification();
+      props.onModification()
+      // await completeTask(id);
+      // await props.onModification();
     }
 
     async function onUndo (id) {
-      await undoTask(id);
-      await props.onModification();
+    //   await undoTask(id);
+    //   await props.onModification();
     }
   
     return (
-      <Card key={id} color={color} fluid>
+      // <Card></Card>
+      // <Card key={id} color={color} fluid> 
+      <Card fluid>
         <Card.Content>
-          <Card.Header textAlign="left">
+          <Card.Header data-testid="hh" textAlign="left">
             <div style={{ wordWrap: "break-word" }}>{task}</div>
           </Card.Header>
-          <Card.Meta textAlign="right">
+          {<Card.Meta textAlign="right">
             <Icon
               name="check circle"
               color="green"
               onClick={() => onDone(id)}
+              data-testid="icon-green"
             />
             <span style={{ paddingRight: 10 }}>Done</span>
             <Icon
@@ -57,7 +62,7 @@ function Task(props) {
               onClick={() => onDelete(id)}
             />
             <span style={{ paddingRight: 10 }}>Delete</span>
-          </Card.Meta>
+          </Card.Meta> }
         </Card.Content>
       </Card>
     );
