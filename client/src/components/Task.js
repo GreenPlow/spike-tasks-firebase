@@ -40,6 +40,13 @@ function Task(props) {
     setTask(e.target.value);
   }
 
+  // async function onSubmit() {
+  //   await updateTask(task);
+  //   // This is a named callback
+  //   await props.onCreateFinish();
+  //   setTask("");
+  // }
+
   const [showEdit, setShowEdit] = useState(false);
 
   // TODO can we test if the card is fluid?
