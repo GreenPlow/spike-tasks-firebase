@@ -35,7 +35,7 @@ describe('tests for task compontent', () => {
     expect(screen.getByTestId('hh')).toHaveTextContent(item.task)
   });
 
-  it("should render the done button", async () => {
+  it("render a working done button", async () => {
     // Arrange
     let completeTaskResolve;
     completeTask.mockReturnValue(new Promise((resolve, reject) => {
@@ -65,7 +65,7 @@ describe('tests for task compontent', () => {
     expect(onModificationMock).toHaveBeenCalledTimes(1);
   })
 
-  it("should render the undo button", async () => {
+  it("render a working undo button", async () => {
     // Arrange
     let undoTaskResolve;
     undoTask.mockReturnValue(new Promise((resolve, reject) => {
