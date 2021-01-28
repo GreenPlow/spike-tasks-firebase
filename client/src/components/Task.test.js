@@ -7,6 +7,7 @@ import { render, cleanup, screen, fireEvent, waitFor } from '@testing-library/re
 import Task from "./Task";
 import {
   completeTask,
+  deleteTask,
   undoTask
 } from "../taskActions"
 
@@ -89,16 +90,32 @@ describe('tests for task compontent', () => {
     undoTaskResolve()
 
     await waitFor(()=> expect(onModificationMock).toHaveBeenCalledTimes(1))
+  })
 
-    
+  it("render a working delete button", async () => {
+    // Arrange
+    let deleteTaskResolve;
+    deleteTask.mockReturnValue(new Promise((resolve, reject) => {
+      deleteTaskResolve = resolve;
+    }));
 
+    const onModificationMock = jest.fn();
+    render(<Task item={item} onModification={onModificationMock} />)
 
-    // await new Promise((resolve, reject) => {
-    //   undoTaskResolve();
-    //   resolve();
-    // });
+    // Act
+    const button = screen.getByTestId('icon-red');
+    expect(button).toBeInTheDocument()
 
-    // expect(onModificationMock).toHaveBeenCalledTimes(1);
+    fireEvent.click(button)
+
+    // Assert
+    expect(deleteTask).toHaveBeenCalledTimes(1);
+    expect(deleteTask).toHaveBeenCalledWith(itemId);
+
+    expect(onModificationMock).toHaveBeenCalledTimes(0);
+    deleteTaskResolve()
+
+    await waitFor(()=> expect(onModificationMock).toHaveBeenCalledTimes(1))
   })
 })
 

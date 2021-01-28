@@ -18,8 +18,8 @@ function Task(props) {
     // }
 
     async function onDelete (id) {
-    //   await deleteTask(id);
-    //   await props.onModification();
+      await deleteTask(id);
+      props.onModification();
     }
 
     async function onDone (id) {
@@ -37,8 +37,6 @@ function Task(props) {
     }
   
     return (
-      // <Card></Card>
-      // <Card key={id} color={color} fluid> 
       <Card fluid>
         <Card.Content>
           <Card.Header data-testid="hh" textAlign="left">
@@ -63,6 +61,7 @@ function Task(props) {
               name="delete"
               color="red"
               onClick={() => onDelete(id)}
+              data-testid="icon-red"
             />
             <span style={{ paddingRight: 10 }}>Delete</span>
           </Card.Meta> }
