@@ -3,10 +3,11 @@ import React from 'react';
 import Chance from 'chance';
 const chance = new Chance();
 
-import { render, cleanup, screen, fireEvent } from '@testing-library/react'
+import { render, cleanup, screen, fireEvent, waitFor } from '@testing-library/react'
 import Task from "./Task";
 import {
-  completeTask
+  completeTask,
+  undoTask
 } from "../taskActions"
 
 jest.mock('../taskActions');
@@ -62,6 +63,42 @@ describe('tests for task compontent', () => {
     });
 
     expect(onModificationMock).toHaveBeenCalledTimes(1);
+  })
+
+  it("should render the undo button", async () => {
+    // Arrange
+    let undoTaskResolve;
+    undoTask.mockReturnValue(new Promise((resolve, reject) => {
+      undoTaskResolve = resolve;
+    }));
+
+    const onModificationMock = jest.fn();
+    render(<Task item={item} onModification={onModificationMock} />)
+
+    // Act
+    const button = screen.getByTestId('icon-yellow');
+    expect(button).toBeInTheDocument()
+
+    fireEvent.click(button)
+
+    // Assert
+    expect(undoTask).toHaveBeenCalledTimes(1);
+    expect(undoTask).toHaveBeenCalledWith(itemId);
+
+    expect(onModificationMock).toHaveBeenCalledTimes(0);
+    undoTaskResolve()
+
+    await waitFor(()=> expect(onModificationMock).toHaveBeenCalledTimes(1))
+
+    
+
+
+    // await new Promise((resolve, reject) => {
+    //   undoTaskResolve();
+    //   resolve();
+    // });
+
+    // expect(onModificationMock).toHaveBeenCalledTimes(1);
   })
 })
 

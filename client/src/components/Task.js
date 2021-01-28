@@ -24,12 +24,14 @@ function Task(props) {
 
     async function onDone (id) {
       await completeTask(id);
-      props.onModification()
+      props.onModification();
       // await completeTask(id);
       // await props.onModification();
     }
 
     async function onUndo (id) {
+      await undoTask(id);
+      props.onModification();
     //   await undoTask(id);
     //   await props.onModification();
     }
@@ -54,6 +56,7 @@ function Task(props) {
               name="undo"
               color="yellow"
               onClick={() => onUndo(id)}
+              data-testid="icon-yellow"
             />
             <span style={{ paddingRight: 10 }}>Undo</span>
             <Icon
