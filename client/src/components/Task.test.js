@@ -99,6 +99,12 @@ describe('tests for task compontent', () => {
       deleteTaskResolve = resolve;
     }));
 
+    // let getLatestTasksFromServerResolve;
+    //
+    // getLatestTasksFromServer.mockReturnValue(new Promise((resolve, reject) => {
+    //   getLatestTasksFromServerResolve = resolve;
+    // }));
+
     const onModificationMock = jest.fn();
     render(<Task item={item} onModification={onModificationMock} />)
 
@@ -111,11 +117,19 @@ describe('tests for task compontent', () => {
     // Assert
     expect(deleteTask).toHaveBeenCalledTimes(1);
     expect(deleteTask).toHaveBeenCalledWith(itemId);
-
     expect(onModificationMock).toHaveBeenCalledTimes(0);
     deleteTaskResolve()
-
     await waitFor(()=> expect(onModificationMock).toHaveBeenCalledTimes(1))
+    // expect(getLatestTasksFromServer).toHaveBeenCalledTimes(1);
+
+    // TODO
+    // Need to test that the private props.onModification() is called
+    // Need to test that the private props.onModification() is awaited
+    // Do we need to test that getLatestTasksFromServer was called?
+
+
+    // getLatestTasksFromServerResolve()
+    // onModificationResolve()
   })
 })
 

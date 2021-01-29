@@ -10,32 +10,34 @@ import { Card, Icon } from "semantic-ui-react";
 function Task(props) {
     const id = props.item._id;
     const task = props.item.task;
-    // const status = props.item.status;
-    // let color = "yellow";
+
+    // TODO Test the colors lines 15 to 20
+    const status = props.item.status;
+    let color = "yellow";
   
-    // if (status) {
-    //   color = "green";
-    // }
+    if (status) {
+      color = "green";
+    }
 
     async function onDelete (id) {
       await deleteTask(id);
       props.onModification();
+      // await props.onModification();
     }
 
     async function onDone (id) {
       await completeTask(id);
       props.onModification();
-      // await completeTask(id);
       // await props.onModification();
     }
 
     async function onUndo (id) {
       await undoTask(id);
       props.onModification();
-    //   await undoTask(id);
     //   await props.onModification();
     }
-  
+
+    // TODO can we test if the card is fluid?
     return (
       <Card fluid>
         <Card.Content>
