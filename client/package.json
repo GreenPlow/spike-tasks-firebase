@@ -43,6 +43,7 @@
     "eslint": "^7.16.0",
     "eslint-plugin-react": "^7.22.0",
     "eslint-plugin-react-hooks": "^4.2.0",
-    "react-test-renderer": "^17.0.1"
+    "react-test-renderer": "^17.0.1",
+    "chance": "^1.1.7"
   }
 }

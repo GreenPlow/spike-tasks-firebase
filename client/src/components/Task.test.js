@@ -1,8 +1,10 @@
 
 import React from 'react';
-import {render, cleanup, screen, fireEvent} from '@testing-library/react'
-import Task from "./Task";
+import Chance from 'chance';
+const chance = new Chance();
 
+import { render, cleanup, screen, fireEvent } from '@testing-library/react'
+import Task from "./Task";
 import {
   completeTask
 } from "../taskActions"
@@ -11,28 +13,28 @@ jest.mock('../taskActions');
 
 afterEach(cleanup);
 
-const itemId = 123;
-const item = {
-  _id: itemId,
-  task: 'test-task-value'
-};
+describe('tests for task compontent', () => {
 
-describe('my tests', () => {
+  const itemId = chance.string({ pool: '1234567890' });
+  const item = {
+    _id: itemId,
+    task: chance.string()
+  };
 
   it("renders a task with provided text from props", () => {
 
     // Arrange
-    render(<Task item={item}/>);
+    render(<Task item={item} />);
     // returns a container, a base element, debug
     // container.firstChild.firstChild
 
     // Act
 
     // Assert
-    expect(screen.getByTestId('hh')).toHaveTextContent('test-task-value')
+    expect(screen.getByTestId('hh')).toHaveTextContent(item.task)
   });
 
-  it ("should render the done button", async () => {
+  it("should render the done button", async () => {
     // Arrange
     let completeTaskResolve;
     completeTask.mockReturnValue(new Promise((resolve, reject) => {
@@ -40,7 +42,7 @@ describe('my tests', () => {
     }));
 
     const onModificationMock = jest.fn();
-    render(<Task item={item} onModification={onModificationMock}/>)
+    render(<Task item={item} onModification={onModificationMock} />)
 
     // Act
     const button = screen.getByTestId('icon-green');
@@ -65,7 +67,7 @@ describe('my tests', () => {
 
 
 /* USER ACTION EXAMPLE
-The way our end user will use this app will be to: see some text on the UI, 
+The way our end user will use this app will be to: see some text on the UI,
 see the text in the button, then click on it, finally see some new text on UI.
 */
 
