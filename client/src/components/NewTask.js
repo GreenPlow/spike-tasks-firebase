@@ -1,27 +1,27 @@
 /* eslint-disable*/
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-import { createNewTask } from "../taskActions"
+import { createNewTask } from "../taskActions";
 
 import { Form, Input } from "semantic-ui-react";
 
 function NewTask(props) {
-    const [newTask, setNewTask] = useState('');
-  
-    function handleNewTask(e) {
-      setNewTask(e.target.value);
-    }
-    
-    async function onSubmit () {
-      await createNewTask(newTask);
-      // This is a named callback
-      await props.onCreateFinish();
-      setNewTask('');
-    }
-  
-    return (
-      <div className="row">
+  const [newTask, setNewTask] = useState("");
+
+  function handleNewTask(e) {
+    setNewTask(e.target.value);
+  }
+
+  async function onSubmit() {
+    await createNewTask(newTask);
+    // This is a named callback
+    await props.onCreateFinish();
+    setNewTask("");
+  }
+
+  return (
+    <div className="row">
       <Form onSubmit={onSubmit}>
         <Input
           type="text"
@@ -33,7 +33,7 @@ function NewTask(props) {
         />
       </Form>
     </div>
-    )
-  }
+  );
+}
 
-  export default NewTask;
+export default NewTask;
