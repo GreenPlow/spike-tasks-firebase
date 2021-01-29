@@ -3,10 +3,12 @@ import React from 'react';
 import Chance from 'chance';
 const chance = new Chance();
 
-import { render, cleanup, screen, fireEvent } from '@testing-library/react'
+import { render, cleanup, screen, fireEvent, waitFor } from '@testing-library/react'
 import Task from "./Task";
 import {
-  completeTask
+  completeTask,
+  deleteTask,
+  undoTask
 } from "../taskActions"
 
 jest.mock('../taskActions');
@@ -34,7 +36,7 @@ describe('tests for task compontent', () => {
     expect(screen.getByTestId('hh')).toHaveTextContent(item.task)
   });
 
-  it("should render the done button", async () => {
+  it("render a working done button", async () => {
     // Arrange
     let completeTaskResolve;
     completeTask.mockReturnValue(new Promise((resolve, reject) => {
@@ -62,6 +64,72 @@ describe('tests for task compontent', () => {
     });
 
     expect(onModificationMock).toHaveBeenCalledTimes(1);
+  })
+
+  it("render a working undo button", async () => {
+    // Arrange
+    let undoTaskResolve;
+    undoTask.mockReturnValue(new Promise((resolve, reject) => {
+      undoTaskResolve = resolve;
+    }));
+
+    const onModificationMock = jest.fn();
+    render(<Task item={item} onModification={onModificationMock} />)
+
+    // Act
+    const button = screen.getByTestId('icon-yellow');
+    expect(button).toBeInTheDocument()
+
+    fireEvent.click(button)
+
+    // Assert
+    expect(undoTask).toHaveBeenCalledTimes(1);
+    expect(undoTask).toHaveBeenCalledWith(itemId);
+
+    expect(onModificationMock).toHaveBeenCalledTimes(0);
+    undoTaskResolve()
+
+    await waitFor(()=> expect(onModificationMock).toHaveBeenCalledTimes(1))
+  })
+
+  it("render a working delete button", async () => {
+    // Arrange
+    let deleteTaskResolve;
+    deleteTask.mockReturnValue(new Promise((resolve, reject) => {
+      deleteTaskResolve = resolve;
+    }));
+
+    // let getLatestTasksFromServerResolve;
+    //
+    // getLatestTasksFromServer.mockReturnValue(new Promise((resolve, reject) => {
+    //   getLatestTasksFromServerResolve = resolve;
+    // }));
+
+    const onModificationMock = jest.fn();
+    render(<Task item={item} onModification={onModificationMock} />)
+
+    // Act
+    const button = screen.getByTestId('icon-red');
+    expect(button).toBeInTheDocument()
+
+    fireEvent.click(button)
+
+    // Assert
+    expect(deleteTask).toHaveBeenCalledTimes(1);
+    expect(deleteTask).toHaveBeenCalledWith(itemId);
+    expect(onModificationMock).toHaveBeenCalledTimes(0);
+    deleteTaskResolve()
+    await waitFor(()=> expect(onModificationMock).toHaveBeenCalledTimes(1))
+    // expect(getLatestTasksFromServer).toHaveBeenCalledTimes(1);
+
+    // TODO
+    // Need to test that the private props.onModification() is called
+    // Need to test that the private props.onModification() is awaited
+    // Do we need to test that getLatestTasksFromServer was called?
+
+
+    // getLatestTasksFromServerResolve()
+    // onModificationResolve()
   })
 })
 

@@ -10,34 +10,37 @@ import { Card, Icon } from "semantic-ui-react";
 function Task(props) {
     const id = props.item._id;
     const task = props.item.task;
-    // const status = props.item.status;
-    // let color = "yellow";
+
+    // TODO Test the colors lines 15 to 20
+    const status = props.item.status;
+    let color = "yellow";
   
-    // if (status) {
-    //   color = "green";
-    // }
+    if (status) {
+      color = "green";
+    }
 
     async function onDelete (id) {
-    //   await deleteTask(id);
-    //   await props.onModification();
+      await deleteTask(id);
+      await props.onModification();
+      // await props.onModification();
     }
 
     async function onDone (id) {
       await completeTask(id);
-      props.onModification()
-      // await completeTask(id);
+      await props.onModification();
       // await props.onModification();
     }
 
     async function onUndo (id) {
-    //   await undoTask(id);
+      await undoTask(id);
+      await props.onModification();
     //   await props.onModification();
     }
-  
+
+    // TODO can we test if the card is fluid?
+    // TODO we need to test that the color is passed in
     return (
-      // <Card></Card>
-      // <Card key={id} color={color} fluid> 
-      <Card fluid>
+      <Card fluid key={id} color={color}>
         <Card.Content>
           <Card.Header data-testid="hh" textAlign="left">
             <div style={{ wordWrap: "break-word" }}>{task}</div>
@@ -54,12 +57,14 @@ function Task(props) {
               name="undo"
               color="yellow"
               onClick={() => onUndo(id)}
+              data-testid="icon-yellow"
             />
             <span style={{ paddingRight: 10 }}>Undo</span>
             <Icon
               name="delete"
               color="red"
               onClick={() => onDelete(id)}
+              data-testid="icon-red"
             />
             <span style={{ paddingRight: 10 }}>Delete</span>
           </Card.Meta> }
