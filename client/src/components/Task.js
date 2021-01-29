@@ -21,19 +21,19 @@ function Task(props) {
 
     async function onDelete (id) {
       await deleteTask(id);
-      props.onModification();
+      await props.onModification();
       // await props.onModification();
     }
 
     async function onDone (id) {
       await completeTask(id);
-      props.onModification();
+      await props.onModification();
       // await props.onModification();
     }
 
     async function onUndo (id) {
       await undoTask(id);
-      props.onModification();
+      await props.onModification();
     //   await props.onModification();
     }
 
