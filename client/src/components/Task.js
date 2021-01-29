@@ -38,8 +38,9 @@ function Task(props) {
     }
 
     // TODO can we test if the card is fluid?
+    // TODO we need to test that the color is passed in
     return (
-      <Card fluid>
+      <Card fluid key={id} color={color}>
         <Card.Content>
           <Card.Header data-testid="hh" textAlign="left">
             <div style={{ wordWrap: "break-word" }}>{task}</div>
