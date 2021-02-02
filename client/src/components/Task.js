@@ -69,7 +69,7 @@ function Task(props) {
             <div style={{ wordWrap: "break-word" }}>{task}</div>
           ) : null}
           {showEdit ? (
-            <EditWindow taskObj={{task, id}} handleEdit={handleEdit} />
+            <EditWindow taskObj={{ task, id }} handleEdit={handleEdit} />
           ) : null}
         </Card.Header>
         <Card.Meta textAlign="right">
