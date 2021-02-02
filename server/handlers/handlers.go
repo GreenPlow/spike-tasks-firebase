@@ -191,9 +191,6 @@ func updateTask(id string, task models.TaskList) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	//
-
-	fmt.Println("Modified a single record", result.UpsertedID)
 
 	fmt.Println("modified count: ", result.ModifiedCount)
 }
