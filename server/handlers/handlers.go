@@ -169,23 +169,24 @@ func UpdateTask(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Methods", "PUT")
 	w.Header().Set("Access-control-Allow-Headers", "Content-Type")
 
+	// TODO Should I use the struct over params? Seems like struct 
+	// would help avoid bugs from the positions of args
 	params := mux.Vars(r)
-	fmt.Println("inside UpdateTask", params)
+	fmt.Println("inside UpdateTask, params from mux.Vars(r):", params)
 	// updateTask(params["id"], params["task"])
 	// json.NewEncoder(w).Encode(params["id"])
 
-	var task models.TaskList
-	_ = json.NewDecoder(r.Body).Decode(&task)
-		updateTask(params["id"], task)
-	json.NewEncoder(w).Encode(task)
+	var taskObj models.TaskList
+	_ = json.NewDecoder(r.Body).Decode(&taskObj)
+		updateTask(taskObj)
+		// TODO should task be encoded or the id?
+	json.NewEncoder(w).Encode(taskObj)
 }
 
-func updateTask(id string, task models.TaskList) {
-	fmt.Println("inside updateTask", task)
-	filter := bson.M{"_id": task.ID}
-	update := bson.M{"$set": bson.M{"task": task.Task}}
-	fmt.Println("test access to attr task", task.Task)
-	fmt.Println("test access to attr id", task.ID)
+func updateTask(taskObj models.TaskList) {
+	fmt.Println("inside updateTask, taskObj:", taskObj)
+	filter := bson.M{"_id": taskObj.ID}
+	update := bson.M{"$set": bson.M{"task": taskObj.Task}}
 
 	result, err := collection.UpdateOne(context.Background(), filter, update)
 	if err != nil {
