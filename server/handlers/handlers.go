@@ -93,6 +93,37 @@ func UndoTask(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(params["id"])
 }
 
+// UpdateTask update the task route
+// func UpdateTask(w http.ResponseWriter, r *http.Request) {
+// 	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
+// 	w.Header().Set("Access-Control-Allow-Origin", "*")
+// 	w.Header().Set("Access-Control-Allow-Methods", "PUT")
+// 	w.Header().Set("Access-control-Allow-Headers", "Content-Type")
+
+// 	params := mux.Vars(r)
+// 	updateTask(params["id"])
+// 	json.NewEncoder(w).Encode(params["id"])
+
+// 	var task models.TaskList
+// 	_ = json.NewDecoder(r.Body).Decode(&task)
+// 	insertOneTask(task)
+// 	// Write the response of the task
+// 	json.NewEncoder(w).Encode(task)
+// }
+
+// DeleteTaskOptions delete one task route
+func DeleteTaskOptions(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "DELETE")
+	w.Header().Set("Access-control-Allow-Headers", "Content-Type")
+
+	// params := mux.Vars(r)
+	// deleteOneTask(params["id"])
+	// json.NewEncoder(w).Encode(params["id"])
+	// http.Error(w, "http status forbidden", http.StatusBadRequest)
+}
+
 // DeleteTask delete one task route
 func DeleteTask(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
@@ -100,9 +131,23 @@ func DeleteTask(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Methods", "DELETE")
 	w.Header().Set("Access-control-Allow-Headers", "Content-Type")
 
-	params := mux.Vars(r)
-	deleteOneTask(params["id"])
-	json.NewEncoder(w).Encode(params["id"])
+	// params := mux.Vars(r)
+	// deleteOneTask(params["id"])
+	// json.NewEncoder(w).Encode(params["id"])
+	http.Error(w, "http status forbidden", http.StatusBadRequest)
+}
+
+func deleteOneTask(task string) {
+	fmt.Println(task)
+	id, _ := primitive.ObjectIDFromHex(task)
+	filter := bson.M{"_id": id}
+	d, err := collection.DeleteOne(context.Background(), filter)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("deleted document", d.DeletedCount)
+
 }
 
 // DeleteAllTask delete all tasks route
@@ -186,19 +231,6 @@ func updateTask(task string) {
 	}
 
 	fmt.Println("modified count: ", result.ModifiedCount)
-}
-
-func deleteOneTask(task string) {
-	fmt.Println(task)
-	id, _ := primitive.ObjectIDFromHex(task)
-	filter := bson.M{"_id": id}
-	d, err := collection.DeleteOne(context.Background(), filter)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Println("deleted document", d.DeletedCount)
-
 }
 
 func deleteAllTask() int64 {
