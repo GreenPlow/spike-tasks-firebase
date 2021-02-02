@@ -57,63 +57,6 @@ func GetAllTask(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(payload)
 }
 
-// CreateTask create task route
-func CreateTask(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "POST")
-	w.Header().Set("Access-control-Allow-Headers", "Content-Type")
-	var task models.TaskList
-	_ = json.NewDecoder(r.Body).Decode(&task)
-	insertOneTask(task)
-	// Write the response of the task
-	json.NewEncoder(w).Encode(task)
-}
-
-// CompleteTask complete the task route
-func CompleteTask(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "PUT")
-	w.Header().Set("Access-control-Allow-Headers", "Content-Type")
-	params := mux.Vars(r)
-	completeTask(params["id"])
-	json.NewEncoder(w).Encode(params["id"])
-}
-
-// UndoTask undo the complete task route
-func UndoTask(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "PUT")
-	w.Header().Set("Access-control-Allow-Headers", "Content-Type")
-
-	params := mux.Vars(r)
-	undoTask(params["id"])
-	json.NewEncoder(w).Encode(params["id"])
-}
-
-// DeleteTask delete one task route
-func DeleteTask(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "DELETE")
-	w.Header().Set("Access-control-Allow-Headers", "Content-Type")
-
-	params := mux.Vars(r)
-	deleteOneTask(params["id"])
-	json.NewEncoder(w).Encode(params["id"])
-}
-
-// DeleteAllTask delete all tasks route
-func DeleteAllTask(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-
-	count := deleteAllTask()
-	json.NewEncoder(w).Encode(count)
-}
-
 // get all task from the DB and return it
 func getAllTask() []primitive.M {
 	cur, err := collection.Find(context.Background(), bson.D{{}})
@@ -141,12 +84,36 @@ func getAllTask() []primitive.M {
 	return results
 }
 
+// CreateTask create task route
+func CreateTask(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "POST")
+	w.Header().Set("Access-control-Allow-Headers", "Content-Type")
+	var task models.TaskList
+	_ = json.NewDecoder(r.Body).Decode(&task)
+	insertOneTask(task)
+	// Write the response of the task
+	json.NewEncoder(w).Encode(task)
+}
+
 func insertOneTask(task models.TaskList) {
 	insertResult, err := collection.InsertOne(context.Background(), task)
 	if err != nil {
 		log.Fatal(err)
 	}
 	fmt.Println("Inserted a single record", insertResult.InsertedID)
+}
+
+// CompleteTask complete the task route
+func CompleteTask(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "PUT")
+	w.Header().Set("Access-control-Allow-Headers", "Content-Type")
+	params := mux.Vars(r)
+	completeTask(params["id"])
+	json.NewEncoder(w).Encode(params["id"])
 }
 
 func completeTask(task string) {
@@ -162,6 +129,18 @@ func completeTask(task string) {
 	fmt.Println("modified count: ", result.ModifiedCount)
 }
 
+// UndoTask undo the complete task route
+func UndoTask(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "PUT")
+	w.Header().Set("Access-control-Allow-Headers", "Content-Type")
+
+	params := mux.Vars(r)
+	undoTask(params["id"])
+	json.NewEncoder(w).Encode(params["id"])
+}
+
 func undoTask(task string) {
 	fmt.Println(task)
 	id, _ := primitive.ObjectIDFromHex(task)
@@ -175,6 +154,74 @@ func undoTask(task string) {
 	fmt.Println("modified count: ", result.ModifiedCount)
 }
 
+// UpdateTaskOptions delete one task route
+func UpdateTaskOptions(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "PUT")
+	w.Header().Set("Access-control-Allow-Headers", "Content-Type")
+}
+
+// UpdateTask update the task route
+func UpdateTask(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "PUT")
+	w.Header().Set("Access-control-Allow-Headers", "Content-Type")
+
+	// TODO Should I use the struct over params? Seems like struct 
+	// would help avoid bugs from the positions of args
+	params := mux.Vars(r)
+	fmt.Println("inside UpdateTask, params from mux.Vars(r):", params)
+	// updateTask(params["id"], params["task"])
+	// json.NewEncoder(w).Encode(params["id"])
+
+	var taskObj models.TaskList
+	_ = json.NewDecoder(r.Body).Decode(&taskObj)
+		updateTask(taskObj)
+		// TODO should task be encoded or the id?
+	json.NewEncoder(w).Encode(taskObj)
+}
+
+func updateTask(taskObj models.TaskList) {
+	fmt.Println("inside updateTask, taskObj:", taskObj)
+	filter := bson.M{"_id": taskObj.ID}
+	update := bson.M{"$set": bson.M{"task": taskObj.Task}}
+
+	result, err := collection.UpdateOne(context.Background(), filter, update)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("modified count: ", result.ModifiedCount)
+}
+
+// DeleteTaskOptions delete one task route
+func DeleteTaskOptions(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "DELETE")
+	w.Header().Set("Access-control-Allow-Headers", "Content-Type")
+
+	// params := mux.Vars(r)
+	// deleteOneTask(params["id"])
+	// json.NewEncoder(w).Encode(params["id"])
+	// http.Error(w, "http status forbidden", http.StatusBadRequest)
+}
+
+// DeleteTask delete one task route
+func DeleteTask(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "DELETE")
+	w.Header().Set("Access-control-Allow-Headers", "Content-Type")
+
+	// params := mux.Vars(r)
+	// deleteOneTask(params["id"])
+	// json.NewEncoder(w).Encode(params["id"])
+	http.Error(w, "http status forbidden", http.StatusBadRequest)
+}
+
 func deleteOneTask(task string) {
 	fmt.Println(task)
 	id, _ := primitive.ObjectIDFromHex(task)
@@ -186,6 +233,15 @@ func deleteOneTask(task string) {
 
 	fmt.Println("deleted document", d.DeletedCount)
 
+}
+
+// DeleteAllTask delete all tasks route
+func DeleteAllTask(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
+	count := deleteAllTask()
+	json.NewEncoder(w).Encode(count)
 }
 
 func deleteAllTask() int64 {
