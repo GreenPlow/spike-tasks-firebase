@@ -4,15 +4,15 @@ import { deleteTask, completeTask, undoTask, updateTask } from "../taskActions";
 import { Card, Icon, Input, Form } from "semantic-ui-react";
 
 function EditWindow(props) {
+  // https://stackoverflow.com/questions/22573494/react-js-input-losing-focus-when-rerendering
   // Destructure the props
   const { taskObj, handleEdit } = props;
   console.log("child ", taskObj);
 
   // The state of task is managed in the other component..
-
   async function onSubmit() {
     await updateTask(taskObj);
-    // We don't need to call the api and re-render the whole list right? Just trigger the dom to rerender to destroy the Editwindow
+    await props.onModification();
   }
 
   return (
@@ -21,8 +21,6 @@ function EditWindow(props) {
     </Form>
   );
 }
-
-// https://stackoverflow.com/questions/22573494/react-js-input-losing-focus-when-rerendering
 
 function Task(props) {
   const id = props.item._id;
@@ -51,9 +49,9 @@ function Task(props) {
   }
 
   function handleEdit(e) {
-    // sets the hook and line 55 occurs before re-render occurs
+    // sets the hook and line 54-56 occurs before re-render occurs
     setTask(e.target.value);
-    // console logs instance a of task, then re-invokes line 27 to get the latest update
+    // console.log() instance A of task, then re-invokes line 27 to get the latest update and will console.log() instance B of task
     console.log("parent ", task);
   }
 
@@ -69,7 +67,14 @@ function Task(props) {
             <div style={{ wordWrap: "break-word" }}>{task}</div>
           ) : null}
           {showEdit ? (
-            <EditWindow taskObj={{ task, id }} handleEdit={handleEdit} />
+            <EditWindow
+              taskObj={{ task, id }}
+              handleEdit={handleEdit}
+              onModification={() => {
+                setShowEdit(false);
+                props.onModification();
+              }}
+            />
           ) : null}
         </Card.Header>
         <Card.Meta textAlign="right">
