@@ -6,7 +6,7 @@ import { SingleDatePicker } from 'react-dates';
 import 'react-dates/lib/css/_datepicker.css';
 import moment from 'moment';
 
-import TaskList from "./components/TaskListWithHooks";
+import TaskList from "./components/TaskList";
 import Time from "./components/Time";
 import "./App.css";
 
