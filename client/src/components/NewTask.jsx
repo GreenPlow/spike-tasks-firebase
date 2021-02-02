@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 
-import { createNewTask } from "../taskActions";
+import { createNewTask } from "../api/taskActions";
 
 import { Form, Input } from "semantic-ui-react";
 
