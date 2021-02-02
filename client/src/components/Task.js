@@ -1,12 +1,25 @@
 /* eslint-disable */
 import React, { useState } from "react";
-import { deleteTask, completeTask, undoTask } from "../taskActions";
-import { Card, Icon, Input } from "semantic-ui-react";
+import { deleteTask, completeTask, undoTask, updateTask } from "../taskActions";
+import { Card, Icon, Input, Form } from "semantic-ui-react";
 
 function EditWindow(props) {
-  const { task, handleEdit } = props;
+  // Destructure the props
+  const { taskObj, handleEdit } = props;
+  console.log("child ", taskObj);
 
-  return <Input label="edit" value={task} onChange={handleEdit} />;
+  // The state of task is managed in the other component..
+
+  async function onSubmit() {
+    await updateTask(taskObj);
+    // We don't need to call the api and re-render the whole list right? Just trigger the dom to rerender to destroy the Editwindow
+  }
+
+  return (
+    <Form onSubmit={onSubmit}>
+      <Input label="edit" value={taskObj.task} onChange={handleEdit} />
+    </Form>
+  );
 }
 
 // https://stackoverflow.com/questions/22573494/react-js-input-losing-focus-when-rerendering
@@ -14,6 +27,7 @@ function EditWindow(props) {
 function Task(props) {
   const id = props.item._id;
   const [task, setTask] = useState(props.item.task);
+  console.log("parent re-render", task);
   const status = props.item.status;
   let color = "yellow";
 
@@ -37,15 +51,11 @@ function Task(props) {
   }
 
   function handleEdit(e) {
+    // sets the hook and line 55 occurs before re-render occurs
     setTask(e.target.value);
+    // console logs instance a of task, then re-invokes line 27 to get the latest update
+    console.log("parent ", task);
   }
-
-  // async function onSubmit() {
-  //   await updateTask(task);
-  //   // This is a named callback
-  //   await props.onCreateFinish();
-  //   setTask("");
-  // }
 
   const [showEdit, setShowEdit] = useState(false);
 
@@ -58,7 +68,9 @@ function Task(props) {
           {!showEdit ? (
             <div style={{ wordWrap: "break-word" }}>{task}</div>
           ) : null}
-          {showEdit ? <EditWindow task={task} handleEdit={handleEdit} /> : null}
+          {showEdit ? (
+            <EditWindow taskObj={{task, id}} handleEdit={handleEdit} />
+          ) : null}
         </Card.Header>
         <Card.Meta textAlign="right">
           <Icon name="check circle" color="green" onClick={() => onDone(id)} />

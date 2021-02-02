@@ -28,9 +28,13 @@ async function undoTask (id) {
   await axios.put(url, {headers: {"Content-Type": "application/x-www-form-urlencoded"}})
 }
 
-async function updateTask (id) {
-  const url = endpoint + "/api/task/" + id;
-  await axios.put(url, {headers: {"Content-Type": "application/x-www-form-urlencoded"}})
+async function updateTask (taskObject) {
+  const { task, id} = taskObject;
+  console.log('update function', id)
+  // Does this make sense to seperate these out, should I include id in the body also?
+  const body = {task};
+  const url = endpoint + "/api/updateTask/" + id;
+  await axios.put(url, body, {headers: {"Content-Type": "application/x-www-form-urlencoded"}})
 }
 
 export {getLatestTasksFromServer, createNewTask, completeTask, deleteTask, undoTask, updateTask}
