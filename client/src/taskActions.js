@@ -73,7 +73,9 @@ async function undoTask(id) {
 async function updateTask(taskObject) {
   const { task, id } = taskObject;
   console.log("update function", id);
-  const body = { task };
+  // Try pushing in the id to the body also... seems like overkill to have it as an endpoint too?
+  // TODO the Go API is not returning a Bad Request Error when json attributes are incorrect. for example, remove the _ from id and it should throw an error, but doesn't
+  const body = { task, _id: id};
   const url = endpoint + "/api/updateTask/" + id;
   try {
     await axios.put(url, body, {

@@ -70,6 +70,14 @@ func CreateTask(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(task)
 }
 
+func insertOneTask(task models.TaskList) {
+	insertResult, err := collection.InsertOne(context.Background(), task)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("Inserted a single record", insertResult.InsertedID)
+}
+
 // CompleteTask complete the task route
 func CompleteTask(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
@@ -93,23 +101,62 @@ func UndoTask(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(params["id"])
 }
 
+func undoTask(task string) {
+	fmt.Println(task)
+	id, _ := primitive.ObjectIDFromHex(task)
+	filter := bson.M{"_id": id}
+	update := bson.M{"$set": bson.M{"status": false}}
+	result, err := collection.UpdateOne(context.Background(), filter, update)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("modified count: ", result.ModifiedCount)
+}
+
+// UpdateTaskOptions delete one task route
+func UpdateTaskOptions(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "PUT")
+	w.Header().Set("Access-control-Allow-Headers", "Content-Type")
+}
+
 // UpdateTask update the task route
-// func UpdateTask(w http.ResponseWriter, r *http.Request) {
-// 	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
-// 	w.Header().Set("Access-Control-Allow-Origin", "*")
-// 	w.Header().Set("Access-Control-Allow-Methods", "PUT")
-// 	w.Header().Set("Access-control-Allow-Headers", "Content-Type")
+func UpdateTask(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "PUT")
+	w.Header().Set("Access-control-Allow-Headers", "Content-Type")
 
-// 	params := mux.Vars(r)
-// 	updateTask(params["id"])
-// 	json.NewEncoder(w).Encode(params["id"])
+	params := mux.Vars(r)
+	fmt.Println("inside UpdateTask", params)
+	// updateTask(params["id"], params["task"])
+	// json.NewEncoder(w).Encode(params["id"])
 
-// 	var task models.TaskList
-// 	_ = json.NewDecoder(r.Body).Decode(&task)
-// 	insertOneTask(task)
-// 	// Write the response of the task
-// 	json.NewEncoder(w).Encode(task)
-// }
+	var task models.TaskList
+	_ = json.NewDecoder(r.Body).Decode(&task)
+		updateTask(params["id"], task)
+	json.NewEncoder(w).Encode(task)
+}
+
+func updateTask(id string, task models.TaskList) {
+	fmt.Println("inside updateTask", task)
+	filter := bson.M{"_id": task.ID}
+	update := bson.M{"$set": bson.M{"task": task.Task}}
+	fmt.Println("test access to attr task", task.Task)
+	fmt.Println("test access to attr id", task.ID)
+
+	result, err := collection.UpdateOne(context.Background(), filter, update)
+	if err != nil {
+		log.Fatal(err)
+	}
+	//
+
+	fmt.Println("Modified a single record", result.UpsertedID)
+
+	fmt.Println("modified count: ", result.ModifiedCount)
+}
 
 // DeleteTaskOptions delete one task route
 func DeleteTaskOptions(w http.ResponseWriter, r *http.Request) {
@@ -186,45 +233,11 @@ func getAllTask() []primitive.M {
 	return results
 }
 
-func insertOneTask(task models.TaskList) {
-	insertResult, err := collection.InsertOne(context.Background(), task)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println("Inserted a single record", insertResult.InsertedID)
-}
-
 func completeTask(task string) {
 	fmt.Println(task)
 	id, _ := primitive.ObjectIDFromHex(task)
 	filter := bson.M{"_id": id}
 	update := bson.M{"$set": bson.M{"status": true}}
-	result, err := collection.UpdateOne(context.Background(), filter, update)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Println("modified count: ", result.ModifiedCount)
-}
-
-func undoTask(task string) {
-	fmt.Println(task)
-	id, _ := primitive.ObjectIDFromHex(task)
-	filter := bson.M{"_id": id}
-	update := bson.M{"$set": bson.M{"status": false}}
-	result, err := collection.UpdateOne(context.Background(), filter, update)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Println("modified count: ", result.ModifiedCount)
-}
-
-func updateTask(task string) {
-	fmt.Println(task)
-	id, _ := primitive.ObjectIDFromHex(task)
-	filter := bson.M{"_id": id}
-	update := bson.M{"$set": bson.M{"status": false}}
 	result, err := collection.UpdateOne(context.Background(), filter, update)
 	if err != nil {
 		log.Fatal(err)
