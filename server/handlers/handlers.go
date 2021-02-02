@@ -57,6 +57,33 @@ func GetAllTask(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(payload)
 }
 
+// get all task from the DB and return it
+func getAllTask() []primitive.M {
+	cur, err := collection.Find(context.Background(), bson.D{{}})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// make a slice to ensure nil is not returned
+	results := make([]primitive.M, 0)
+	for cur.Next(context.Background()) {
+		var result bson.M
+		e := cur.Decode(&result)
+		if e != nil {
+			log.Fatal(e)
+		}
+
+		results = append(results, result)
+	}
+
+	if err := cur.Err(); err != nil {
+		log.Fatal(err)
+	}
+
+	cur.Close(context.Background())
+	return results
+}
+
 // CreateTask create task route
 func CreateTask(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
@@ -87,6 +114,19 @@ func CompleteTask(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	completeTask(params["id"])
 	json.NewEncoder(w).Encode(params["id"])
+}
+
+func completeTask(task string) {
+	fmt.Println(task)
+	id, _ := primitive.ObjectIDFromHex(task)
+	filter := bson.M{"_id": id}
+	update := bson.M{"$set": bson.M{"status": true}}
+	result, err := collection.UpdateOne(context.Background(), filter, update)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("modified count: ", result.ModifiedCount)
 }
 
 // UndoTask undo the complete task route
@@ -204,46 +244,6 @@ func DeleteAllTask(w http.ResponseWriter, r *http.Request) {
 
 	count := deleteAllTask()
 	json.NewEncoder(w).Encode(count)
-}
-
-// get all task from the DB and return it
-func getAllTask() []primitive.M {
-	cur, err := collection.Find(context.Background(), bson.D{{}})
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// make a slice to ensure nil is not returned
-	results := make([]primitive.M, 0)
-	for cur.Next(context.Background()) {
-		var result bson.M
-		e := cur.Decode(&result)
-		if e != nil {
-			log.Fatal(e)
-		}
-
-		results = append(results, result)
-	}
-
-	if err := cur.Err(); err != nil {
-		log.Fatal(err)
-	}
-
-	cur.Close(context.Background())
-	return results
-}
-
-func completeTask(task string) {
-	fmt.Println(task)
-	id, _ := primitive.ObjectIDFromHex(task)
-	filter := bson.M{"_id": id}
-	update := bson.M{"$set": bson.M{"status": true}}
-	result, err := collection.UpdateOne(context.Background(), filter, update)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Println("modified count: ", result.ModifiedCount)
 }
 
 func deleteAllTask() int64 {
