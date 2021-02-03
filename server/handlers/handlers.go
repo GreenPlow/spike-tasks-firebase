@@ -169,9 +169,11 @@ func UpdateTask(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "PUT")
 	w.Header().Set("Access-control-Allow-Headers", "Content-Type")
+	params := mux.Vars(r)
 
 	var taskObj models.TaskList
 	_ = json.NewDecoder(r.Body).Decode(&taskObj)
+	taskObj.ID, _ = primitive.ObjectIDFromHex(params["id"])
 	err := updateTask(taskObj)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
