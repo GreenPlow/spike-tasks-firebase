@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -169,21 +170,17 @@ func UpdateTask(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Methods", "PUT")
 	w.Header().Set("Access-control-Allow-Headers", "Content-Type")
 
-	// TODO Should I use the struct over params? Seems like struct 
-	// would help avoid bugs from the positions of args
-	params := mux.Vars(r)
-	fmt.Println("inside UpdateTask, params from mux.Vars(r):", params)
-	// updateTask(params["id"], params["task"])
-	// json.NewEncoder(w).Encode(params["id"])
-
 	var taskObj models.TaskList
 	_ = json.NewDecoder(r.Body).Decode(&taskObj)
-		updateTask(taskObj)
+	err := updateTask(taskObj)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+	}
 		// TODO should task be encoded or the id?
 	json.NewEncoder(w).Encode(taskObj)
 }
 
-func updateTask(taskObj models.TaskList) {
+func updateTask(taskObj models.TaskList) error {
 	fmt.Println("inside updateTask, taskObj:", taskObj)
 	filter := bson.M{"_id": taskObj.ID}
 	update := bson.M{"$set": bson.M{"task": taskObj.Task}}
@@ -194,6 +191,10 @@ func updateTask(taskObj models.TaskList) {
 	}
 
 	fmt.Println("modified count: ", result.ModifiedCount)
+	if result.ModifiedCount < 1 {
+		return  errors.New("Failed to update record")
+	}
+	return nil
 }
 
 // DeleteTaskOptions delete one task route
