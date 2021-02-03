@@ -1,6 +1,11 @@
 /* eslint-disable */
 import React, { useState } from "react";
-import { deleteTask, completeTask, undoTask, updateTask } from "../api/taskActions";
+import {
+  completeTask,
+  deleteTask,
+  undoTask,
+  updateTask,
+} from "../api/taskActions";
 import { Card, Icon, Input, Form } from "semantic-ui-react";
 
 function EditWindow(props) {
