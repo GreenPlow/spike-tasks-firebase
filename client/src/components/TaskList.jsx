@@ -3,8 +3,8 @@ import React, { useState, useEffect } from "react";
 import Task from "./Task";
 import NewTask from "./NewTask";
 
-import { getLatestTasksFromServer } from "../taskActions";
-import "./TaskListWithHooks.css";
+import { getLatestTasksFromServer } from "../api/taskActions";
+import "./TaskList.css";
 
 import { Card } from "semantic-ui-react";
 
