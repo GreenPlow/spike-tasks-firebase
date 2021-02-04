@@ -6,10 +6,33 @@ import { createNewTask } from "../api/taskActions";
 
 import { Form, Input, Radio } from "semantic-ui-react";
 
+function TaskSizeSelector(props) {
+  // The props could be destructed to avoid typing props.
+  // may add confusion if coder forgets to do it
+  // const { sizeOptions, selectedSize, onSizeChange } = props;
+
+  return (
+    <div class="inline fields">
+      {props.sizeOptions.map((sizeOption) => (
+        <Form.Field>
+          <Radio
+            name="radioGroup"
+            label={sizeOption}
+            value={sizeOption}
+            checked={sizeOption === props.selectedSize}
+            onChange={() => {
+              props.onSizeChange(sizeOption);
+            }}
+          />
+        </Form.Field>
+      ))}
+    </div>
+  );
+}
 
 function NewTask(props) {
   const [newTask, setNewTask] = useState("");
-  const [newTaskSize, setSize] = useState("");
+  const [newTaskSize, setNewTaskSize] = useState("");
 
   function handleNewTask(e) {
     setNewTask(e.target.value);
@@ -20,6 +43,10 @@ function NewTask(props) {
     // This is a named callback
     await props.onCreateFinish();
     setNewTask("");
+  }
+
+  function onSizeChange(size) {
+    setNewTaskSize(size);
   }
 
   return (
@@ -34,39 +61,11 @@ function NewTask(props) {
           onChange={handleNewTask}
         />
       </Form>
-      <Form.Field>
-        <Radio
-          label="small"
-          name="radioGroup"
-          value="small"
-          checked={newTaskSize === "small"}
-          onChange={() => {
-            setSize("small");
-          }}
-        />
-      </Form.Field>
-      <Form.Field>
-        <Radio
-          label="medium"
-          name="radioGroup"
-          value="medium"
-          checked={newTaskSize === "medium"}
-          onChange={() => {
-            setSize("medium");
-          }}
-        />
-      </Form.Field>
-      <Form.Field>
-        <Radio
-          label="large"
-          name="radioGroup"
-          value="large"
-          checked={newTaskSize === "large"}
-          onChange={() => {
-            setSize("large");
-          }}
-        />
-      </Form.Field>
+      <TaskSizeSelector
+        sizeOptions={["small", "medium", "large"]}
+        selectedSize={newTaskSize}
+        onSizeChange={onSizeChange}
+      />
     </div>
   );
 }
