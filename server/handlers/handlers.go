@@ -199,30 +199,21 @@ func updateTask(taskObj models.TaskList) error {
 	return nil
 }
 
-// DeleteTaskOptions delete one task route
-func DeleteTaskOptions(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "DELETE")
-	w.Header().Set("Access-control-Allow-Headers", "Content-Type")
-
-	// params := mux.Vars(r)
-	// deleteOneTask(params["id"])
-	// json.NewEncoder(w).Encode(params["id"])
-	// http.Error(w, "http status forbidden", http.StatusBadRequest)
-}
-
 // DeleteTask delete one task route
 func DeleteTask(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "DELETE")
 	w.Header().Set("Access-control-Allow-Headers", "Content-Type")
+	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
 
-	// params := mux.Vars(r)
-	// deleteOneTask(params["id"])
-	// json.NewEncoder(w).Encode(params["id"])
-	http.Error(w, "http status forbidden", http.StatusBadRequest)
+	params := mux.Vars(r)
+	// prevent pre-flight from invoking a delete twice
+	if r.Method == http.MethodOptions {
+		json.NewEncoder(w).Encode(params["id"])
+	} else {
+		deleteOneTask(params["id"])
+		json.NewEncoder(w).Encode(params["id"])
+	}
 }
 
 func deleteOneTask(task string) {
