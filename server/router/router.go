@@ -27,7 +27,6 @@ func Router() *mux.Router {
 	router.HandleFunc("/api/completeTask/{id}", handlers.CompleteTask).Methods("PUT", "OPTIONS")
 	router.HandleFunc("/api/undoTask/{id}", handlers.UndoTask).Methods("PUT", "OPTIONS")
 	// pre-flight is invoking the real handler
-	// router.HandleFunc("/api/updateTask/{id}", handlers.UpdateTaskOptions).Methods("OPTIONS")
 	router.HandleFunc("/api/updateTask/{id}", handlers.UpdateTask).Methods("PUT", "OPTIONS")
 	// if statement added in handlers.go to prevent delete pre-flight from invoking delete
 	router.HandleFunc("/api/deleteTask/{id}", handlers.DeleteTask).Methods("DELETE", "OPTIONS")
