@@ -9,6 +9,7 @@ export default function handleAxiosError(error) {
     // that falls out of the range of 2xx
 
     const errorStatus = error.response.status;
+    console.error("attempted api call: ", error.response.config.url);
     switch (errorStatus) {
       case 400:
         console.error("error bad request ", errorStatus);
