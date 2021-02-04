@@ -14,7 +14,6 @@ async function getLatestTasksFromServer() {
 // utility function (a. give me an axios reponse, b, call one of four functions)
 
 function handleAxiosError(error) {
-  debugger;
   const errorStatus = error.response.status;
   console.error("attempted api call: ", error.response.config.url);
   switch (errorStatus) {
