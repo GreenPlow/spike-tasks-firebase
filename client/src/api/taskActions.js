@@ -14,7 +14,6 @@ async function getLatestTasksFromServer() {
 // utility function (a. give me an axios reponse, b, call one of four functions)
 
 function handleAxiosError(error) {
-  debugger;
   const errorStatus = error.response.status;
   console.error("attempted api call: ", error.response.config.url);
   switch (errorStatus) {
@@ -75,7 +74,7 @@ async function updateTask(taskObject) {
   console.log("update function", id);
   // Try pushing in the id to the body also... seems like overkill to have it as an endpoint too?
   // TODO the Go API is not returning a Bad Request Error when json attributes are incorrect. for example, remove the _ from id and it should throw an error, but doesn't
-  const body = { task, _id: id};
+  const body = { task };
   const url = endpoint + "/api/updateTask/" + id;
   try {
     await axios.put(url, body, {
