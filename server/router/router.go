@@ -2,36 +2,32 @@ package router
 
 import (
 	"github.com/GreenPlow/spike-list/server/handlers"
-	"github.com/gorilla/mux"
+	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
+	"github.com/rs/cors"
 )
 
-//	"net/http"
-//	"os"
-// 	middle "github.com/gorilla/handlers"
-// func loggingMiddleware(next http.Handler) http.Handler {
-// 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-// 		middle.LoggingHandler(os.Stdout, next)
-// 		// Call the next handler, which can be another middleware in the chain, or the final handler.
-// 		next.ServeHTTP(w, r)
-// 	})
-// }
-// router.Use(loggingMiddleware)
-// router.Use(mux.CORSMethodMiddleware(router))
-
 // Router handles the api endpoints
-func Router() *mux.Router {
-	router := mux.NewRouter()
+func Router() *chi.Mux {
+	r := chi.NewRouter()
 
-	router.HandleFunc("/api/task", handlers.GetAllTask).Methods("GET", "OPTIONS")
-	router.HandleFunc("/api/task", handlers.CreateTask).Methods("POST", "OPTIONS")
-	router.HandleFunc("/api/completeTask/{id}", handlers.CompleteTask).Methods("PUT", "OPTIONS")
-	router.HandleFunc("/api/undoTask/{id}", handlers.UndoTask).Methods("PUT", "OPTIONS")
-	// pre-flight is invoking the real handler
-	router.HandleFunc("/api/updateTask/{id}", handlers.UpdateTask).Methods("PUT", "OPTIONS")
-	// if statement added in handlers.go to prevent delete pre-flight from invoking delete
-	router.HandleFunc("/api/deleteTask/{id}", handlers.DeleteTask).Methods("DELETE", "OPTIONS")
-	router.HandleFunc("/api/deleteAllTask", handlers.DeleteAllTask).Methods("DELETE", "OPTIONS")
-	
-	return router
+	c := cors.New(cors.Options{
+		AllowedMethods: []string{"DELETE", "GET", "POST", "PUT"},
+	})
+
+	r.Use(middleware.RequestID)
+	r.Use(middleware.RealIP)
+	r.Use(middleware.Logger)
+	r.Use(middleware.Recoverer)
+	r.Use(c.Handler)
+
+	r.Get("/api/task", handlers.GetAllTask)
+	r.Post("/api/task", handlers.CreateTask)
+	r.Put("/api/completeTask/{id}", handlers.CompleteTask)
+	r.Put("/api/undoTask/{id}", handlers.UndoTask)
+	r.Put("/api/updateTask/{id}", handlers.UpdateTask)
+	r.Delete("/api/deleteTask/{id}", handlers.DeleteTask)
+	r.Delete("/api/deleteAllTask", handlers.DeleteAllTask)
+
+	return r
 }
-
