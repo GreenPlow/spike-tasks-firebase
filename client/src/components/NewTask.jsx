@@ -1,6 +1,6 @@
 /* eslint-disable*/
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 import { createNewTask } from "../api/taskActions";
 
@@ -11,8 +11,9 @@ function TaskSizeSelector(props) {
   // may add confusion if coder forgets to do it
   // const { sizeOptions, selectedSize, onSizeChange } = props;
 
+  // Radio siblings need keys
   return (
-    <div class="inline fields">
+    <Form.Group inline>
       {props.sizeOptions.map((sizeOption) => (
         <Form.Field>
           <Radio
@@ -26,7 +27,7 @@ function TaskSizeSelector(props) {
           />
         </Form.Field>
       ))}
-    </div>
+    </Form.Group>
   );
 }
 
@@ -38,16 +39,21 @@ function NewTask(props) {
     setNewTask(e.target.value);
   }
 
-  async function onSubmit() {
-    await createNewTask(newTask, newTaskSize);
-    // This is a named callback
-    await props.onCreateFinish();
-    setNewTask("")
-    setNewTaskSize("");
-  }
-
   function onSizeChange(size) {
     setNewTaskSize(size);
+  }
+
+  async function onSubmit() {
+    if (newTaskSize.length === 0) {
+      console.log("inside onSubmit()");
+      console.log(newTaskSize);
+    } else {
+      await createNewTask(newTask, newTaskSize);
+      // This is a named callback
+      await props.onCreateFinish();
+      setNewTask("");
+      setNewTaskSize("");
+    }
   }
 
   return (
@@ -61,12 +67,12 @@ function NewTask(props) {
           value={newTask}
           onChange={handleNewTask}
         />
+        <TaskSizeSelector
+          sizeOptions={["small", "medium", "large"]}
+          selectedSize={newTaskSize}
+          onSizeChange={onSizeChange}
+        />
       </Form>
-      <TaskSizeSelector
-        sizeOptions={["small", "medium", "large"]}
-        selectedSize={newTaskSize}
-        onSizeChange={onSizeChange}
-      />
     </div>
   );
 }
