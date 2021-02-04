@@ -39,10 +39,11 @@ function NewTask(props) {
   }
 
   async function onSubmit() {
-    await createNewTask(newTask);
+    await createNewTask(newTask, newTaskSize);
     // This is a named callback
     await props.onCreateFinish();
-    setNewTask("");
+    setNewTask("")
+    setNewTaskSize("");
   }
 
   function onSizeChange(size) {
