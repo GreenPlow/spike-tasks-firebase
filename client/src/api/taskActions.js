@@ -1,7 +1,7 @@
 /* eslint-disable*/
 
 import axios from "axios";
-import handleAxiosError from "./errorHandler"
+import handleAxiosError from "./errorHandler";
 // add the axios interceptors here to do the banners and logging, able to delete the try catches
 // replace localhost with ip address to access app from a local network
 const endpoint = "http://localhost:8000";
@@ -11,12 +11,16 @@ async function getLatestTasksFromServer() {
   return res.data;
 }
 
-async function createNewTask(task) {
+async function createNewTask(task, taskSize) {
   const url = endpoint + "/api/task";
-  const body = { task };
-  await axios.post(url, body, {
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-  });
+  const body = { task, taskSize };
+  try {
+    await axios.post(url, body, {
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    });
+  } catch (errorObj) {
+    handleAxiosError(errorObj);
+  }
 }
 
 async function completeTask(id) {

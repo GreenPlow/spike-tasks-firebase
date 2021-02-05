@@ -13,10 +13,7 @@ export default function TaskList() {
 
   async function getLatestTasksFromServerAndUpdateState() {
     const latestTasks = await getLatestTasksFromServer();
-    if (latestTasks) {
-      // TODO: you might not do this if server returns empty array
-      setTasks(latestTasks);
-    }
+    setTasks(latestTasks);
   }
 
   useEffect(() => {

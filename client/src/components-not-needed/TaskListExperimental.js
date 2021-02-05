@@ -5,49 +5,114 @@ import { Card, Header, Form, Input, Icon, Button } from "semantic-ui-react";
 
 let endpoint = "http://localhost:8000";
 
+// Using forward ref to set focus on an input located in a child
+// const TaskSizeSelector = React.forwardRef((props, ref) => {
+//   return (
+//     <div class="inline fields">
+//       <Input type="text" name="task2" fluid placeholder="Create Task" ref={ref}/>
+//       {props.sizeOptions.map((sizeOption) => (
+//       ))}
+//     </div>
+//   );
+// });
+
+// Doesn't work
+// const TaskSizeSelector = React.forwardRef((props, ref) => {
+//   return (
+//       <Form.Group inline>
+//         {props.sizeOptions.map((sizeOption) => (
+//           <Form.Field>
+//             <Radio
+//               name="radioGroup"
+//               label={sizeOption}
+//               value={sizeOption}
+//               checked={sizeOption === props.selectedSize}
+//               ref={sizeOption === "small" ? ref : null}
+//               onChange={() => {
+//                 props.onSizeChange(sizeOption);
+//               }}
+//             />
+//           </Form.Field>
+//         ))}
+//       </Form.Group>
+//   );
+// });
+
+// useEffect(() => {
+//   inputRef.current.focus();
+// }, []);
+
+/* <Input type="text" name="task2" fluid placeholder="Create Task" /> */
+
+  // const inputRef = useRef();
+  // const ref = React.createRef();
+
+  // async function onSubmit() {
+  //   console.log("horse");
+  //   if (newTaskSize.length === 0) {
+  //     console.log("inside onSubmit()");
+  //     console.log(newTaskSize);
+  //     ref.current.focus();
+  //   } else {
+  //     await createNewTask(newTask, newTaskSize);
+  //     // This is a named callback
+  //     await props.onCreateFinish();
+  //     setNewTask("");
+  //     setNewTaskSize("");
+  //   }
+
 function RadioButton(props) {
-    return (
-      <div class="field" >
-        <div class="ui radio checkbox">
-          <input type="radio" name={props.name} checked={props.checked} tabindex="0" disabled={props.disabled} class="hidden"></input>
-          <label>{props.name}</label>
+  return (
+    <div class="field">
+      <div class="ui radio checkbox">
+        <input
+          type="radio"
+          name={props.name}
+          checked={props.checked}
+          tabindex="0"
+          disabled={props.disabled}
+          class="hidden"
+        ></input>
+        <label>{props.name}</label>
+      </div>
+    </div>
+  );
+}
+
+function TaskSizeSelector(props) {
+  return (
+    <div class="inline fields">
+      {["small", "medium", "large"].map((buttonText) => (
+        <RadioButton name={buttonText} enabled={props.enabled} />
+      ))}
+    </div>
+  );
+}
+
+function NewTaskForm(props) {
+  return (
+    <div id="new-task-group" class="ui segment">
+      <form class="ui form">
+        <div class="field">
+          <input
+            type="text"
+            name="task-description"
+            placeholder="Type to enter a task description"
+            onChange={(event) =>
+              this.setState({ textValue: event.target.value })
+            }
+          ></input>
         </div>
-      </div> )
-    }
+        <TaskSizeSelector />
+      </form>
+    </div>
+  );
+}
 
-  function TaskSizeSelector (props) {
-    return (
-      <div class="inline fields" >
-        {["small", "medium", "large"].map(buttonText => <RadioButton name={buttonText} enabled={props.enabled}/>)}
-      </div>
-    )
-  }
-
-  function NewTaskForm (props) {
-    return (
-      <div id='new-task-group' class="ui segment">
-        <form class="ui form">
-          <div class="field">
-            <input
-              type="text"
-              name="task-description"
-              placeholder="Type to enter a task description"
-              onChange={(event) => this.setState({ textValue: event.target.value })}>
-            </input>
-          </div>
-          <TaskSizeSelector />
-        </form>
-      </div>
-    )
-  }
-
-  function Time() {
-    const time = new Date().toLocaleTimeString()
-    return (
-      <div>{time}</div>
-    )
-  }
-
+function Time() {
+  const time = new Date().toLocaleTimeString();
+  return <div>{time}</div>;
+}
 
 class TaskList extends Component {
   constructor(props) {
@@ -56,12 +121,12 @@ class TaskList extends Component {
     this.state = {
       task: "",
       items: [],
-      textValue: ""
+      textValue: "",
     };
   }
 
   someMethod() {
-    console.log('test')
+    console.log("test");
   }
 
   //   onChange(i){
@@ -89,7 +154,7 @@ class TaskList extends Component {
       <div>
         <br></br>
         <Time />
-        <div id='new-task-group' class="ui segment">
+        <div id="new-task-group" class="ui segment">
           <form class="ui form">
             <div class="field">
               <input
@@ -97,13 +162,13 @@ class TaskList extends Component {
                 name="task-description"
                 placeholder="Type to enter a task description"
                 onChange={(event) => {
-                  const {value} = event.target;
-                  console.log(value)
+                  const { value } = event.target;
+                  console.log(value);
                   if (value.length > 0) {
-                    this.setState({ textValue: value});
+                    this.setState({ textValue: value });
                   }
-                }}>
-              </input>
+                }}
+              ></input>
             </div>
           </form>
         </div>
@@ -111,14 +176,15 @@ class TaskList extends Component {
           <Card.Group>{this.state.items}</Card.Group>
         </div>
       </div>
-    )
+    );
   }
 }
-setInterval(Time, 1000)
+setInterval(Time, 1000);
 
 export default TaskList;
 
-{/* <html>
+{
+  /* <html>
   <input
     type="text"
     name="task-description"
@@ -154,5 +220,5 @@ export default TaskList;
     </div>
   </form>
   </div>
-</html> */}
-
+</html> */
+}
