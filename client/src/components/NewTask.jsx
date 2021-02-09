@@ -14,9 +14,10 @@ function TaskSizeSelector(props) {
   // Radio siblings need keys
   return (
     <Form.Group inline>
-      {props.sizeOptions.map((sizeOption) => (
+      {props.sizeOptions.map((sizeOption, index) => (
         <Form.Field>
           <Radio
+          tabIndex={index + 2}
             name="radioGroup"
             label={sizeOption}
             value={sizeOption}
@@ -66,6 +67,7 @@ function NewTask(props) {
           placeholder="Create Task"
           value={newTask}
           onChange={handleNewTask}
+          tabIndex={1}
         />
         <TaskSizeSelector
           sizeOptions={["small", "medium", "large"]}
