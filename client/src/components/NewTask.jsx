@@ -9,11 +9,10 @@ function TaskSizeSelector({sizeOptions, selectedSize, onSizeChange}) {
   // may add confusion if coder forgets to do it
   // const { sizeOptions, selectedSize, onSizeChange } = props;
 
-  // Radio siblings need keys
   return (
     <Form.Group inline>
       {sizeOptions.map((sizeOption, index) => (
-        <Form.Field key={index}>
+        <Form.Field key={`formField${index}`}>
           <Radio
             tabIndex={index + 2}
             name="radioGroup"
