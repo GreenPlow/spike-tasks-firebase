@@ -1,12 +1,10 @@
-/* eslint-disable*/
 
-import React, { useState, useRef, useEffect } from "react";
-
+import React, { useState } from "react";
+import PropTypes from "prop-types";
+import { Form, Input, Radio } from "semantic-ui-react";
 import { createNewTask } from "../api/taskActions";
 
-import { Form, Input, Radio } from "semantic-ui-react";
-
-function TaskSizeSelector(props) {
+function TaskSizeSelector({sizeOptions, selectedSize, onSizeChange}) {
   // The props could be destructed to avoid typing props.
   // may add confusion if coder forgets to do it
   // const { sizeOptions, selectedSize, onSizeChange } = props;
@@ -14,16 +12,16 @@ function TaskSizeSelector(props) {
   // Radio siblings need keys
   return (
     <Form.Group inline>
-      {props.sizeOptions.map((sizeOption, index) => (
-        <Form.Field>
+      {sizeOptions.map((sizeOption, index) => (
+        <Form.Field key={index}>
           <Radio
-          tabIndex={index + 2}
+            tabIndex={index + 2}
             name="radioGroup"
             label={sizeOption}
             value={sizeOption}
-            checked={sizeOption === props.selectedSize}
+            checked={sizeOption === selectedSize}
             onChange={() => {
-              props.onSizeChange(sizeOption);
+              onSizeChange(sizeOption);
             }}
           />
         </Form.Field>
@@ -31,6 +29,12 @@ function TaskSizeSelector(props) {
     </Form.Group>
   );
 }
+
+TaskSizeSelector.propTypes = {
+  sizeOptions: PropTypes.arrayOf(PropTypes.string).isRequired,
+  selectedSize: PropTypes.oneOf(["small", "medium", "large"]).isRequired,
+  onSizeChange: PropTypes.func.isRequired
+};
 
 function NewTask(props) {
   const [newTask, setNewTask] = useState("");
