@@ -38,6 +38,27 @@ let endpoint = "http://localhost:8000";
 //   );
 // });
 
+// return (
+//   <Form.Group inline>
+//     {props.sizeOptions.map((sizeOption, index) => (
+//       <Form.Field>
+//         <Radio
+//           tabIndex={index + 1}
+//           name="radioGroup"
+//           label={sizeOption}
+//           value={sizeOption}
+//           checked={sizeOption === props.selectedSize}
+//           onChange={() => {
+//             props.onSizeChange(sizeOption);
+//           }}
+//         />
+//       </Form.Field>
+//     ))}
+//   </Form.Group>
+// );
+// }
+
+
 // useEffect(() => {
 //   inputRef.current.focus();
 // }, []);
