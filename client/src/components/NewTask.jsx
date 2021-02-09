@@ -1,10 +1,14 @@
-
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { Form, Input, Radio } from "semantic-ui-react";
 import { createNewTask } from "../api/taskActions";
 
-function TaskSizeSelector({sizeOptions, selectedSize, onSizeChange}) {
+function TaskSizeSelector({
+  sizeOptions,
+  selectedSize,
+  onSizeChange,
+  errorMessage,
+}) {
   // The props could be destructed to avoid typing props.
   // may add confusion if coder forgets to do it
   // const { sizeOptions, selectedSize, onSizeChange } = props;
@@ -21,7 +25,7 @@ function TaskSizeSelector({sizeOptions, selectedSize, onSizeChange}) {
           "border-radius": "4px",
         }}
       >
-        {props.errorMessage}
+        {errorMessage}
       </p>
       <Form.Group
         inline
@@ -31,32 +35,33 @@ function TaskSizeSelector({sizeOptions, selectedSize, onSizeChange}) {
           "padding-top": "4px",
         }}
       >
-      {sizeOptions.map((sizeOption, index) => (
-        <Form.Field key={`formField${index}`}>
-          <Radio
-            tabIndex={index + 2}
-            name="radioGroup"
-            label={sizeOption}
-            value={sizeOption}
-            checked={sizeOption === selectedSize}
-            onChange={() => {
-              onSizeChange(sizeOption);
-            }}
-          />
-        </Form.Field>
-      ))}
-    </Form.Group>
-          </div>
+        {sizeOptions.map((sizeOption, index) => (
+          <Form.Field key={`formField${index}`}>
+            <Radio
+              tabIndex={index + 2}
+              name="radioGroup"
+              label={sizeOption}
+              value={sizeOption}
+              checked={sizeOption === selectedSize}
+              onChange={() => {
+                onSizeChange(sizeOption);
+              }}
+            />
+          </Form.Field>
+        ))}
+      </Form.Group>
+    </div>
   );
 }
 
 TaskSizeSelector.propTypes = {
   sizeOptions: PropTypes.arrayOf(PropTypes.string).isRequired,
   selectedSize: PropTypes.oneOf(["small", "medium", "large"]).isRequired,
-  onSizeChange: PropTypes.func.isRequired
+  onSizeChange: PropTypes.func.isRequired,
+  errorMessage: PropTypes.string,
 };
 
-function NewTask({onCreateFinish}) {
+function NewTask({ onCreateFinish }) {
   const [newTask, setNewTask] = useState("");
   const [newTaskSize, setNewTaskSize] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -111,7 +116,7 @@ function NewTask({onCreateFinish}) {
 }
 
 NewTask.propTypes = {
-  onCreateFinish: PropTypes.func.isRequired
-}
+  onCreateFinish: PropTypes.func.isRequired,
+};
 
 export default NewTask;
