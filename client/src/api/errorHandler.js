@@ -3,7 +3,6 @@
 
 // utility function (a. give me an axios reponse, b, call one of four functions)
 export default function handleAxiosError(error) {
-  debugger; //eslint-disable-line
   if (error.response) {
     // The request was made and the server responded with a status code
     // that falls out of the range of 2xx
@@ -27,20 +26,21 @@ export default function handleAxiosError(error) {
           // generic catch all
         console.error("general error: ", errorStatus);
     }
-    return errorStatus;
   } else if (error.request) {
     // The request was made but no response was received
     // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
     // http.ClientRequest in node.js
 
+    // Network failure
+
     console.error(
       "request was made, but no response was recieved",
       error.request
     );
-    return error.request;
   } else {
     // Something happened in setting up the request that triggered an Error
     console.error("Error", error.message);
-    return error.message;
+
+    // Something bad happened and I don't know what it was
   }
 }

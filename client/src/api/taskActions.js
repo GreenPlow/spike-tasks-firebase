@@ -6,6 +6,20 @@ import handleAxiosError from "./errorHandler";
 // replace localhost with ip address to access app from a local network
 const endpoint = "http://localhost:8000";
 
+axios.interceptors.response.use(
+  function (response) {
+    // Any status code that lie within the range of 2xx cause this function to trigger
+    // Do something with response data
+    return response;
+  },
+  function (error) {
+    // Any status codes that falls outside the range of 2xx cause this function to trigger
+    // Do something with response error
+    handleAxiosError(error);
+    return Promise.reject(error);
+  }
+);
+
 async function getLatestTasksFromServer() {
   const res = await axios.get(endpoint + "/api/task");
   return res.data;
@@ -19,7 +33,7 @@ async function createNewTask(task, taskSize) {
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
     });
   } catch (errorObj) {
-    handleAxiosError(errorObj);
+    throw new Error(`failed to create task ${task}`);
   }
 }
 

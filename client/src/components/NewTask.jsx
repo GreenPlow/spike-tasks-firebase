@@ -13,28 +13,50 @@ function TaskSizeSelector(props) {
 
   // Radio siblings need keys
   return (
-    <Form.Group inline>
-      {props.sizeOptions.map((sizeOption, index) => (
-        <Form.Field>
-          <Radio
-          tabIndex={index + 2}
-            name="radioGroup"
-            label={sizeOption}
-            value={sizeOption}
-            checked={sizeOption === props.selectedSize}
-            onChange={() => {
-              props.onSizeChange(sizeOption);
-            }}
-          />
-        </Form.Field>
-      ))}
-    </Form.Group>
+    <div style={{ position: "relative" }}>
+      <p
+        style={{
+          position: "absolute",
+          "background-color": "red",
+          width: "100%",
+          "text-align": "right",
+          padding: "4px",
+          "border-radius": "4px",
+        }}
+      >
+        {props.errorMessage}
+      </p>
+      <Form.Group
+        inline
+        style={{
+          "vertical-align": "middle",
+          "margin-top": "4px",
+          "padding-top": "4px",
+        }}
+      >
+        {props.sizeOptions.map((sizeOption, index) => (
+          <Form.Field>
+            <Radio
+              tabIndex={index + 2}
+              name="radioGroup"
+              label={sizeOption}
+              value={sizeOption}
+              checked={sizeOption === props.selectedSize}
+              onChange={() => {
+                props.onSizeChange(sizeOption);
+              }}
+            />
+          </Form.Field>
+        ))}
+      </Form.Group>
+    </div>
   );
 }
 
 function NewTask(props) {
   const [newTask, setNewTask] = useState("");
   const [newTaskSize, setNewTaskSize] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   function handleNewTask(e) {
     setNewTask(e.target.value);
@@ -49,7 +71,11 @@ function NewTask(props) {
       console.log("inside onSubmit()");
       console.log(newTaskSize);
     } else {
-      await createNewTask(newTask, newTaskSize);
+      try {
+        await createNewTask(newTask, newTaskSize);
+      } catch (error) {
+        setErrorMessage(error.message);
+      }
       // This is a named callback
       await props.onCreateFinish();
       setNewTask("");
@@ -73,7 +99,9 @@ function NewTask(props) {
           sizeOptions={["small", "medium", "large"]}
           selectedSize={newTaskSize}
           onSizeChange={onSizeChange}
+          errorMessage={errorMessage}
         />
+        {errorMessage ? <text>{errorMessage}</text> : null}
       </Form>
     </div>
   );
