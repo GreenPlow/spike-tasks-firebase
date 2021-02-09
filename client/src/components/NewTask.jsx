@@ -10,7 +10,27 @@ function TaskSizeSelector({sizeOptions, selectedSize, onSizeChange}) {
   // const { sizeOptions, selectedSize, onSizeChange } = props;
 
   return (
-    <Form.Group inline>
+    <div style={{ position: "relative" }}>
+      <p
+        style={{
+          position: "absolute",
+          "background-color": "red",
+          width: "100%",
+          "text-align": "right",
+          padding: "4px",
+          "border-radius": "4px",
+        }}
+      >
+        {props.errorMessage}
+      </p>
+      <Form.Group
+        inline
+        style={{
+          "vertical-align": "middle",
+          "margin-top": "4px",
+          "padding-top": "4px",
+        }}
+      >
       {sizeOptions.map((sizeOption, index) => (
         <Form.Field key={`formField${index}`}>
           <Radio
@@ -26,6 +46,7 @@ function TaskSizeSelector({sizeOptions, selectedSize, onSizeChange}) {
         </Form.Field>
       ))}
     </Form.Group>
+          </div>
   );
 }
 
@@ -38,6 +59,7 @@ TaskSizeSelector.propTypes = {
 function NewTask({onCreateFinish}) {
   const [newTask, setNewTask] = useState("");
   const [newTaskSize, setNewTaskSize] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   function handleNewTask(e) {
     setNewTask(e.target.value);
@@ -52,7 +74,11 @@ function NewTask({onCreateFinish}) {
       console.log("inside onSubmit()");
       console.log(newTaskSize);
     } else {
-      await createNewTask(newTask, newTaskSize);
+      try {
+        await createNewTask(newTask, newTaskSize);
+      } catch (error) {
+        setErrorMessage(error.message);
+      }
       // This is a named callback
       await onCreateFinish();
       setNewTask("");
@@ -76,7 +102,9 @@ function NewTask({onCreateFinish}) {
           sizeOptions={["small", "medium", "large"]}
           selectedSize={newTaskSize}
           onSizeChange={onSizeChange}
+          errorMessage={errorMessage}
         />
+        {errorMessage ? <text>{errorMessage}</text> : null}
       </Form>
     </div>
   );
