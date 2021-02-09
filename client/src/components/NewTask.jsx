@@ -35,7 +35,7 @@ TaskSizeSelector.propTypes = {
   onSizeChange: PropTypes.func.isRequired
 };
 
-function NewTask(props) {
+function NewTask({onCreateFinish}) {
   const [newTask, setNewTask] = useState("");
   const [newTaskSize, setNewTaskSize] = useState("");
 
@@ -54,7 +54,7 @@ function NewTask(props) {
     } else {
       await createNewTask(newTask, newTaskSize);
       // This is a named callback
-      await props.onCreateFinish();
+      await onCreateFinish();
       setNewTask("");
       setNewTaskSize("");
     }
@@ -80,6 +80,10 @@ function NewTask(props) {
       </Form>
     </div>
   );
+}
+
+NewTask.propTypes = {
+  onCreateFinish: PropTypes.func.isRequired
 }
 
 export default NewTask;
