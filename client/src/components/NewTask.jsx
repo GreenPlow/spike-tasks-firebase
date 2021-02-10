@@ -15,18 +15,20 @@ function TaskSizeSelector({
 
   return (
     <div style={{ position: "relative" }}>
-      <p
-        style={{
-          position: "absolute",
-          "background-color": "red",
-          width: "100%",
-          "text-align": "right",
-          padding: "4px",
-          "border-radius": "4px",
-        }}
-      >
-        {errorMessage}
-      </p>
+      {errorMessage ? (
+        <p
+          style={{
+            position: "absolute",
+            "background-color": "red",
+            width: "100%",
+            "text-align": "right",
+            padding: "4px",
+            "border-radius": "4px",
+          }}
+        >
+          {errorMessage}
+        </p>
+      ) : null}
       <Form.Group
         inline
         style={{
@@ -39,7 +41,7 @@ function TaskSizeSelector({
           <Form.Field key={`formField${index}`}>
             <Radio
               tabIndex={index + 2}
-              name="radioGroup"
+              name={sizeOption}
               label={sizeOption}
               value={sizeOption}
               checked={sizeOption === selectedSize}
@@ -66,11 +68,7 @@ function NewTask({ onCreateFinish }) {
   const [newTaskSize, setNewTaskSize] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  function handleNewTask(e) {
-    setNewTask(e.target.value);
-  }
-
-  function onSizeChange(size) {
+  function cb_onSizeChange(size) {
     setNewTaskSize(size);
   }
 
@@ -88,6 +86,7 @@ function NewTask({ onCreateFinish }) {
       await onCreateFinish();
       setNewTask("");
       setNewTaskSize("");
+      setErrorMessage("");
     }
   }
 
@@ -95,18 +94,20 @@ function NewTask({ onCreateFinish }) {
     <div className="row">
       <Form onSubmit={onSubmit}>
         <Input
+          tabIndex={1}
+          fluid
           type="text"
           name="task"
-          fluid
           placeholder="Create Task"
           value={newTask}
-          onChange={handleNewTask}
-          tabIndex={1}
+          onChange={(e) => {
+            setNewTask(e.target.value);
+          }}
         />
         <TaskSizeSelector
           sizeOptions={["small", "medium", "large"]}
+          onSizeChange={cb_onSizeChange}
           selectedSize={newTaskSize}
-          onSizeChange={onSizeChange}
           errorMessage={errorMessage}
         />
         {errorMessage ? <text>{errorMessage}</text> : null}
