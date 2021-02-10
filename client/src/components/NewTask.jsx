@@ -1,17 +1,18 @@
-/* eslint-disable*/
-
-import React, { useState, useRef, useEffect } from "react";
-
+import React, { useState } from "react";
+import PropTypes from "prop-types";
+import { Form, Input, Radio } from "semantic-ui-react";
 import { createNewTask } from "../api/taskActions";
 
-import { Form, Input, Radio } from "semantic-ui-react";
-
-function TaskSizeSelector(props) {
+function TaskSizeSelector({
+  sizeOptions,
+  selectedSize,
+  onSizeChange,
+  errorMessage,
+}) {
   // The props could be destructed to avoid typing props.
   // may add confusion if coder forgets to do it
   // const { sizeOptions, selectedSize, onSizeChange } = props;
 
-  // Radio siblings need keys
   return (
     <div style={{ position: "relative" }}>
       <p
@@ -24,7 +25,7 @@ function TaskSizeSelector(props) {
           "border-radius": "4px",
         }}
       >
-        {props.errorMessage}
+        {errorMessage}
       </p>
       <Form.Group
         inline
@@ -34,16 +35,16 @@ function TaskSizeSelector(props) {
           "padding-top": "4px",
         }}
       >
-        {props.sizeOptions.map((sizeOption, index) => (
-          <Form.Field>
+        {sizeOptions.map((sizeOption, index) => (
+          <Form.Field key={`formField${index}`}>
             <Radio
               tabIndex={index + 2}
               name="radioGroup"
               label={sizeOption}
               value={sizeOption}
-              checked={sizeOption === props.selectedSize}
+              checked={sizeOption === selectedSize}
               onChange={() => {
-                props.onSizeChange(sizeOption);
+                onSizeChange(sizeOption);
               }}
             />
           </Form.Field>
@@ -53,7 +54,14 @@ function TaskSizeSelector(props) {
   );
 }
 
-function NewTask(props) {
+TaskSizeSelector.propTypes = {
+  sizeOptions: PropTypes.arrayOf(PropTypes.string).isRequired,
+  selectedSize: PropTypes.oneOf(["small", "medium", "large"]).isRequired,
+  onSizeChange: PropTypes.func.isRequired,
+  errorMessage: PropTypes.string,
+};
+
+function NewTask({ onCreateFinish }) {
   const [newTask, setNewTask] = useState("");
   const [newTaskSize, setNewTaskSize] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -77,7 +85,7 @@ function NewTask(props) {
         setErrorMessage(error.message);
       }
       // This is a named callback
-      await props.onCreateFinish();
+      await onCreateFinish();
       setNewTask("");
       setNewTaskSize("");
     }
@@ -106,5 +114,9 @@ function NewTask(props) {
     </div>
   );
 }
+
+NewTask.propTypes = {
+  onCreateFinish: PropTypes.func.isRequired,
+};
 
 export default NewTask;

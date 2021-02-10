@@ -1,6 +1,6 @@
 {
     "eslint.options": {
-        "configFile": ".eslintrc.json"
+        "configFile": "./client/.eslintrc.json"
     },
     "eslint.validate": ["javascript", "javascriptreact"],
     "editor.codeActionsOnSave": {
