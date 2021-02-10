@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 
@@ -10,30 +9,35 @@ import {
 } from "../api/taskActions";
 import { Card, Icon, Input, Form } from "semantic-ui-react";
 
-function EditWindow(props) {
+function EditWindow({ editObj, handleEdit, afterUpdate }) {
   // https://stackoverflow.com/questions/22573494/react-js-input-losing-focus-when-rerendering
-  // Destructure the props
-  const { taskObj, handleEdit } = props;
-  console.log("child ", taskObj);
 
   // The state of task is managed in the other component..
   async function onSubmit() {
-    await updateTask(taskObj);
-    await props.onModification();
+    await updateTask(editObj);
+    await afterUpdate();
   }
 
   return (
     <Form onSubmit={onSubmit}>
-      <Input label="edit" value={taskObj.task} onChange={handleEdit} />
+      <Input label="edit" value={editObj.task} onChange={handleEdit} />
     </Form>
   );
 }
 
+EditWindow.propTypes = {
+  editObj: PropTypes.exact({
+    _id: PropTypes.string.isRequired,
+    task: PropTypes.string.isRequired,
+  }),
+  handleEdit: PropTypes.func.isRequired,
+  afterUpdate: PropTypes.func.isRequired,
+};
+
 function Task({ taskObj, onModification }) {
-  const { _id, task, status, taskSize } = taskObj;
+  const { _id, task, status } = taskObj;
 
   const [thisTask, setTask] = useState(task);
-  console.log("parent re-render", task);
   let color = "yellow";
 
   if (status) {
@@ -59,7 +63,6 @@ function Task({ taskObj, onModification }) {
     // sets the hook and line 54-56 occurs before re-render occurs
     setTask(e.target.value);
     // console.log() instance A of task, then re-invokes line 27 to get the latest update and will console.log() instance B of task
-    console.log("parent ", status);
   }
 
   const [showEdit, setShowEdit] = useState(false);
@@ -75,9 +78,9 @@ function Task({ taskObj, onModification }) {
           ) : null}
           {showEdit ? (
             <EditWindow
-              taskObj={{ task, id }}
+              editObj={{ task: thisTask, _id: _id }}
               handleEdit={handleEdit}
-              onModification={() => {
+              afterUpdate={() => {
                 setShowEdit(false);
                 onModification();
               }}
@@ -104,7 +107,7 @@ Task.propTypes = {
     status: PropTypes.bool.isRequired,
     tasksize: PropTypes.string.isRequired,
   }),
-  onModification: PropTypes.func.isRequired
+  onModification: PropTypes.func.isRequired,
 };
 
 export default Task;
