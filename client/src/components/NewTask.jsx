@@ -56,7 +56,7 @@ function TaskSizeSelector({
 
 TaskSizeSelector.propTypes = {
   sizeOptions: PropTypes.arrayOf(PropTypes.string).isRequired,
-  selectedSize: PropTypes.oneOf(["small", "medium", "large"]).isRequired,
+  selectedSize: PropTypes.oneOf(["small", "medium", "large", ""]).isRequired,
   onSizeChange: PropTypes.func.isRequired,
   errorMessage: PropTypes.string,
 };
