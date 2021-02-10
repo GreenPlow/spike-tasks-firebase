@@ -27,7 +27,7 @@ function EditWindow(props) {
   );
 }
 
-function Task({ item }) {
+function Task({ item, onModification }) {
   const { id, status } = item;
 
   const [task, setTask] = useState(item.task);
@@ -40,17 +40,17 @@ function Task({ item }) {
 
   async function onDelete(id) {
     await deleteTask(id);
-    await props.onModification();
+    await onModification();
   }
 
   async function onDone(id) {
     await completeTask(id);
-    await props.onModification();
+    await onModification();
   }
 
   async function onUndo(id) {
     await undoTask(id);
-    await props.onModification();
+    await onModification();
   }
 
   function handleEdit(e) {
@@ -77,7 +77,7 @@ function Task({ item }) {
               handleEdit={handleEdit}
               onModification={() => {
                 setShowEdit(false);
-                props.onModification();
+                onModification();
               }}
             />
           ) : null}
