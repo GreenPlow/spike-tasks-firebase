@@ -13,22 +13,26 @@ function TaskSizeSelector({
   // may add confusion if coder forgets to do it
   // const { sizeOptions, selectedSize, onSizeChange } = props;
 
+  function Alert() {
+    return (
+      <p
+        style={{
+          position: "absolute",
+          "background-color": "red",
+          width: "100%",
+          "text-align": "right",
+          padding: "4px",
+          "border-radius": "4px",
+        }}
+      >
+        {errorMessage}
+      </p>
+    );
+  }
+
   return (
     <div style={{ position: "relative" }}>
-      {errorMessage ? (
-        <p
-          style={{
-            position: "absolute",
-            "background-color": "red",
-            width: "100%",
-            "text-align": "right",
-            padding: "4px",
-            "border-radius": "4px",
-          }}
-        >
-          {errorMessage}
-        </p>
-      ) : null}
+      {errorMessage ? <Alert /> : null}
       <Form.Group
         inline
         style={{
@@ -79,6 +83,7 @@ function NewTask({ onCreateFinish }) {
     } else {
       try {
         await createNewTask(newTask, newTaskSize);
+        setErrorMessage("")
       } catch (error) {
         setErrorMessage(error.message);
       }
@@ -86,7 +91,7 @@ function NewTask({ onCreateFinish }) {
       await onCreateFinish();
       setNewTask("");
       setNewTaskSize("");
-      setErrorMessage("");
+      // TODO this doesnt seem to be breaking the flow
     }
   }
 
