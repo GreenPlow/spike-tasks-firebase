@@ -27,11 +27,11 @@ function EditWindow(props) {
   );
 }
 
-function Task(props) {
-  const id = props.item._id;
-  const [task, setTask] = useState(props.item.task);
+function Task({ item }) {
+  const { id, status } = item;
+
+  const [task, setTask] = useState(item.task);
   console.log("parent re-render", task);
-  const status = props.item.status;
   let color = "yellow";
 
   if (status) {
