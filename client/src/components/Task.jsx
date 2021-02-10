@@ -28,7 +28,7 @@ function EditWindow(props) {
 }
 
 function Task({ item, onModification }) {
-  const { id, status } = item;
+  const { _id, status } = item;
 
   const [task, setTask] = useState(item.task);
   console.log("parent re-render", task);
@@ -38,18 +38,18 @@ function Task({ item, onModification }) {
     color = "green";
   }
 
-  async function onDelete(id) {
-    await deleteTask(id);
+  async function onDelete() {
+    await deleteTask(_id);
     await onModification();
   }
 
-  async function onDone(id) {
-    await completeTask(id);
+  async function onDone() {
+    await completeTask(_id);
     await onModification();
   }
 
-  async function onUndo(id) {
-    await undoTask(id);
+  async function onUndo() {
+    await undoTask(_id);
     await onModification();
   }
 
@@ -65,7 +65,7 @@ function Task({ item, onModification }) {
   // TODO can we test if the card is fluid?
   // TODO we need to test that the color is passed in
   return (
-    <Card key={id} color={color} fluid draggable>
+    <Card key={_id} color={color} fluid draggable>
       <Card.Content>
         <Card.Header textAlign="left" onClick={() => setShowEdit(true)}>
           {!showEdit ? (
@@ -83,11 +83,11 @@ function Task({ item, onModification }) {
           ) : null}
         </Card.Header>
         <Card.Meta textAlign="right">
-          <Icon name="check circle" color="green" onClick={() => onDone(id)} />
+          <Icon name="check circle" color="green" onClick={() => onDone()} />
           <span style={{ paddingRight: 10 }}>Done</span>
-          <Icon name="undo" color="yellow" onClick={() => onUndo(id)} />
+          <Icon name="undo" color="yellow" onClick={() => onUndo()} />
           <span style={{ paddingRight: 10 }}>Undo</span>
-          <Icon name="delete" color="red" onClick={() => onDelete(id)} />
+          <Icon name="delete" color="red" onClick={() => onDelete()} />
           <span style={{ paddingRight: 10 }}>Delete</span>
         </Card.Meta>
       </Card.Content>
