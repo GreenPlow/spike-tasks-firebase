@@ -9,10 +9,6 @@ function TaskSizeSelector({
   onSizeChange,
   errorMessage,
 }) {
-  // The props could be destructed to avoid typing props.
-  // may add confusion if coder forgets to do it
-  // const { sizeOptions, selectedSize, onSizeChange } = props;
-
   function Alert() {
     return (
       <p
@@ -83,7 +79,7 @@ function NewTask({ onCreateFinish }) {
     } else {
       try {
         await createNewTask(newTask, newTaskSize);
-        setErrorMessage("")
+        setErrorMessage("");
       } catch (error) {
         setErrorMessage(error.message);
       }
