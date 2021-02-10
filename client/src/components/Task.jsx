@@ -35,9 +35,10 @@ EditWindow.propTypes = {
 };
 
 function Task({ taskObj, onModification }) {
-  const { _id, task, status } = taskObj;
+  const { _id, task, status, tasksize } = taskObj;
 
   const [thisTask, setTask] = useState(task);
+
   let color = "yellow";
 
   if (status) {
@@ -75,6 +76,9 @@ function Task({ taskObj, onModification }) {
         <Card.Header textAlign="left" onClick={() => setShowEdit(true)}>
           {!showEdit ? (
             <div style={{ wordWrap: "break-word" }}>{thisTask}</div>
+          ) : null}
+          {!showEdit ? (
+            <div style={{ wordWrap: "break-word" }}>{tasksize}</div>
           ) : null}
           {showEdit ? (
             <EditWindow
