@@ -33,7 +33,7 @@ export default function TaskList() {
           {tasks.map((item) => (
             <Task
               key={item._id}
-              item={item}
+              taskObj={item}
               onModification={getLatestTasksFromServerAndUpdateState}
             />
           ))}
