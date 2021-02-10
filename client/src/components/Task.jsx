@@ -1,5 +1,7 @@
 /* eslint-disable */
 import React, { useState } from "react";
+import PropTypes from "prop-types";
+
 import {
   completeTask,
   deleteTask,
@@ -27,10 +29,10 @@ function EditWindow(props) {
   );
 }
 
-function Task({ item, onModification }) {
-  const { _id, status } = item;
+function Task({ taskObj, onModification }) {
+  const { _id, task, status, taskSize } = taskObj;
 
-  const [task, setTask] = useState(item.task);
+  const [thisTask, setTask] = useState(task);
   console.log("parent re-render", task);
   let color = "yellow";
 
@@ -57,7 +59,7 @@ function Task({ item, onModification }) {
     // sets the hook and line 54-56 occurs before re-render occurs
     setTask(e.target.value);
     // console.log() instance A of task, then re-invokes line 27 to get the latest update and will console.log() instance B of task
-    console.log("parent ", task);
+    console.log("parent ", status);
   }
 
   const [showEdit, setShowEdit] = useState(false);
@@ -69,7 +71,7 @@ function Task({ item, onModification }) {
       <Card.Content>
         <Card.Header textAlign="left" onClick={() => setShowEdit(true)}>
           {!showEdit ? (
-            <div style={{ wordWrap: "break-word" }}>{task}</div>
+            <div style={{ wordWrap: "break-word" }}>{thisTask}</div>
           ) : null}
           {showEdit ? (
             <EditWindow
@@ -94,6 +96,16 @@ function Task({ item, onModification }) {
     </Card>
   );
 }
+
+Task.propTypes = {
+  taskObj: PropTypes.exact({
+    _id: PropTypes.string.isRequired,
+    task: PropTypes.string.isRequired,
+    status: PropTypes.bool.isRequired,
+    tasksize: PropTypes.string.isRequired,
+  }),
+  onModification: PropTypes.func.isRequired
+};
 
 export default Task;
 
