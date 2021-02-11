@@ -9,12 +9,8 @@ function TaskSizeSelector({
   onSizeChange,
   errorMessage,
 }) {
-  // The props could be destructed to avoid typing props.
-  // may add confusion if coder forgets to do it
-  // const { sizeOptions, selectedSize, onSizeChange } = props;
-
-  return (
-    <div style={{ position: "relative" }}>
+  function Alert() {
+    return (
       <p
         style={{
           position: "absolute",
@@ -27,6 +23,12 @@ function TaskSizeSelector({
       >
         {errorMessage}
       </p>
+    );
+  }
+
+  return (
+    <div style={{ position: "relative" }}>
+      {errorMessage ? <Alert /> : null}
       <Form.Group
         inline
         style={{
@@ -39,7 +41,7 @@ function TaskSizeSelector({
           <Form.Field key={`formField${index}`}>
             <Radio
               tabIndex={index + 2}
-              name="radioGroup"
+              name={sizeOption}
               label={sizeOption}
               value={sizeOption}
               checked={sizeOption === selectedSize}
@@ -56,7 +58,7 @@ function TaskSizeSelector({
 
 TaskSizeSelector.propTypes = {
   sizeOptions: PropTypes.arrayOf(PropTypes.string).isRequired,
-  selectedSize: PropTypes.oneOf(["small", "medium", "large"]).isRequired,
+  selectedSize: PropTypes.oneOf(["small", "medium", "large", ""]).isRequired,
   onSizeChange: PropTypes.func.isRequired,
   errorMessage: PropTypes.string,
 };
@@ -66,11 +68,7 @@ function NewTask({ onCreateFinish }) {
   const [newTaskSize, setNewTaskSize] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  function handleNewTask(e) {
-    setNewTask(e.target.value);
-  }
-
-  function onSizeChange(size) {
+  function cb_onSizeChange(size) {
     setNewTaskSize(size);
   }
 
@@ -81,6 +79,7 @@ function NewTask({ onCreateFinish }) {
     } else {
       try {
         await createNewTask(newTask, newTaskSize);
+        setErrorMessage("");
       } catch (error) {
         setErrorMessage(error.message);
       }
@@ -88,6 +87,7 @@ function NewTask({ onCreateFinish }) {
       await onCreateFinish();
       setNewTask("");
       setNewTaskSize("");
+      // TODO this doesnt seem to be breaking the flow
     }
   }
 
@@ -95,18 +95,20 @@ function NewTask({ onCreateFinish }) {
     <div className="row">
       <Form onSubmit={onSubmit}>
         <Input
+          tabIndex={1}
+          fluid
           type="text"
           name="task"
-          fluid
           placeholder="Create Task"
           value={newTask}
-          onChange={handleNewTask}
-          tabIndex={1}
+          onChange={(e) => {
+            setNewTask(e.target.value);
+          }}
         />
         <TaskSizeSelector
           sizeOptions={["small", "medium", "large"]}
+          onSizeChange={cb_onSizeChange}
           selectedSize={newTaskSize}
-          onSizeChange={onSizeChange}
           errorMessage={errorMessage}
         />
         {errorMessage ? <text>{errorMessage}</text> : null}

@@ -1,5 +1,3 @@
-/* eslint-disable*/
-
 import axios from "axios";
 import handleAxiosError from "./errorHandler";
 // add the axios interceptors here to do the banners and logging, able to delete the try catches
