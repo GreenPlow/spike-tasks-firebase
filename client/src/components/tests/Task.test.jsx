@@ -29,7 +29,7 @@ describe("tests for task component", () => {
     // container.firstChild.firstChild
 
     // TODO I think in the TaskList.test.js file we need to mock the server call here and return json to then simulate the await
-    const task = screen.getByText("failTheTest");
+    const task = screen.getByText(testTaskObj.task);
 
     expect(task).toHaveTextContent(testTaskObj.task);
   });
