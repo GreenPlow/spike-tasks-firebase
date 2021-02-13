@@ -84,17 +84,18 @@ func CreateTask(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
 	var task models.TaskList
 	_ = json.NewDecoder(r.Body).Decode(&task)
-	insertOneTask(task)
+	task.ID = insertOneTask(task)
 	// Write the response of the task
 	json.NewEncoder(w).Encode(task)
 }
 
-func insertOneTask(task models.TaskList) {
+func insertOneTask(task models.TaskList) primitive.ObjectID {
 	insertResult, err := collection.InsertOne(context.Background(), task)
 	if err != nil {
 		log.Fatal(err)
 	}
 	log.Println("Inserted a single record", insertResult.InsertedID)
+	return insertResult.InsertedID.(primitive.ObjectID)
 }
 
 // CompleteTask complete the task route
