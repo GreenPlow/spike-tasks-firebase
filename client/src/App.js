@@ -11,10 +11,12 @@ import Time from "./components/Time";
 import "./App.css";
 
 import Button from "react-bootstrap/Button";
+import { get, set } from "./user";
 
 function App() {
   const [calendarDate, setDate] = useState(moment());
   const [isFocused, setFocused] = useState(false);
+  const [user, setUser] = useState(get());
 
   function today() {
     setDate(moment());
@@ -27,6 +29,15 @@ function App() {
   return (
     <div>
       <Container>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            setUser(e.target[0].value);
+            set(e.target[0].value);
+          }}
+        >
+          <input defaultValue={user}></input>
+        </form>
         <Button onClick={today}>Today</Button>
         <Button onClick={nextDay}>Next Day</Button>
         <Header className="header" as="h2" textAlign="center">
