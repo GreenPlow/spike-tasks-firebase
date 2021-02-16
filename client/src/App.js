@@ -13,30 +13,36 @@ import "./App.css";
 import Button from "react-bootstrap/Button";
 import { get, set } from "./user";
 
+import { getLatestTasksFromServer } from "./api/taskActions";
+
 function App() {
-  const [calendarDate, setDate] = useState(moment());
+  const [calendarDate, setCalendarDate] = useState(moment());
   const [isFocused, setFocused] = useState(false);
   const [user, setUser] = useState(get());
 
   function today() {
-    setDate(moment());
+    setCalendarDate(moment());
   }
 
   function nextDay() {
-    setDate(calendarDate.clone().add(1, "days"));
+    setCalendarDate(calendarDate.clone().add(1, "days"));
   }
 
   return (
     <div>
       <Container>
         <form
-          onSubmit={(e) => {
+          onSubmit={async (e) => {
             e.preventDefault();
             setUser(e.target[0].value);
             set(e.target[0].value);
+            await getLatestTasksFromServer();
           }}
         >
-          <input defaultValue={user}></input>
+          <div style={{ textAlign: "right" }}>{user} is logged in!</div>
+          <div style={{ textAlign: "right" }}>
+            <input defaultValue={user}></input>
+          </div>
         </form>
         <Button onClick={today}>Today</Button>
         <Button onClick={nextDay}>Next Day</Button>
@@ -45,7 +51,7 @@ function App() {
           {/* TODO REVIEW THIS LIB FOR A BETTER ONE */}
           <SingleDatePicker
             date={calendarDate} // momentPropTypes.momentObj or null
-            onDateChange={(calendarDate) => setDate(calendarDate)} // PropTypes.func.isRequired
+            onDateChange={(calendarDate) => setCalendarDate(calendarDate)} // PropTypes.func.isRequired
             focused={isFocused} // PropTypes.bool
             onFocusChange={({ focused }) => setFocused(focused)} // PropTypes.func.isRequired
             id="your_unique_id" // PropTypes.string.isRequired //why is this required and what should it be?
