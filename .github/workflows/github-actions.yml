@@ -1,7 +1,7 @@
 name: js-commit
 on: [push]
 jobs:
-  build-and-test:
+  build-lint-test-client:
     runs-on: ubuntu-latest
     defaults:
       run:
