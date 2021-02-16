@@ -25,7 +25,7 @@ async function getLatestTasksFromServer() {
 
 async function createNewTask(task, taskSize) {
   const url = endpoint + "/api/task";
-  const body = { task, taskSize };
+  const body = { task, taskSize, "date":"1955-11-12T20:04:00-08:00"};
   try {
     await axios.post(url, body, {
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
