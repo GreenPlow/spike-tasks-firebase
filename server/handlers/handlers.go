@@ -19,7 +19,7 @@ import (
 
 const connectionString = "mongodb://mongo:27017"
 const dbName = "test"
-const collName = "tasklist"
+const collPrefixTask = "tasklist"
 
 // collection object/instance
 var collection *mongo.Collection
@@ -42,9 +42,39 @@ func init() {
 		log.Fatal(err)
 	}
 
-	log.Println("Connection to MongoDB established!")
-	collection = client.Database(dbName).Collection(collName)
-	log.Println("Collection instance created!")
+	// log.Println("Connection to MongoDB established!")
+	// // TODO should not connect to a non user prefix on init... What should it do?
+	// collection = client.Database(dbName).Collection(collPrefixTask)
+	// log.Println("Collection instance created!")
+}
+
+// CreateTask create task route
+func CreateTask(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
+	user := r.Header.Get("X-USERNAME")
+	fmt.Println("user", user)
+
+	clientOptions := options.Client().ApplyURI(connectionString)
+	client, conErr := mongo.Connect(context.TODO(), clientOptions)
+	if conErr != nil {
+		log.Fatal(conErr)
+	}
+	thisCollection := client.Database(dbName).Collection(collPrefixTask + "/" + user)
+
+	var task models.TaskList
+	_ = json.NewDecoder(r.Body).Decode(&task)
+	task.ID = insertOneTask(task, thisCollection)
+	// Write the response of the task
+	json.NewEncoder(w).Encode(task)
+}
+
+func insertOneTask(task models.TaskList, collection *mongo.Collection) primitive.ObjectID {
+	insertResult, err := collection.InsertOne(context.Background(), task)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println("Inserted a single record", insertResult.InsertedID)
+	return insertResult.InsertedID.(primitive.ObjectID)
 }
 
 // GetAllTask get all the task route
@@ -90,18 +120,27 @@ func getAllTask() []primitive.M {
 func GetTasksByDate(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
 
+	user := r.Header.Get("X-USERNAME")
+	fmt.Println("user", user)
+	clientOptions := options.Client().ApplyURI(connectionString)
+	client, conErr := mongo.Connect(context.TODO(), clientOptions)
+	if conErr != nil {
+		log.Fatal(conErr)
+	}
+	thisCollection := client.Database(dbName).Collection(collPrefixTask + "/" + user)
+
 	searchDate := r.URL.Query().Get("searchDate")
 	fmt.Println("searchDate", searchDate)
 
 	timeZone := r.URL.Query().Get("timeZone")
 	fmt.Println("timeZone", timeZone)
 
-	payload := getTasksByDate(searchDate, timeZone)
+	payload := getTasksByDate(searchDate, timeZone, thisCollection)
 	json.NewEncoder(w).Encode(payload)
 }
 
 // get tasks by date from the DB and return it
-func getTasksByDate(searchDateTime string, timeZone string) []primitive.M {
+func getTasksByDate(searchDateTime string, timeZone string, collection *mongo.Collection) []primitive.M {
 	t, err := time.Parse(time.RFC3339, searchDateTime)
 	fmt.Println("t", t)
 
@@ -151,34 +190,25 @@ func getTasksByDate(searchDateTime string, timeZone string) []primitive.M {
 	return results
 }
 
-// CreateTask create task route
-func CreateTask(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
-	var task models.TaskList
-	_ = json.NewDecoder(r.Body).Decode(&task)
-	task.ID = insertOneTask(task)
-	// Write the response of the task
-	json.NewEncoder(w).Encode(task)
-}
-
-func insertOneTask(task models.TaskList) primitive.ObjectID {
-	insertResult, err := collection.InsertOne(context.Background(), task)
-	if err != nil {
-		log.Fatal(err)
-	}
-	log.Println("Inserted a single record", insertResult.InsertedID)
-	return insertResult.InsertedID.(primitive.ObjectID)
-}
-
 // CompleteTask complete the task route
 func CompleteTask(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
+
+	user := r.Header.Get("X-USERNAME")
+	fmt.Println("user", user)
+	clientOptions := options.Client().ApplyURI(connectionString)
+	client, conErr := mongo.Connect(context.TODO(), clientOptions)
+	if conErr != nil {
+		log.Fatal(conErr)
+	}
+	thisCollection := client.Database(dbName).Collection(collPrefixTask + "/" + user)
+
 	taskID := chi.URLParam(r, "id")
-	completeTask(taskID)
+	completeTask(taskID, thisCollection)
 	json.NewEncoder(w).Encode(taskID)
 }
 
-func completeTask(task string) {
+func completeTask(task string, collection *mongo.Collection) {
 	log.Println(task)
 	id, _ := primitive.ObjectIDFromHex(task)
 	filter := bson.M{"_id": id}
@@ -195,12 +225,21 @@ func completeTask(task string) {
 func UndoTask(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
 
+	user := r.Header.Get("X-USERNAME")
+	fmt.Println("user", user)
+	clientOptions := options.Client().ApplyURI(connectionString)
+	client, conErr := mongo.Connect(context.TODO(), clientOptions)
+	if conErr != nil {
+		log.Fatal(conErr)
+	}
+	thisCollection := client.Database(dbName).Collection(collPrefixTask + "/" + user)
+
 	taskID := chi.URLParam(r, "id")
-	undoTask(taskID)
+	undoTask(taskID, thisCollection)
 	json.NewEncoder(w).Encode(taskID)
 }
 
-func undoTask(task string) {
+func undoTask(task string, collection *mongo.Collection) {
 	log.Println(task)
 	id, _ := primitive.ObjectIDFromHex(task)
 	filter := bson.M{"_id": id}
@@ -221,12 +260,22 @@ func UpdateTaskOptions(w http.ResponseWriter, r *http.Request) {
 // UpdateTask update the task route
 func UpdateTask(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
+
+	user := r.Header.Get("X-USERNAME")
+	fmt.Println("user", user)
+	clientOptions := options.Client().ApplyURI(connectionString)
+	client, conErr := mongo.Connect(context.TODO(), clientOptions)
+	if conErr != nil {
+		log.Fatal(conErr)
+	}
+	thisCollection := client.Database(dbName).Collection(collPrefixTask + "/" + user)
+
 	taskID := chi.URLParam(r, "id")
 
 	var taskObj models.TaskList
 	_ = json.NewDecoder(r.Body).Decode(&taskObj)
 	taskObj.ID, _ = primitive.ObjectIDFromHex(taskID)
-	err := updateTask(taskObj)
+	err := updateTask(taskObj, thisCollection)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
@@ -234,7 +283,7 @@ func UpdateTask(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(taskObj)
 }
 
-func updateTask(taskObj models.TaskList) error {
+func updateTask(taskObj models.TaskList, collection *mongo.Collection) error {
 	log.Println("inside updateTask, taskObj:", taskObj)
 	filter := bson.M{"_id": taskObj.ID}
 	update := bson.M{"$set": bson.M{"task": taskObj.Task}}
@@ -255,12 +304,21 @@ func updateTask(taskObj models.TaskList) error {
 func DeleteTask(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
 
+	user := r.Header.Get("X-USERNAME")
+	fmt.Println("user", user)
+	clientOptions := options.Client().ApplyURI(connectionString)
+	client, conErr := mongo.Connect(context.TODO(), clientOptions)
+	if conErr != nil {
+		log.Fatal(conErr)
+	}
+	thisCollection := client.Database(dbName).Collection(collPrefixTask + "/" + user)
+
 	taskID := chi.URLParam(r, "id")
-	deleteOneTask(taskID)
+	deleteOneTask(taskID, thisCollection)
 	json.NewEncoder(w).Encode(taskID)
 }
 
-func deleteOneTask(task string) {
+func deleteOneTask(task string, collection *mongo.Collection) {
 	log.Println(task)
 	id, _ := primitive.ObjectIDFromHex(task)
 	filter := bson.M{"_id": id}
@@ -277,11 +335,20 @@ func deleteOneTask(task string) {
 func DeleteAllTask(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
 
-	count := deleteAllTask()
+	user := r.Header.Get("X-USERNAME")
+	fmt.Println("user", user)
+	clientOptions := options.Client().ApplyURI(connectionString)
+	client, conErr := mongo.Connect(context.TODO(), clientOptions)
+	if conErr != nil {
+		log.Fatal(conErr)
+	}
+	thisCollection := client.Database(dbName).Collection(collPrefixTask + "/" + user)
+
+	count := deleteAllTask(thisCollection)
 	json.NewEncoder(w).Encode(count)
 }
 
-func deleteAllTask() int64 {
+func deleteAllTask(collection *mongo.Collection) int64 {
 	d, err := collection.DeleteMany(context.Background(), bson.D{{}}, nil)
 	if err != nil {
 		log.Fatal(err)
