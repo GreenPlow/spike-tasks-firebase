@@ -4,8 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/GreenPlow/spike-list/server/models"
 	"github.com/go-chi/chi"
@@ -67,6 +69,76 @@ func getAllTask() []primitive.M {
 		if e != nil {
 			log.Fatal(e)
 		}
+
+		results = append(results, result)
+	}
+
+	if err := cur.Err(); err != nil {
+		log.Fatal(err)
+	}
+
+	cur.Close(context.Background())
+	return results
+}
+
+// fetch the url parameter `"userID"` from the request of a matching
+// routing pattern. An example routing pattern could be: /users/{userID}
+// dateString := chi.URLParam(r, "date")
+// however, it makes more since for date to be a query param
+
+// GetTasksByDate get all the task route
+func GetTasksByDate(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
+
+	searchDate := r.URL.Query().Get("searchDate")
+	fmt.Println("searchDate", searchDate)
+
+	timeZone := r.URL.Query().Get("timeZone")
+	fmt.Println("timeZone", timeZone)
+
+	payload := getTasksByDate(searchDate, timeZone)
+	json.NewEncoder(w).Encode(payload)
+}
+
+// get tasks by date from the DB and return it
+func getTasksByDate(searchDateTime string, timeZone string) []primitive.M {
+	t, err := time.Parse(time.RFC3339, searchDateTime)
+	fmt.Println("t", t)
+
+	loc, _ := time.LoadLocation(timeZone)
+
+	searchDateTimeInUserLoc := t.In(loc)
+	fmt.Println("searchDateTimeInUserLoc", searchDateTimeInUserLoc)
+
+	searchDateInUserLoc := time.Date(searchDateTimeInUserLoc.Year(), searchDateTimeInUserLoc.Month(), searchDateTimeInUserLoc.Day(), 0, 0, 0, 0, loc)
+	fmt.Println("searchDateInUserLoc", searchDateInUserLoc)
+
+	locUTC, _ := time.LoadLocation(timeZone)
+	backtoUTC := searchDateInUserLoc.In(locUTC)
+
+	nextDay := backtoUTC.AddDate(0, 0, 1)
+	fmt.Println("nextDay", nextDay)
+
+	// dayStart := searchDateInUserLoc.Format(time.RFC3339)
+	// nextDay := searchDateInUserLoc.AddDate(0, 0, 1)
+	// filter := bson.M{"date": bson.M{"$gte": searchDateInUserLoc, "$lt": nextDay}}
+
+	filter := bson.M{"date": bson.M{"$gte": backtoUTC, "$lt": nextDay}}
+	cur, err := collection.Find(context.Background(), filter)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// make a slice to ensure nil is not returned
+	results := make([]primitive.M, 0)
+	for cur.Next(context.Background()) {
+		println("Horse")
+		var result bson.M
+		e := cur.Decode(&result)
+		if e != nil {
+			log.Fatal(e)
+		}
+		println("result", result)
 
 		results = append(results, result)
 	}

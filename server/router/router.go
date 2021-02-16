@@ -21,7 +21,8 @@ func Router() *chi.Mux {
 	r.Use(middleware.Recoverer)
 	r.Use(c.Handler)
 
-	r.Get("/api/task", handlers.GetAllTask)
+	// r.Get("/api/task", handlers.GetAllTask)
+	r.Get("/api/task", handlers.GetTasksByDate)
 	r.Post("/api/task", handlers.CreateTask)
 	r.Put("/api/completeTask/{id}", handlers.CompleteTask)
 	r.Put("/api/undoTask/{id}", handlers.UndoTask)
