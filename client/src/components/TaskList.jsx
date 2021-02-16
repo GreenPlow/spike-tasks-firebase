@@ -12,18 +12,20 @@ import { Card } from "semantic-ui-react";
 export default function TaskList({ calendarDate }) {
   const [tasks, setTasks] = useState([]);
 
-  async function getLatestTasksFromServerAndUpdateState() {
-    const latestTasks = await getLatestTasksFromServer();
+  async function getLatestTasksFromServerAndUpdateState(aDateObj) {
+    const dateISOString = aDateObj.toISOString();
+    const latestTasks = await getLatestTasksFromServer(dateISOString);
     setTasks(latestTasks);
   }
 
   useEffect(() => {
     async function getLatest() {
-      await getLatestTasksFromServerAndUpdateState();
+      // Why is useEffect needed?
+      await getLatestTasksFromServerAndUpdateState(calendarDate);
     }
 
     getLatest();
-  }, []);
+  }, [calendarDate]);
 
   return (
     // pass in the function callback as a named prop
@@ -41,6 +43,7 @@ export default function TaskList({ calendarDate }) {
               key={item._id}
               taskObj={item}
               onModification={getLatestTasksFromServerAndUpdateState}
+              calendarDate={calendarDate}
             />
           ))}
         </Card.Group>
@@ -52,3 +55,5 @@ export default function TaskList({ calendarDate }) {
 TaskList.propTypes = {
   calendarDate: PropTypes.object.isRequired,
 };
+
+/*Is there a better way to pass the calendar date that will be used for the get new tasks in the onModification call?*/

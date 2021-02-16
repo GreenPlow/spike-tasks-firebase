@@ -18,9 +18,19 @@ axios.interceptors.response.use(
   }
 );
 
-async function getLatestTasksFromServer() {
-  const res = await axios.get(endpoint + "/api/task");
-  return res.data;
+async function getLatestTasksFromServer(date) {
+  const url =
+    endpoint +
+    `/api/task?searchDate=${date}&timeZone=${
+      Intl.DateTimeFormat().resolvedOptions().timeZone
+    }`;
+  console.log(url);
+  try {
+    const res = await axios.get(url);
+    return res.data;
+  } catch (errorObj) {
+    throw new Error(`failed to get tasks for ${date}`);
+  }
 }
 
 async function createNewTask(task, taskSize, date) {

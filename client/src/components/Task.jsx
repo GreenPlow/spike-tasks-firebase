@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
+import moment from "moment";
 
 import {
   completeTask,
@@ -34,8 +35,8 @@ EditWindow.propTypes = {
   afterUpdate: PropTypes.func.isRequired,
 };
 
-function Task({ taskObj, onModification }) {
-  const { _id, task, status, tasksize } = taskObj;
+function Task({ taskObj, onModification, calendarDate }) {
+  const { _id, task, status, tasksize, date } = taskObj;
 
   const [thisTask, setTask] = useState(task);
 
@@ -47,17 +48,17 @@ function Task({ taskObj, onModification }) {
 
   async function onDelete() {
     await deleteTask(_id);
-    await onModification();
+    await onModification(calendarDate);
   }
 
   async function onDone() {
     await completeTask(_id);
-    await onModification();
+    await onModification(calendarDate);
   }
 
   async function onUndo() {
     await undoTask(_id);
-    await onModification();
+    await onModification(calendarDate);
   }
 
   function handleEdit(e) {
@@ -79,6 +80,11 @@ function Task({ taskObj, onModification }) {
           ) : null}
           {!showEdit ? (
             <div style={{ wordWrap: "break-word" }}>{tasksize}</div>
+          ) : null}
+          {!showEdit ? (
+            <div style={{ wordWrap: "break-word" }}>
+              {moment(date).format("LTS")}
+            </div>
           ) : null}
           {showEdit ? (
             <EditWindow
@@ -110,9 +116,10 @@ Task.propTypes = {
     task: PropTypes.string.isRequired,
     status: PropTypes.bool.isRequired,
     tasksize: PropTypes.string.isRequired,
-    date: PropTypes.string.isRequired
+    date: PropTypes.string.isRequired,
   }),
   onModification: PropTypes.func.isRequired,
+  calendarDate: PropTypes.object,
 };
 
 export default Task;
