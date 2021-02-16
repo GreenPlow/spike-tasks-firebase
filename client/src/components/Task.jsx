@@ -110,6 +110,7 @@ Task.propTypes = {
     task: PropTypes.string.isRequired,
     status: PropTypes.bool.isRequired,
     tasksize: PropTypes.string.isRequired,
+    date: PropTypes.string.isRequired
   }),
   onModification: PropTypes.func.isRequired,
 };

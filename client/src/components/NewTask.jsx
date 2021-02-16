@@ -63,7 +63,7 @@ TaskSizeSelector.propTypes = {
   errorMessage: PropTypes.string,
 };
 
-function NewTask({ onCreateFinish }) {
+function NewTask({ onCreateFinish, dateObj }) {
   const [newTask, setNewTask] = useState("");
   const [newTaskSize, setNewTaskSize] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -78,7 +78,7 @@ function NewTask({ onCreateFinish }) {
       console.log(newTaskSize);
     } else {
       try {
-        await createNewTask(newTask, newTaskSize);
+        await createNewTask(newTask, newTaskSize, dateObj.toISOString());
         setErrorMessage("");
       } catch (error) {
         setErrorMessage(error.message);
@@ -119,6 +119,7 @@ function NewTask({ onCreateFinish }) {
 
 NewTask.propTypes = {
   onCreateFinish: PropTypes.func.isRequired,
+  dateObj: PropTypes.object,
 };
 
 export default NewTask;

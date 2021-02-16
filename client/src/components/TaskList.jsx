@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 
 import Task from "./Task";
 import NewTask from "./NewTask";
@@ -8,7 +9,7 @@ import "./TaskList.css";
 
 import { Card } from "semantic-ui-react";
 
-export default function TaskList() {
+export default function TaskList({ calendarDate }) {
   const [tasks, setTasks] = useState([]);
 
   async function getLatestTasksFromServerAndUpdateState() {
@@ -27,7 +28,12 @@ export default function TaskList() {
   return (
     // pass in the function callback as a named prop
     <div>
-      <NewTask onCreateFinish={getLatestTasksFromServerAndUpdateState} />
+      <NewTask
+        dateObj={calendarDate}
+        onCreateFinish={() => {
+          getLatestTasksFromServerAndUpdateState(calendarDate);
+        }}
+      />
       <div className="list">
         <Card.Group>
           {tasks.map((item) => (
@@ -42,3 +48,7 @@ export default function TaskList() {
     </div>
   );
 }
+
+TaskList.propTypes = {
+  calendarDate: PropTypes.object.isRequired,
+};

@@ -40,7 +40,7 @@ function App() {
             id="your_unique_id" // PropTypes.string.isRequired //why is this required and what should it be?
           />
         </Header>
-        <TaskList />
+        <TaskList calendarDate={calendarDate} />
       </Container>
     </div>
   );
