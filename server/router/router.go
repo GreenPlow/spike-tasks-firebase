@@ -12,7 +12,9 @@ func Router() *chi.Mux {
 	r := chi.NewRouter()
 
 	c := cors.New(cors.Options{
-		AllowedMethods: []string{"DELETE", "GET", "POST", "PUT"},
+		AllowedMethods:   []string{"DELETE", "GET", "POST", "PUT"},
+		AllowedHeaders:   []string{"*"},
+		AllowCredentials: true,
 	})
 
 	r.Use(middleware.RequestID)
