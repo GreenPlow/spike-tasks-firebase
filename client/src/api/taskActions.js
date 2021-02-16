@@ -23,15 +23,15 @@ async function getLatestTasksFromServer() {
   return res.data;
 }
 
-async function createNewTask(task, taskSize) {
+async function createNewTask(task, taskSize, date) {
   const url = endpoint + "/api/task";
-  const body = { task, taskSize, "date":"1955-11-12T20:04:00-08:00"};
+  const body = { task, taskSize, date };
   try {
     await axios.post(url, body, {
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
     });
   } catch (errorObj) {
-    throw new Error(`failed to create task ${task}`);
+    throw new Error(`failed to create task: ${task}`);
   }
 }
 
