@@ -13,13 +13,19 @@ import "./App.css";
 import Button from "react-bootstrap/Button";
 import { get, set } from "./user";
 
-import { getLatestTasksFromServer } from "./api/taskActions";
 
 function App() {
   const [calendarDate, setCalendarDate] = useState(moment());
   const [isFocused, setFocused] = useState(false);
   const [user, setUser] = useState("");
-  console.log("user state", user);
+
+  if (!user) {
+    try {
+      setUser(get());
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   function today() {
     setCalendarDate(moment());
@@ -89,4 +95,5 @@ function App() {
 
   return <div>{user ? <ShowTheApp /> : <ShowLogin />}</div>;
 }
+
 export default App;
