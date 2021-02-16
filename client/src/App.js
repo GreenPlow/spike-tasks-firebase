@@ -18,7 +18,8 @@ import { getLatestTasksFromServer } from "./api/taskActions";
 function App() {
   const [calendarDate, setCalendarDate] = useState(moment());
   const [isFocused, setFocused] = useState(false);
-  const [user, setUser] = useState(get());
+  const [user, setUser] = useState("");
+  console.log("user state", user);
 
   function today() {
     setCalendarDate(moment());
@@ -28,22 +29,46 @@ function App() {
     setCalendarDate(calendarDate.clone().add(1, "days"));
   }
 
-  return (
-    <div>
+  function ShowLogin() {
+    return (
       <Container>
-        <form
-          onSubmit={async (e) => {
-            e.preventDefault();
-            setUser(e.target[0].value);
-            set(e.target[0].value);
-            await getLatestTasksFromServer();
+        <div
+          style={{
+            textAlign: "center",
+            padding: "200px",
           }}
         >
-          <div style={{ textAlign: "right" }}>{user} is logged in!</div>
-          <div style={{ textAlign: "right" }}>
+          <div>you done logged out.. type a username to log in</div>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              setUser(e.target[0].value);
+              set(e.target[0].value);
+            }}
+          >
             <input defaultValue={user}></input>
-          </div>
-        </form>
+          </form>
+        </div>
+      </Container>
+    );
+  }
+
+  function ShowTheApp() {
+    return (
+      <Container>
+        <div style={{ textAlign: "right" }}>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              setUser(e.target[0].value);
+              set(e.target[0].value);
+            }}
+          >
+            <div style={{ textAlign: "right" }}>{user} is logged in!</div>
+            <label hmtlFor="switchUser">Switch User</label>
+            <input defaultValue={user} id="switchUser"></input>
+          </form>
+        </div>
         <Button onClick={today}>Today</Button>
         <Button onClick={nextDay}>Next Day</Button>
         <Header className="header" as="h2" textAlign="center">
@@ -59,7 +84,9 @@ function App() {
         </Header>
         <TaskList calendarDate={calendarDate} />
       </Container>
-    </div>
-  );
+    );
+  }
+
+  return <div>{user ? <ShowTheApp /> : <ShowLogin />}</div>;
 }
 export default App;
