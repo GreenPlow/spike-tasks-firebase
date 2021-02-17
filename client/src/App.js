@@ -6,13 +6,13 @@ import { SingleDatePicker } from "react-dates";
 import "react-dates/lib/css/_datepicker.css";
 import moment from "moment";
 
+import LoginScreen from "./components/LoginScreen";
 import TaskList from "./components/TaskList";
 import Time from "./components/Time";
 import "./App.css";
 
 import Button from "react-bootstrap/Button";
 import { get, set } from "./user";
-
 
 function App() {
   const [calendarDate, setCalendarDate] = useState(moment());
@@ -35,28 +35,9 @@ function App() {
     setCalendarDate(calendarDate.clone().add(1, "days"));
   }
 
-  function ShowLogin() {
-    return (
-      <Container>
-        <div
-          style={{
-            textAlign: "center",
-            padding: "200px",
-          }}
-        >
-          <div>you done logged out.. type a username to log in</div>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              setUser(e.target[0].value);
-              set(e.target[0].value);
-            }}
-          >
-            <input defaultValue={user}></input>
-          </form>
-        </div>
-      </Container>
-    );
+  function handleUserLogin(value) {
+    setUser(value);
+    set(value);
   }
 
   function ShowTheApp() {
@@ -66,8 +47,7 @@ function App() {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              setUser(e.target[0].value);
-              set(e.target[0].value);
+              handleUserLogin(e.target[0].value);
             }}
           >
             <div style={{ textAlign: "right" }}>{user} is logged in!</div>
@@ -93,7 +73,15 @@ function App() {
     );
   }
 
-  return <div>{user ? <ShowTheApp /> : <ShowLogin />}</div>;
+  return (
+    <div>
+      {user ? (
+        <ShowTheApp />
+      ) : (
+        <LoginScreen user={user} onSubmit={handleUserLogin} />
+      )}
+    </div>
+  );
 }
 
 export default App;
