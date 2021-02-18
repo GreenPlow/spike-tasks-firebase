@@ -18,6 +18,7 @@ export default function TaskList({ calendarDate, triggerRender }) {
     const dateISOString = aDateObj.toISOString();
     try {
       const latestTasks = await getLatestTasksFromServer(dateISOString);
+      setErrorAlert(undefined);
       setTasks(latestTasks);
     } catch (e) {
       setErrorAlert(e);
@@ -36,25 +37,28 @@ export default function TaskList({ calendarDate, triggerRender }) {
   return (
     // pass in the function callback as a named prop
     <div>
-      {errorAlert ? <Alert>Alert! {errorAlert.toString()}</Alert> : null}
       <NewTask
         dateObj={calendarDate}
         onCreateFinish={() => {
           getLatestTasksFromServerAndUpdateState(calendarDate);
         }}
       />
-      <div className="list">
-        <Card.Group>
-          {tasks.map((item) => (
-            <Task
-              key={item._id}
-              taskObj={item}
-              onModification={getLatestTasksFromServerAndUpdateState}
-              calendarDate={calendarDate}
-            />
-          ))}
-        </Card.Group>
-      </div>
+      {errorAlert ? (
+        <Alert>Alert! {errorAlert.toString()}</Alert>
+      ) : (
+        <div className="list">
+          <Card.Group>
+            {tasks.map((item) => (
+              <Task
+                key={item._id}
+                taskObj={item}
+                onModification={getLatestTasksFromServerAndUpdateState}
+                calendarDate={calendarDate}
+              />
+            ))}
+          </Card.Group>
+        </div>
+      )}
     </div>
   );
 }
