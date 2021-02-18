@@ -7,15 +7,21 @@ import NewTask from "./NewTask";
 import { getLatestTasksFromServer } from "../api/taskActions";
 import "./TaskList.css";
 
+import Alert from "react-bootstrap/Alert";
 import { Card } from "semantic-ui-react";
 
 export default function TaskList({ calendarDate, triggerRender }) {
   const [tasks, setTasks] = useState([]);
+  const [errorAlert, setErrorAlert] = useState(undefined);
 
   async function getLatestTasksFromServerAndUpdateState(aDateObj) {
     const dateISOString = aDateObj.toISOString();
-    const latestTasks = await getLatestTasksFromServer(dateISOString);
-    setTasks(latestTasks);
+    try {
+      const latestTasks = await getLatestTasksFromServer(dateISOString);
+      setTasks(latestTasks);
+    } catch (e) {
+      setErrorAlert(e);
+    }
   }
 
   useEffect(() => {
@@ -30,6 +36,7 @@ export default function TaskList({ calendarDate, triggerRender }) {
   return (
     // pass in the function callback as a named prop
     <div>
+      {errorAlert ? <Alert>Alert! {errorAlert.toString()}</Alert> : null}
       <NewTask
         dateObj={calendarDate}
         onCreateFinish={() => {
