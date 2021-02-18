@@ -29,6 +29,10 @@ export default function AppLanding({ user, onSubmit }) {
     setCalendarDate(calendarDate.clone().add(1, "days"));
   }
 
+  function previousDay() {
+    setCalendarDate(calendarDate.clone().subtract(1, "days"));
+  }
+
   return (
     <Container>
       <div style={{ textAlign: "right" }}>
@@ -56,6 +60,7 @@ export default function AppLanding({ user, onSubmit }) {
       </div>
       <ButtonGroup>
         <Button onClick={today}>Today</Button>
+        <Button onClick={previousDay}>Previous Day</Button>
         <Button onClick={nextDay}>Next Day</Button>
       </ButtonGroup>
       <Header className="header" as="h2" textAlign="center">
