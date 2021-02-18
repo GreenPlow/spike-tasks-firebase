@@ -1,4 +1,4 @@
-let user = localStorage.getItem("user") || null;
+let user = localStorage.getItem("user") || undefined;
 
 function set(userName) {
   user = userName;

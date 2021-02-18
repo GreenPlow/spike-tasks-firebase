@@ -17,7 +17,7 @@ import { get, set } from "./user";
 function App() {
   const [calendarDate, setCalendarDate] = useState(moment());
   const [isFocused, setFocused] = useState(false);
-  const [user, setUser] = useState("");
+  const [user, setUser] = useState(undefined);
 
   if (!user) {
     try {
@@ -56,9 +56,8 @@ function App() {
           </form>
           <form>
             <Button
-              onClick={(e) => {
-                setUser("");
-                set(null);
+              onClick={() => {
+                handleUserLogin(undefined);
               }}
             >
               Logout
