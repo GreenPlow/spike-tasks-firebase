@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 
 import Button from "react-bootstrap/Button";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
+import DropdownButton from "react-bootstrap/DropdownButton";
+import DropdownItem from "react-bootstrap/DropdownItem";
+
 import Container from "react-bootstrap/Container";
 import { Header } from "semantic-ui-react";
 import { SingleDatePicker } from "react-dates";
@@ -28,28 +32,32 @@ export default function AppLanding({ user, onSubmit }) {
   return (
     <Container>
       <div style={{ textAlign: "right" }}>
+        <DropdownButton
+          title={`Hi ${user}!`}
+          id="bg-nested-dropdown"
+        >
+          <DropdownItem
+            onClick={() => {
+              onSubmit(undefined);
+            }}
+          >
+            Logout
+          </DropdownItem>
+        </DropdownButton>
         <form
           onSubmit={(e) => {
             e.preventDefault();
             onSubmit(e.target[0].value);
           }}
         >
-          <div style={{ textAlign: "right" }}>{user} is logged in!</div>
           <label hmtlFor="switchUser">Switch User</label>
           <input defaultValue={user} id="switchUser"></input>
         </form>
-        <form>
-          <Button
-            onClick={() => {
-              onSubmit(undefined);
-            }}
-          >
-            Logout
-          </Button>
-        </form>
       </div>
-      <Button onClick={today}>Today</Button>
-      <Button onClick={nextDay}>Next Day</Button>
+      <ButtonGroup>
+        <Button onClick={today}>Today</Button>
+        <Button onClick={nextDay}>Next Day</Button>
+      </ButtonGroup>
       <Header className="header" as="h2" textAlign="center">
         <Time />
         {/* TODO REVIEW THIS LIB FOR A BETTER ONE */}
