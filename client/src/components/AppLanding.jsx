@@ -59,6 +59,7 @@ export default function AppLanding({ user, onSubmit }) {
           focused={isFocused} // PropTypes.bool
           onFocusChange={({ focused }) => setFocused(focused)} // PropTypes.func.isRequired
           id="your_unique_id" // PropTypes.string.isRequired //why is this required and what should it be?
+          isOutsideRange={() => false}
         />
       </Header>
       <TaskList calendarDate={calendarDate} triggerRender={user} />
