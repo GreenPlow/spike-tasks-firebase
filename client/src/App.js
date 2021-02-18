@@ -1,8 +1,4 @@
 import React, { useState } from "react";
-import "react-dates/initialize";
-import "react-dates/lib/css/_datepicker.css";
-
-import "react-dates/lib/css/_datepicker.css";
 
 import AppLanding from "./components/AppLanding";
 import AppLogin from "./components/AppLogin";
