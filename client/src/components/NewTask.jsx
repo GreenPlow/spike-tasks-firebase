@@ -94,6 +94,13 @@ function NewTask({ onCreateFinish, dateObj }) {
   return (
     <div className="row">
       <Form onSubmit={onSubmit}>
+        <TaskSizeSelector
+          sizeOptions={["small", "medium", "large"]}
+          onSizeChange={cb_onSizeChange}
+          selectedSize={newTaskSize}
+          errorMessage={errorMessage}
+        />
+        {errorMessage ? <text>{errorMessage}</text> : null}
         <Input
           tabIndex={1}
           fluid
@@ -105,13 +112,6 @@ function NewTask({ onCreateFinish, dateObj }) {
             setNewTask(e.target.value);
           }}
         />
-        <TaskSizeSelector
-          sizeOptions={["small", "medium", "large"]}
-          onSizeChange={cb_onSizeChange}
-          selectedSize={newTaskSize}
-          errorMessage={errorMessage}
-        />
-        {errorMessage ? <text>{errorMessage}</text> : null}
       </Form>
     </div>
   );
