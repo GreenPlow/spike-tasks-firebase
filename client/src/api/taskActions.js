@@ -1,8 +1,17 @@
 import axios from "axios";
 import handleAxiosError from "./errorHandler";
+
+import { get } from "../user";
 // add the axios interceptors here to do the banners and logging, able to delete the try catches
 // replace localhost with ip address to access app from a local network
 const endpoint = "http://localhost:8000";
+
+axios.interceptors.request.use(function (config) {
+  console.log(config);
+  config.headers["X-USERNAME"] = get();
+  console.log(config);
+  return config;
+});
 
 axios.interceptors.response.use(
   function (response) {
@@ -19,6 +28,7 @@ axios.interceptors.response.use(
 );
 
 async function getLatestTasksFromServer(date) {
+  console.log(get());
   const url =
     endpoint +
     `/api/task?searchDate=${date}&timeZone=${

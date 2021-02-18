@@ -9,7 +9,7 @@ import "./TaskList.css";
 
 import { Card } from "semantic-ui-react";
 
-export default function TaskList({ calendarDate }) {
+export default function TaskList({ calendarDate, triggerRender }) {
   const [tasks, setTasks] = useState([]);
 
   async function getLatestTasksFromServerAndUpdateState(aDateObj) {
@@ -25,7 +25,7 @@ export default function TaskList({ calendarDate }) {
     }
 
     getLatest();
-  }, [calendarDate]);
+  }, [calendarDate, triggerRender]);
 
   return (
     // pass in the function callback as a named prop
@@ -54,6 +54,7 @@ export default function TaskList({ calendarDate }) {
 
 TaskList.propTypes = {
   calendarDate: PropTypes.object.isRequired,
+  triggerRender: PropTypes.string,
 };
 
 /*Is there a better way to pass the calendar date that will be used for the get new tasks in the onModification call?*/
