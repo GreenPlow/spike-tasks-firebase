@@ -54,6 +54,16 @@ function App() {
             <label hmtlFor="switchUser">Switch User</label>
             <input defaultValue={user} id="switchUser"></input>
           </form>
+          <form>
+            <Button
+              onClick={(e) => {
+                setUser("");
+                set(null);
+              }}
+            >
+              Logout
+            </Button>
+          </form>
         </div>
         <Button onClick={today}>Today</Button>
         <Button onClick={nextDay}>Next Day</Button>
