@@ -92,7 +92,7 @@ function Task({ taskObj, onModification, calendarDate }) {
               handleEdit={handleEdit}
               afterUpdate={() => {
                 setShowEdit(false);
-                onModification();
+                onModification(calendarDate);
               }}
             />
           ) : null}
