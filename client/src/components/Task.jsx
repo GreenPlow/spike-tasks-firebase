@@ -76,14 +76,16 @@ function Task({ taskObj, onModification, calendarDate }) {
       <Card.Content>
         <Card.Header textAlign="left" onClick={() => setShowEdit(true)}>
           {!showEdit ? (
+            <div style={{ wordWrap: "break-word" }}>
+              {moment(date).format("LTS")}
+            </div>
+          ) : null}
+          {!showEdit ? (
             <div style={{ wordWrap: "break-word" }}>{thisTask}</div>
           ) : null}
           {!showEdit ? (
-            <div style={{ wordWrap: "break-word" }}>{tasksize}</div>
-          ) : null}
-          {!showEdit ? (
-            <div style={{ wordWrap: "break-word" }}>
-              {moment(date).format("LTS")}
+            <div style={{ wordWrap: "break-word"}}>
+              {tasksize}
             </div>
           ) : null}
           {showEdit ? (
