@@ -1,57 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 
 import Card from "react-bootstrap/Card";
+import { Icon } from "semantic-ui-react";
 
 import moment from "moment";
 
-import {
-  completeTask,
-  deleteTask,
-  undoTask,
-  updateTask,
-} from "../api/taskActions";
-import { Icon, Input, Form } from "semantic-ui-react";
-
-function EditWindow({ editObj, handleEdit, afterUpdate }) {
-  // https://stackoverflow.com/questions/22573494/react-js-input-losing-focus-when-rerendering
-
-  const inputRef = useRef(null);
-
-  useEffect(() => {
-    inputRef.current.focus();
-  }, []);
-
-  // The state of task is managed in the other component..
-  async function onSubmit() {
-    await updateTask(editObj);
-    await afterUpdate();
-  }
-
-  return (
-    <Form onSubmit={onSubmit}>
-      <Input
-        label="edit"
-        value={editObj.task}
-        onChange={handleEdit}
-        ref={inputRef}
-        onFocus={(e) => {
-          e.target.select();
-        }}
-      />
-      )
-    </Form>
-  );
-}
-
-EditWindow.propTypes = {
-  editObj: PropTypes.exact({
-    _id: PropTypes.string.isRequired,
-    task: PropTypes.string.isRequired,
-  }),
-  handleEdit: PropTypes.func.isRequired,
-  afterUpdate: PropTypes.func.isRequired,
-};
+import { completeTask, deleteTask, undoTask } from "../api/taskActions";
+import EditTask from "./EditTask";
 
 function Task({ taskObj, onModification, calendarDate }) {
   const { _id, task, status, tasksize, date } = taskObj;
@@ -90,7 +46,7 @@ function Task({ taskObj, onModification, calendarDate }) {
   // TODO can we test if the card is fluid?
   // TODO we need to test that the color is passed in
   return (
-    <Card key={_id} color={color} fluid draggable>
+    <Card key={_id} color={color}>
       <Card.Body textAlign="left" onClick={() => setShowEdit(true)}>
         {!showEdit ? (
           <div>
@@ -120,7 +76,7 @@ function Task({ taskObj, onModification, calendarDate }) {
           </div>
         ) : null}
         {showEdit ? (
-          <EditWindow
+          <EditTask
             editObj={{ task: thisTask, _id: _id }}
             handleEdit={handleEdit}
             afterUpdate={() => {
