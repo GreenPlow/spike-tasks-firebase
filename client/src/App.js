@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 
+import Container from "react-bootstrap/Container";
+
 import AppLanding from "./components/AppLanding";
 import AppLogin from "./components/AppLogin";
 
@@ -24,13 +26,13 @@ function App() {
   }
 
   return (
-    <div>
+      <Container fluid>
       {user ? (
         <AppLanding user={user} cbSetUser={handleUserLogin} />
       ) : (
         <AppLogin user={user} onSubmit={handleUserLogin} />
       )}
-    </div>
+      </Container>
   );
 }
 
