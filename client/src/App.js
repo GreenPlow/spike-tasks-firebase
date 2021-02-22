@@ -26,7 +26,7 @@ function App() {
   return (
     <div>
       {user ? (
-        <AppLanding user={user} onSubmit={handleUserLogin} />
+        <AppLanding user={user} cbSetUser={handleUserLogin} />
       ) : (
         <AppLogin user={user} onSubmit={handleUserLogin} />
       )}

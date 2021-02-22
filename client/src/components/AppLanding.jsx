@@ -14,10 +14,11 @@ import "react-dates/lib/css/_datepicker.css";
 
 import TaskList from "./TaskList";
 import Time from "./Time";
+import SwitchUser from "./SwitchUser";
 
 import moment from "moment";
 
-export default function AppLanding({ user, onSubmit }) {
+export default function AppLanding({ user, cbSetUser }) {
   const [calendarDate, setCalendarDate] = useState(moment());
   const [isFocused, setFocused] = useState(false);
 
@@ -36,27 +37,15 @@ export default function AppLanding({ user, onSubmit }) {
   return (
     <Container>
       <div style={{ textAlign: "right" }}>
-        <DropdownButton
-          title={`Hi ${user}!`}
-          id="bg-nested-dropdown"
-        >
+        <DropdownButton title={`Hi ${user}!`} id="bg-nested-dropdown">
           <DropdownItem
             onClick={() => {
-              onSubmit(undefined);
+              cbSetUser(undefined);
             }}
           >
             Logout
           </DropdownItem>
         </DropdownButton>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            onSubmit(e.target[0].value);
-          }}
-        >
-          <label hmtlFor="switchUser">Switch User</label>
-          <input defaultValue={user} id="switchUser"></input>
-        </form>
       </div>
       <ButtonGroup>
         <Button onClick={today}>Today</Button>
@@ -76,11 +65,12 @@ export default function AppLanding({ user, onSubmit }) {
         />
       </Header>
       <TaskList calendarDate={calendarDate} triggerRender={user} />
+      <SwitchUser cbSetUser={cbSetUser} />
     </Container>
   );
 }
 
 AppLanding.propTypes = {
   user: PropTypes.string.isRequired,
-  onSubmit: PropTypes.func.isRequired,
+  cbSetUser: PropTypes.func.isRequired,
 };
