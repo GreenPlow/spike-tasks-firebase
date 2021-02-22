@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
+import Alert from "react-bootstrap/Alert";
+
 import Task from "./Task";
 import NewTask from "./NewTask";
 
 import { getLatestTasksFromServer } from "../api/taskActions";
 import "./TaskList.css";
 
-import Alert from "react-bootstrap/Alert";
-import { Card } from "semantic-ui-react";
 
 export default function TaskList({ calendarDate, triggerRender }) {
   const [tasks, setTasks] = useState([]);
@@ -47,7 +47,6 @@ export default function TaskList({ calendarDate, triggerRender }) {
         <Alert>Alert! {errorAlert.toString()}</Alert>
       ) : (
         <div className="list">
-          <Card.Group>
             {tasks.map((item) => (
               <Task
                 key={item._id}
@@ -56,7 +55,6 @@ export default function TaskList({ calendarDate, triggerRender }) {
                 calendarDate={calendarDate}
               />
             ))}
-          </Card.Group>
         </div>
       )}
     </div>
