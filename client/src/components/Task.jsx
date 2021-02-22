@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
+
+import Card from "react-bootstrap/Card";
+
 import moment from "moment";
 
 import {
@@ -8,10 +11,16 @@ import {
   undoTask,
   updateTask,
 } from "../api/taskActions";
-import { Card, Icon, Input, Form } from "semantic-ui-react";
+import { Icon, Input, Form } from "semantic-ui-react";
 
 function EditWindow({ editObj, handleEdit, afterUpdate }) {
   // https://stackoverflow.com/questions/22573494/react-js-input-losing-focus-when-rerendering
+
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    inputRef.current.focus();
+  }, []);
 
   // The state of task is managed in the other component..
   async function onSubmit() {
@@ -21,7 +30,16 @@ function EditWindow({ editObj, handleEdit, afterUpdate }) {
 
   return (
     <Form onSubmit={onSubmit}>
-      <Input label="edit" value={editObj.task} onChange={handleEdit} />
+      <Input
+        label="edit"
+        value={editObj.task}
+        onChange={handleEdit}
+        ref={inputRef}
+        onFocus={(e) => {
+          e.target.select();
+        }}
+      />
+      )
     </Form>
   );
 }
@@ -73,41 +91,45 @@ function Task({ taskObj, onModification, calendarDate }) {
   // TODO we need to test that the color is passed in
   return (
     <Card key={_id} color={color} fluid draggable>
-      <Card.Content>
-        <Card.Header textAlign="left" onClick={() => setShowEdit(true)}>
-          {!showEdit ? (
-            <div style={{ wordWrap: "break-word" }}>
-              {moment(date).format("LTS")}
-            </div>
-          ) : null}
-          {!showEdit ? (
-            <div style={{ wordWrap: "break-word" }}>{thisTask}</div>
-          ) : null}
-          {!showEdit ? (
-            <div style={{ wordWrap: "break-word"}}>
-              {tasksize}
-            </div>
-          ) : null}
-          {showEdit ? (
-            <EditWindow
-              editObj={{ task: thisTask, _id: _id }}
-              handleEdit={handleEdit}
-              afterUpdate={() => {
-                setShowEdit(false);
-                onModification(calendarDate);
-              }}
-            />
-          ) : null}
-        </Card.Header>
-        <Card.Meta textAlign="right">
-          <Icon name="check circle" color="green" onClick={() => onDone()} />
-          <span style={{ paddingRight: 10 }}>Done</span>
-          <Icon name="undo" color="yellow" onClick={() => onUndo()} />
-          <span style={{ paddingRight: 10 }}>Undo</span>
-          <Icon name="delete" color="red" onClick={() => onDelete()} />
-          <span style={{ paddingRight: 10 }}>Delete</span>
-        </Card.Meta>
-      </Card.Content>
+      <Card.Body textAlign="left" onClick={() => setShowEdit(true)}>
+        {!showEdit ? (
+          <div>
+            <Card.Title>
+              <div style={{ wordWrap: "break-word" }}>{thisTask}</div>
+            </Card.Title>
+            <Card.Subtitle>
+              <div style={{ wordWrap: "break-word" }}>
+                {moment(date).format("LTS")}
+              </div>
+            </Card.Subtitle>
+            <Card.Text>
+              <div style={{ wordWrap: "break-word" }}>{tasksize}</div>
+            </Card.Text>
+            <Card.Text textAlign="right">
+              <Icon
+                name="check circle"
+                color="green"
+                onClick={() => onDone()}
+              />
+              <span style={{ paddingRight: 10 }}>Done</span>
+              <Icon name="undo" color="yellow" onClick={() => onUndo()} />
+              <span style={{ paddingRight: 10 }}>Undo</span>
+              <Icon name="delete" color="red" onClick={() => onDelete()} />
+              <span style={{ paddingRight: 10 }}>Delete</span>
+            </Card.Text>
+          </div>
+        ) : null}
+        {showEdit ? (
+          <EditWindow
+            editObj={{ task: thisTask, _id: _id }}
+            handleEdit={handleEdit}
+            afterUpdate={() => {
+              setShowEdit(false);
+              onModification(calendarDate);
+            }}
+          />
+        ) : null}
+      </Card.Body>
     </Card>
   );
 }
