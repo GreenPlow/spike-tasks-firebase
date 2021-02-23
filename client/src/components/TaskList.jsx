@@ -9,25 +9,58 @@ import NewTask from "./NewTask";
 import { getLatestTasksFromServer } from "../api/taskActions";
 import "./TaskList.css";
 
+function renderTaskListOrAlert({
+  tasks,
+  getLatestTasksFromServerAndUpdateState,
+  calendarDate,
+}) {
+  if (tasks === undefined) {
+    return;
+  }
+  if (tasks === null) {
+    return (
+      <Alert key="danger" variant="danger" style={{ height: "300px" }}>
+        Ooops. There was a problem getting tasks from the CLOUD...
+      </Alert>
+    );
+  }
+  if (tasks.length === 0) {
+    return (
+      <Alert key="danger" variant="success" style={{ height: "300px" }}>
+        There are no tasks to display for this day. Try creating one!
+      </Alert>
+    );
+  }
 
+  return (
+    <div className="list">
+      {tasks.map((item) => (
+        <Task
+          key={item._id}
+          taskObj={item}
+          onModification={getLatestTasksFromServerAndUpdateState}
+          calendarDate={calendarDate}
+        />
+      ))}
+    </div>
+  );
+}
 export default function TaskList({ calendarDate, triggerRender }) {
-  const [tasks, setTasks] = useState([]);
-  const [errorAlert, setErrorAlert] = useState(undefined);
+  const [tasks, setTasks] = useState();
 
   async function getLatestTasksFromServerAndUpdateState(aDateObj) {
     const dateISOString = aDateObj.toISOString();
+
     try {
       const latestTasks = await getLatestTasksFromServer(dateISOString);
-      setErrorAlert(undefined);
       setTasks(latestTasks);
-    } catch (e) {
-      setErrorAlert(e);
+    } catch (error) {
+      setTasks(null);
     }
   }
 
   useEffect(() => {
     async function getLatest() {
-      // Why is useEffect needed?
       await getLatestTasksFromServerAndUpdateState(calendarDate);
     }
 
@@ -35,28 +68,19 @@ export default function TaskList({ calendarDate, triggerRender }) {
   }, [calendarDate, triggerRender]);
 
   return (
-    // pass in the function callback as a named prop
     <div>
       <NewTask
         dateObj={calendarDate}
         onCreateFinish={() => {
+          // pass in the function callback as a named prop
           getLatestTasksFromServerAndUpdateState(calendarDate);
         }}
       />
-      {errorAlert ? (
-        <Alert>Alert! {errorAlert.toString()}</Alert>
-      ) : (
-        <div className="list">
-            {tasks.map((item) => (
-              <Task
-                key={item._id}
-                taskObj={item}
-                onModification={getLatestTasksFromServerAndUpdateState}
-                calendarDate={calendarDate}
-              />
-            ))}
-        </div>
-      )}
+      {renderTaskListOrAlert({
+        tasks,
+        getLatestTasksFromServerAndUpdateState,
+        calendarDate,
+      })}
     </div>
   );
 }
@@ -65,5 +89,3 @@ TaskList.propTypes = {
   calendarDate: PropTypes.object.isRequired,
   triggerRender: PropTypes.string,
 };
-
-/*Is there a better way to pass the calendar date that will be used for the get new tasks in the onModification call?*/
