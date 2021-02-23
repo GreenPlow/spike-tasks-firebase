@@ -26,11 +26,6 @@ export default function EditTask({ editObj, afterUpdate }) {
     setTask(e.target.value);
   }
 
-  function handleDateEdit(e) {
-    console.log(e.target.value);
-    setDate(e.target.value);
-  }
-
   useEffect(() => {
     inputRef.current.focus();
   }, []);
