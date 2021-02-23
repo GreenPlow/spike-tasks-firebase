@@ -12,8 +12,6 @@ import EditTask from "./EditTask";
 function Task({ taskObj, onModification, calendarDate }) {
   const { _id, task, status, tasksize, date } = taskObj;
 
-  const [thisTask, setTask] = useState(task);
-
   let color = "yellow";
 
   if (status) {
@@ -35,12 +33,6 @@ function Task({ taskObj, onModification, calendarDate }) {
     await onModification(calendarDate);
   }
 
-  function handleEdit(e) {
-    // sets the hook and line 54-56 occurs before re-render occurs
-    setTask(e.target.value);
-    // console.log() instance A of task, then re-invokes line 27 to get the latest update and will console.log() instance B of task
-  }
-
   const [showEdit, setShowEdit] = useState(false);
 
   // TODO can we test if the card is fluid?
@@ -51,7 +43,7 @@ function Task({ taskObj, onModification, calendarDate }) {
         {!showEdit ? (
           <div>
             <Card.Title>
-              <div style={{ wordWrap: "break-word" }}>{thisTask}</div>
+              <div style={{ wordWrap: "break-word" }}>{task}</div>
             </Card.Title>
             <Card.Subtitle>
               <div style={{ wordWrap: "break-word" }}>
@@ -77,8 +69,7 @@ function Task({ taskObj, onModification, calendarDate }) {
         ) : null}
         {showEdit ? (
           <EditTask
-            editObj={{ task: thisTask, _id: _id }}
-            handleEdit={handleEdit}
+            editObj={taskObj}
             afterUpdate={() => {
               setShowEdit(false);
               onModification(calendarDate);
