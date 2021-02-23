@@ -8,7 +8,7 @@ import {
 import Task from "../Task";
 // TODO is there a better where to import things so the path doesn't easily break?
 
-jest.mock("../../api/taskActions");
+jest.mock("../../../../api/taskActions");
 
 // afterEach(cleanup);
 const chance = new Chance();

@@ -6,7 +6,7 @@ import { Icon } from "semantic-ui-react";
 
 import moment from "moment";
 
-import { completeTask, deleteTask, undoTask } from "../api/taskActions";
+import { completeTask, deleteTask, undoTask } from "../../../api/taskActions";
 import EditTask from "./EditTask";
 
 function Task({ taskObj, onModification, calendarDate }) {

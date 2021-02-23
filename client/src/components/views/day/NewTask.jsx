@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import Form from "react-bootstrap/Form";
 
-import { createNewTask } from "../api/taskActions";
+import { createNewTask } from "../../../api/taskActions";
 
 function TaskSizeSelector({
   sizeOptions,

@@ -6,7 +6,7 @@ import Alert from "react-bootstrap/Alert";
 import Task from "./Task";
 import NewTask from "./NewTask";
 
-import { getLatestTasksFromServer } from "../api/taskActions";
+import { getLatestTasksFromServer } from "../../../api/taskActions";
 import "./TaskList.css";
 
 function renderTaskListOrAlert({
