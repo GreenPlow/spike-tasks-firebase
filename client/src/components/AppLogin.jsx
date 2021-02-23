@@ -2,26 +2,30 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import Container from "react-bootstrap/Container";
+import Form from "react-bootstrap/Form";
 
-
-export default function LoginScreen({ user, onSubmit}) {
+export default function LoginScreen({ user, onSubmit }) {
   return (
-    <Container>
+    <Container fluid>
       <div
         style={{
           textAlign: "center",
-          padding: "200px",
+          padding: "180px",
         }}
       >
-        <div>you done logged out.. type a username to log in</div>
-        <form
+        <Form
           onSubmit={(e) => {
             e.preventDefault();
             onSubmit(e.target[0].value);
           }}
         >
-          <input defaultValue={user}></input>
-        </form>
+          <Form.Group>
+            <Form.Label>
+              you done logged out.. type a username to log in
+            </Form.Label>
+            <Form.Control defaultValue={user} />
+          </Form.Group>
+        </Form>
       </div>
     </Container>
   );

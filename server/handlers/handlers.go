@@ -286,7 +286,7 @@ func UpdateTask(w http.ResponseWriter, r *http.Request) {
 func updateTask(taskObj models.TaskList, collection *mongo.Collection) error {
 	log.Println("inside updateTask, taskObj:", taskObj)
 	filter := bson.M{"_id": taskObj.ID}
-	update := bson.M{"$set": bson.M{"task": taskObj.Task}}
+	update := bson.M{"$set": bson.M{"task": taskObj.Task, "date": taskObj.DateTime}}
 
 	result, err := collection.UpdateOne(context.Background(), filter, update)
 	if err != nil {
