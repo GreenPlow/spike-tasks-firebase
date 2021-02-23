@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { Form, Input, Radio } from "semantic-ui-react";
+
+import Form from "react-bootstrap/Form";
+
 import { createNewTask } from "../api/taskActions";
 
 function TaskSizeSelector({
@@ -38,18 +40,19 @@ function TaskSizeSelector({
         }}
       >
         {sizeOptions.map((sizeOption, index) => (
-          <Form.Field key={`formField${index}`}>
-            <Radio
-              tabIndex={index + 2}
-              name={sizeOption}
-              label={sizeOption}
-              value={sizeOption}
-              checked={sizeOption === selectedSize}
-              onChange={() => {
-                onSizeChange(sizeOption);
-              }}
-            />
-          </Form.Field>
+          <Form.Check
+            key={`formField${index}`}
+            tabIndex={index + 2}
+            type="radio"
+            inline
+            name={sizeOption}
+            label={sizeOption}
+            value={sizeOption}
+            checked={sizeOption === selectedSize}
+            onChange={() => {
+              onSizeChange(sizeOption);
+            }}
+          />
         ))}
       </Form.Group>
     </div>
@@ -72,11 +75,12 @@ function NewTask({ onCreateFinish, dateObj }) {
     setNewTaskSize(size);
   }
 
-  async function onSubmit() {
-    if (newTaskSize.length === 0) {
-      console.log("inside onSubmit()");
-      console.log(newTaskSize);
-    } else {
+  async function onSubmit(event) {
+    event.preventDefault();
+    console.log(newTaskSize)
+    console.log(newTaskSize.length)
+    if (newTaskSize.length > 0) {
+      console.log("echo2")
       try {
         await createNewTask(newTask, newTaskSize, dateObj.toISOString());
         setErrorMessage("");
@@ -92,18 +96,17 @@ function NewTask({ onCreateFinish, dateObj }) {
   }
 
   return (
-    <div className="row">
-      <Form onSubmit={onSubmit}>
-        <TaskSizeSelector
-          sizeOptions={["small", "medium", "large"]}
-          onSizeChange={cb_onSizeChange}
-          selectedSize={newTaskSize}
-          errorMessage={errorMessage}
-        />
-        {errorMessage ? <text>{errorMessage}</text> : null}
-        <Input
+    <Form onSubmit={(e)=>{onSubmit(e)}}>
+      <TaskSizeSelector
+        sizeOptions={["small", "medium", "large"]}
+        onSizeChange={cb_onSizeChange}
+        selectedSize={newTaskSize}
+        errorMessage={errorMessage}
+      />
+      {errorMessage ? <text>{errorMessage}</text> : null}
+      <Form.Group>
+        <Form.Control
           tabIndex={1}
-          fluid
           type="text"
           name="task"
           placeholder="Create Task"
@@ -112,8 +115,8 @@ function NewTask({ onCreateFinish, dateObj }) {
             setNewTask(e.target.value);
           }}
         />
-      </Form>
-    </div>
+      </Form.Group>
+    </Form>
   );
 }
 
