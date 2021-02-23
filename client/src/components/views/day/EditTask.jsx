@@ -3,6 +3,10 @@ import PropTypes from "prop-types";
 
 import { Form, Button } from "react-bootstrap";
 
+import { SingleDatePicker } from "react-dates";
+import "react-dates/initialize";
+import "react-dates/lib/css/_datepicker.css";
+
 import moment from "moment";
 
 import { updateTask } from "../../../api/taskActions";
@@ -12,8 +16,8 @@ export default function EditTask({ editObj, afterUpdate }) {
 
   const [task, setTask] = useState(editObj.task);
   // const [date, setDate] = useState(moment(editObj.date).format("L"));
-  const [date, setDate] = useState(editObj.date);
-
+  const [date, setDate] = useState(moment(editObj.date));
+  const [isFocused, setFocused] = useState(false);
 
   const inputRef = useRef(null);
 
@@ -52,7 +56,15 @@ export default function EditTask({ editObj, afterUpdate }) {
       </Form.Group>
       <Form.Group controlId="formBasicDate">
         <Form.Label>Date</Form.Label>
-        <Form.Control value={date} onChange={handleDateEdit} />
+        <SingleDatePicker
+          small
+          date={date} // momentPropTypes.momentObj or null
+          onDateChange={(date) => setDate(date)} // PropTypes.func.isRequired
+          focused={isFocused} // PropTypes.bool
+          onFocusChange={({ focused }) => setFocused(focused)} // PropTypes.func.isRequired
+          id="your_unique_id" // PropTypes.string.isRequired //why is this required and what should it be?
+          isOutsideRange={() => false}
+        />
       </Form.Group>
       <Button variant="primary" type="submit">
         Save
