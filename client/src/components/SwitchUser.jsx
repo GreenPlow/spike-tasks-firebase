@@ -5,26 +5,20 @@ import Form from "react-bootstrap/Form";
 
 export default function SwitchUser({ cbSetUser }) {
   const [validated, setValidated] = useState(false);
-  const [value, setValue] = useState("");
 
   const handleSubmit = (event) => {
     const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
+    event.preventDefault();
+
+    if (form.checkValidity()) {
+      setValidated(false);
+      cbSetUser(event.target[0].value);
+      event.target[0].value = "";
+    } else {
       event.stopPropagation();
       setValidated(true);
-    } else {
-      event.preventDefault();
-      setValidated(false);
-      cbSetUser(value);
-      setValue("");
     }
   };
-
-  // onSubmit={(e) => {
-  //     e.preventDefault();
-  //     onSubmit(e.target[0].value);
-  //   }}
 
   return (
     <Form noValidate validated={validated} onSubmit={handleSubmit}>
@@ -33,11 +27,7 @@ export default function SwitchUser({ cbSetUser }) {
         <Form.Control
           type="text"
           placeholder="Enter a username"
-          required
-          value={value}
-          onChange={(e) => {
-            setValue(e.target.value);
-          }}
+          required // browser will evaluate if the field has text
         />
         <Form.Control.Feedback type="invalid">
           Please provide a username.
