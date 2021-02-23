@@ -65,6 +65,8 @@ EditTask.propTypes = {
   editObj: PropTypes.exact({
     _id: PropTypes.string.isRequired,
     task: PropTypes.string.isRequired,
+    status: PropTypes.bool.isRequired,
+    tasksize: PropTypes.string.isRequired,
     date: PropTypes.string.isRequired,
   }),
   afterUpdate: PropTypes.func.isRequired,

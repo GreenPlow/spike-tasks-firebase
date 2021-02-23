@@ -171,14 +171,11 @@ func getTasksByDate(searchDateTime string, timeZone string, collection *mongo.Co
 	// make a slice to ensure nil is not returned
 	results := make([]primitive.M, 0)
 	for cur.Next(context.Background()) {
-		println("Horse")
 		var result bson.M
 		e := cur.Decode(&result)
 		if e != nil {
 			log.Fatal(e)
 		}
-		println("result", result)
-
 		results = append(results, result)
 	}
 
