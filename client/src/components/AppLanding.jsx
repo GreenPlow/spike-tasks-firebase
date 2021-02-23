@@ -16,7 +16,7 @@ import { SingleDatePicker } from "react-dates";
 import "react-dates/initialize";
 import "react-dates/lib/css/_datepicker.css";
 
-import TaskList from "./TaskList";
+import TaskList from "./views/day/TaskList";
 import Time from "./Time";
 import SwitchUser from "./SwitchUser";
 

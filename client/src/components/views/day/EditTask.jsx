@@ -5,7 +5,7 @@ import { Form, Button } from "react-bootstrap";
 
 import moment from "moment";
 
-import { updateTask } from "../api/taskActions";
+import { updateTask } from "../../../api/taskActions";
 
 export default function EditTask({ editObj, afterUpdate }) {
   // https://stackoverflow.com/questions/22573494/react-js-input-losing-focus-when-rerendering
