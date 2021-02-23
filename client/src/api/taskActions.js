@@ -7,7 +7,6 @@ import { get } from "../user";
 const endpoint = "http://localhost:8000";
 
 axios.interceptors.request.use(function (config) {
-  console.log(config);
   config.headers["X-USERNAME"] = get();
   console.log(config);
   return config;
@@ -38,6 +37,7 @@ async function getLatestTasksFromServer(date) {
   try {
     const res = await axios.get(url);
     return res.data;
+
   } catch (errorObj) {
     throw new Error(`failed to get tasks for ${date}`);
   }
@@ -79,12 +79,11 @@ async function undoTask(id) {
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
   });
 }
-
 async function updateTask(obj) {
-  const { task, _id } = obj;
+  const { _id} = obj;
   // Try pushing in the id to the body also... seems like overkill to have it as an endpoint too?
   // TODO the Go API is not returning a Bad Request Error when json attributes are incorrect. for example, remove the _ from id and it should throw an error, but doesn't
-  const body = { task };
+  const body = obj;
   const url = endpoint + "/api/updateTask/" + _id;
   try {
     await axios.put(url, body, {
