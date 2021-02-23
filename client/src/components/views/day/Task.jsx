@@ -39,21 +39,13 @@ function Task({ taskObj, onModification, calendarDate }) {
   // TODO we need to test that the color is passed in
   return (
     <Card key={_id} color={color}>
-      <Card.Body textAlign="left" onClick={() => setShowEdit(true)}>
+      <Card.Body textalign="left" onClick={() => setShowEdit(true)}>
         {!showEdit ? (
           <div>
-            <Card.Title>
-              <div style={{ wordWrap: "break-word" }}>{task}</div>
-            </Card.Title>
-            <Card.Subtitle>
-              <div style={{ wordWrap: "break-word" }}>
-                {moment(date).format("LTS")}
-              </div>
-            </Card.Subtitle>
-            <Card.Text>
-              <div style={{ wordWrap: "break-word" }}>{tasksize}</div>
-            </Card.Text>
-            <Card.Text textAlign="right">
+            <Card.Title>{task}</Card.Title>
+            <Card.Subtitle>{moment(date).format("LTS")}</Card.Subtitle>
+            <Card.Text>{tasksize}</Card.Text>
+            <Card.Text textalign="right">
               <Icon
                 name="check circle"
                 color="green"
