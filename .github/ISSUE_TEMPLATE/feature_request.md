@@ -4,7 +4,7 @@ about: Suggest an idea for this project
 title: 'feat:'
 labels: enhancement
 assignees: ''
-project: MVP App
+projects: MVP App
 
 ---
 
