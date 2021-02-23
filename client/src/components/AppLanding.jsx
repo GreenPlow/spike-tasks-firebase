@@ -5,7 +5,7 @@ import Nav from "react-bootstrap/Nav";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-import Button from "react-bootstrap/Button";
+import { Button, ButtonToolbar } from "react-bootstrap";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import DropdownItem from "react-bootstrap/DropdownItem";
@@ -41,6 +41,29 @@ export default function AppLanding({ user, cbSetUser }) {
   return (
     <div>
       <Row>
+        <Time />
+      </Row>
+      <Row>
+        <Col md="auto">
+          <ButtonToolbar aria-label="Toolbar with button groups">
+            <ButtonGroup>
+              <Button onClick={today}>Today</Button>
+            </ButtonGroup>
+            <ButtonGroup>
+              <Button onClick={previousDay}>Previous Day</Button>
+              <SingleDatePicker
+                small
+                date={calendarDate} // momentPropTypes.momentObj or null
+                onDateChange={(calendarDate) => setCalendarDate(calendarDate)} // PropTypes.func.isRequired
+                focused={isFocused} // PropTypes.bool
+                onFocusChange={({ focused }) => setFocused(focused)} // PropTypes.func.isRequired
+                id="your_unique_id" // PropTypes.string.isRequired //why is this required and what should it be?
+                isOutsideRange={() => false}
+              />
+              <Button onClick={nextDay}>Next Day</Button>
+            </ButtonGroup>
+          </ButtonToolbar>
+        </Col>
         <Col md="auto">
           <Nav variant="pills" defaultActiveKey="link-1">
             <Nav.Item>
@@ -54,14 +77,7 @@ export default function AppLanding({ user, cbSetUser }) {
             </Nav.Item>
           </Nav>
         </Col>
-        <Col md="auto">
-          <ButtonGroup>
-            <Button onClick={today}>Today</Button>
-            <Button onClick={previousDay}>Previous Day</Button>
-            <Button onClick={nextDay}>Next Day</Button>
-          </ButtonGroup>
-        </Col>
-        <Col >
+        <Col>
           <DropdownButton
             title={`Hi ${user}!`}
             id="bg-nested-dropdown"
@@ -77,15 +93,6 @@ export default function AppLanding({ user, cbSetUser }) {
           </DropdownButton>
         </Col>
       </Row>
-      <Time />
-      <SingleDatePicker
-        date={calendarDate} // momentPropTypes.momentObj or null
-        onDateChange={(calendarDate) => setCalendarDate(calendarDate)} // PropTypes.func.isRequired
-        focused={isFocused} // PropTypes.bool
-        onFocusChange={({ focused }) => setFocused(focused)} // PropTypes.func.isRequired
-        id="your_unique_id" // PropTypes.string.isRequired //why is this required and what should it be?
-        isOutsideRange={() => false}
-      />
       <div>
         <TaskList calendarDate={calendarDate} triggerRender={user} />
       </div>
