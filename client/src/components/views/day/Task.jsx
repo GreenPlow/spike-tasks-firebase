@@ -39,12 +39,14 @@ function Task({ taskObj, onModification, calendarDate }) {
   // TODO we need to test that the color is passed in
   return (
     <Card key={_id} color={color}>
-      <Card.Body textalign="left" onClick={() => setShowEdit(true)}>
+      <Card.Body textalign="left">
         {!showEdit ? (
           <div>
-            <Card.Title>{task}</Card.Title>
-            <Card.Subtitle>{moment(date).format("LTS")}</Card.Subtitle>
-            <Card.Text>{tasksize}</Card.Text>
+            <div onClick={() => setShowEdit(true)}>
+              <Card.Title>{task}</Card.Title>
+              <Card.Subtitle>{moment(date).format("LTS")}</Card.Subtitle>
+              <Card.Text>{tasksize}</Card.Text>
+            </div>
             <Card.Text textalign="right">
               <Icon
                 name="check circle"
@@ -65,6 +67,9 @@ function Task({ taskObj, onModification, calendarDate }) {
             afterUpdate={() => {
               setShowEdit(false);
               onModification(calendarDate);
+            }}
+            handleCancel={() => {
+              setShowEdit(false);
             }}
           />
         ) : null}
