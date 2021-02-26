@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 
 import Form from "react-bootstrap/Form";
+import Alert from "react-bootstrap/Alert";
 
 import { createNewTask } from "../../../api/taskActions";
 
@@ -9,28 +10,9 @@ function TaskSizeSelector({
   sizeOptions,
   selectedSize,
   onSizeChange,
-  errorMessage,
 }) {
-  function Alert() {
-    return (
-      <p
-        style={{
-          position: "absolute",
-          "background-color": "red",
-          width: "100%",
-          "text-align": "right",
-          padding: "4px",
-          "border-radius": "4px",
-        }}
-      >
-        {errorMessage}
-      </p>
-    );
-  }
-
   return (
     <div style={{ position: "relative" }}>
-      {errorMessage ? <Alert /> : null}
       <Form.Group
         inline
         style={{
@@ -63,7 +45,6 @@ TaskSizeSelector.propTypes = {
   sizeOptions: PropTypes.arrayOf(PropTypes.string).isRequired,
   selectedSize: PropTypes.oneOf(["small", "medium", "large", ""]).isRequired,
   onSizeChange: PropTypes.func.isRequired,
-  errorMessage: PropTypes.string,
 };
 
 function NewTask({ onCreateFinish, dateObj }) {
@@ -96,31 +77,36 @@ function NewTask({ onCreateFinish, dateObj }) {
   }
 
   return (
-    <Form
-      onSubmit={(e) => {
-        onSubmit(e);
-      }}
-    >
-      <TaskSizeSelector
-        sizeOptions={["small", "medium", "large"]}
-        onSizeChange={cb_onSizeChange}
-        selectedSize={newTaskSize}
-        errorMessage={errorMessage}
-      />
-      {errorMessage ? <text>{errorMessage}</text> : null}
-      <Form.Group>
-        <Form.Control
-          tabIndex={1}
-          type="text"
-          name="task"
-          placeholder="Create Task"
-          value={newTask}
-          onChange={(e) => {
-            setNewTask(e.target.value);
-          }}
+    <div>
+      {errorMessage ? (
+        <Alert variant="warning">There was a problem! <strong>{errorMessage}</strong></Alert>
+      ) : (
+        <Alert variant="light"/>
+      )}
+      <Form
+        onSubmit={(e) => {
+          onSubmit(e);
+        }}
+      >
+        <TaskSizeSelector
+          sizeOptions={["small", "medium", "large"]}
+          onSizeChange={cb_onSizeChange}
+          selectedSize={newTaskSize}
         />
-      </Form.Group>
-    </Form>
+        <Form.Group>
+          <Form.Control
+            tabIndex={1}
+            type="text"
+            name="task"
+            placeholder="Create Task"
+            value={newTask}
+            onChange={(e) => {
+              setNewTask(e.target.value);
+            }}
+          />
+        </Form.Group>
+      </Form>
+    </div>
   );
 }
 
