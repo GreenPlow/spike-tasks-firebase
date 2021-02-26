@@ -5,8 +5,21 @@
 
 version: 2
 updates:
+  # Maintain dependencies for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 1
+
   - package-ecosystem: "npm" # See documentation for possible values
     directory: "/client" # Location of package manifests
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 1
+    
+  - package-ecosystem: "gomod" # See documentation for possible values
+    directory: "/server" # Location of package manifests
     schedule:
       interval: "daily"
     open-pull-requests-limit: 1
