@@ -12,10 +12,10 @@ import EditTask from "./EditTask";
 function Task({ taskObj, onModification, calendarDate }) {
   const { _id, task, status, tasksize, date } = taskObj;
 
-  let color = "yellow";
+  let color = "warning";
 
   if (status) {
-    color = "green";
+    color = "success";
   }
 
   async function onDelete() {
@@ -38,7 +38,7 @@ function Task({ taskObj, onModification, calendarDate }) {
   // TODO can we test if the card is fluid?
   // TODO we need to test that the color is passed in
   return (
-    <Card key={_id} color={color}>
+    <Card key={_id} border={color}>
       <Card.Body textalign="left">
         {!showEdit ? (
           <div>
