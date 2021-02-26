@@ -32,6 +32,6 @@ export default function LoginScreen({ user, onSubmit }) {
 }
 
 LoginScreen.propTypes = {
-  user: PropTypes.string.isRequired,
+  user: PropTypes.string,
   onSubmit: PropTypes.func.isRequired,
 };
