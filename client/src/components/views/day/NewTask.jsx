@@ -77,10 +77,10 @@ function NewTask({ onCreateFinish, dateObj }) {
 
   async function onSubmit(event) {
     event.preventDefault();
-    console.log(newTaskSize)
-    console.log(newTaskSize.length)
+    console.log(newTaskSize);
+    console.log(newTaskSize.length);
     if (newTaskSize.length > 0) {
-      console.log("echo2")
+      console.log("echo2");
       try {
         await createNewTask(newTask, newTaskSize, dateObj.toISOString());
         setErrorMessage("");
@@ -96,7 +96,11 @@ function NewTask({ onCreateFinish, dateObj }) {
   }
 
   return (
-    <Form onSubmit={(e)=>{onSubmit(e)}}>
+    <Form
+      onSubmit={(e) => {
+        onSubmit(e);
+      }}
+    >
       <TaskSizeSelector
         sizeOptions={["small", "medium", "large"]}
         onSizeChange={cb_onSizeChange}
