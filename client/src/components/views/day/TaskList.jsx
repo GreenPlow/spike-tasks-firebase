@@ -19,14 +19,14 @@ function renderTaskListOrAlert({
   }
   if (tasks === null) {
     return (
-      <Alert key="danger" variant="danger" style={{ height: "300px" }}>
+      <Alert key="warning" variant="warning" style={{ height: "300px" }}>
         Ooops. There was a problem getting tasks from the CLOUD...
       </Alert>
     );
   }
   if (tasks.length === 0) {
     return (
-      <Alert key="danger" variant="success" style={{ height: "300px" }}>
+      <Alert key="success" variant="success" style={{ height: "300px" }}>
         There are no tasks to display for this day. Try creating one!
       </Alert>
     );
