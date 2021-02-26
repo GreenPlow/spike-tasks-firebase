@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import PropTypes from "prop-types";
 
-import { Form, Button, ButtonGroup } from "react-bootstrap";
+import { Form, Button } from "react-bootstrap";
 
 import { SingleDatePicker } from "react-dates";
 import "react-dates/initialize";
