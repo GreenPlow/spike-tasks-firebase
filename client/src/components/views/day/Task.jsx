@@ -5,15 +5,14 @@ import Card from "react-bootstrap/Card";
 import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
 import ToggleButton from "react-bootstrap/ToggleButton";
 
-
 import { Icon } from "semantic-ui-react";
 
 import moment from "moment";
 
-import { completeTask, deleteTask } from "../../../api/taskActions";
+import { completeTask, deleteTask, undoTask } from "../../../api/taskActions";
 import EditTask from "./EditTask";
 
-function Task({ taskObj, onModification, calendarDate }) {
+function Task({ taskObj, onModification, calendarDate, doneButton }) {
   const { _id, task, status, tasksize, date } = taskObj;
 
   let color = "warning";
@@ -32,10 +31,10 @@ function Task({ taskObj, onModification, calendarDate }) {
     await onModification(calendarDate);
   }
 
-  // async function onUndo() {
-  //   await undoTask(_id);
-  //   await onModification(calendarDate);
-  // }
+  async function onUndo() {
+    await undoTask(_id);
+    await onModification(calendarDate);
+  }
 
   const [showEdit, setShowEdit] = useState(false);
 
@@ -63,14 +62,25 @@ function Task({ taskObj, onModification, calendarDate }) {
               </div>
             </div>
             <Card.Text textalign="right">
-              <Icon
-                name="check circle"
-                color="green"
-                onClick={() => onDone()}
-              />
-              <span style={{ paddingRight: 10 }}>Done</span>
-              <Icon name="delete" color="red" onClick={() => onDelete()} />
-              <span style={{ paddingRight: 10 }}>Delete</span>
+              {doneButton ? (
+                <div>
+                  <Icon
+                    name="check circle"
+                    color="green"
+                    onClick={() => onDone()}
+                  />
+                  <span style={{ paddingRight: 10 }}>Done</span>
+                  <Icon name="delete" color="red" onClick={() => onDelete()} />
+                  <span style={{ paddingRight: 10 }}>Delete</span>
+                </div>
+              ) : (
+                <div>
+                  <Icon name="undo" color="yellow" onClick={() => onUndo()} />
+                  <span style={{ paddingRight: 10 }}>Undo</span>
+                  <Icon name="delete" color="red" onClick={() => onDelete()} />
+                  <span style={{ paddingRight: 10 }}>Delete</span>
+                </div>
+              )}
             </Card.Text>
           </div>
         ) : null}
@@ -101,6 +111,7 @@ Task.propTypes = {
   }),
   onModification: PropTypes.func.isRequired,
   calendarDate: PropTypes.object,
+  doneButton: PropTypes.bool.isRequired,
 };
 
 export default Task;
@@ -109,8 +120,3 @@ export default Task;
 // one test for each action and that they call their action creator properly
 // 2 tests for either status color
 // <Card.Text>{tasksize}</Card.Text>
-
-{
-  /* <Icon name="undo" color="yellow" onClick={() => onUndo()} />
-<span style={{ paddingRight: 10 }}>Undo</span> */
-}
