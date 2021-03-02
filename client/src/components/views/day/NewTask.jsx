@@ -1,42 +1,41 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 
-import Form from "react-bootstrap/Form";
-import Alert from "react-bootstrap/Alert";
+import {
+  Alert,
+  Form,
+  ToggleButtonGroup,
+  ToggleButton,
+  Row,
+  Col,
+} from "react-bootstrap";
 
 import { createNewTask } from "../../../api/taskActions";
 
-function TaskSizeSelector({
-  sizeOptions,
-  selectedSize,
-  onSizeChange,
-}) {
+function TaskSizeSelector({ sizeOptions, selectedSize, onSizeChange }) {
   return (
-    <div style={{ position: "relative" }}>
-      <Form.Group
-        style={{
-          "verticalAlign": "middle",
-          "marginTop": "4px",
-          "paddingTop": "4px",
-        }}
-      >
-        {sizeOptions.map((sizeOption, index) => (
-          <Form.Check
-            key={`formField${index}`}
-            tabIndex={index + 2}
-            type="radio"
-            inline
-            name={sizeOption}
-            label={sizeOption}
-            value={sizeOption}
-            checked={sizeOption === selectedSize}
-            onChange={() => {
-              onSizeChange(sizeOption);
-            }}
-          />
-        ))}
-      </Form.Group>
-    </div>
+    <ToggleButtonGroup
+      className="align-self-end"
+      type="radio"
+      name="options"
+      value={selectedSize}
+      onChange={onSizeChange}
+      onClick={(e) => {
+        e.stopPropagation();
+      }}
+    >
+      {sizeOptions.map((sizeOption, index) => (
+        <ToggleButton
+          key={`formField${index}`}
+          tabIndex={index + 2}
+          name={sizeOption}
+          label={sizeOption}
+          value={sizeOption}
+        >
+          {sizeOption}
+        </ToggleButton>
+      ))}
+    </ToggleButtonGroup>
   );
 }
 
@@ -50,10 +49,6 @@ function NewTask({ onCreateFinish, dateObj }) {
   const [newTask, setNewTask] = useState("");
   const [newTaskSize, setNewTaskSize] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-
-  function cb_onSizeChange(size) {
-    setNewTaskSize(size);
-  }
 
   async function onSubmit(event) {
     event.preventDefault();
@@ -75,24 +70,26 @@ function NewTask({ onCreateFinish, dateObj }) {
     }
   }
 
+  function cb_onSizeChange(size) {
+    setNewTaskSize(size);
+  }
+
   return (
     <div>
       {errorMessage ? (
-        <Alert variant="warning">There was a problem! <strong>{errorMessage}</strong></Alert>
+        <Alert variant="warning">
+          There was a problem! <strong>{errorMessage}</strong>
+        </Alert>
       ) : (
-        <Alert variant="light"/>
+        <Alert variant="light" />
       )}
       <Form
+        className="d-flex"
         onSubmit={(e) => {
           onSubmit(e);
         }}
       >
-        <TaskSizeSelector
-          sizeOptions={["small", "medium", "large"]}
-          onSizeChange={cb_onSizeChange}
-          selectedSize={newTaskSize}
-        />
-        <Form.Group>
+        <Form.Group className="flex-grow-1">
           <Form.Control
             tabIndex={1}
             type="text"
@@ -103,6 +100,25 @@ function NewTask({ onCreateFinish, dateObj }) {
               setNewTask(e.target.value);
             }}
           />
+          <div className="justify-content-end">
+            <ToggleButtonGroup
+              type="radio"
+              name="options"
+              value={newTaskSize}
+              onChange={(value) => {
+                debugger; //eslint-disable-line
+                cb_onSizeChange(value);
+                onSubmit();
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >
+              <ToggleButton value="small">S</ToggleButton>
+              <ToggleButton value="medium">M</ToggleButton>
+              <ToggleButton value="large">L</ToggleButton>
+            </ToggleButtonGroup>
+          </div>
         </Form.Group>
       </Form>
     </div>
@@ -115,3 +131,14 @@ NewTask.propTypes = {
 };
 
 export default NewTask;
+
+// <TaskSizeSelector
+// sizeOptions={["small", "medium", "large"]}
+// onSizeChange={(value) => {
+//   console.log("click");
+//   setNewTaskSize(value);
+//   console.log(newTaskSize)
+//   onSubmit()
+// }}
+// selectedSize={newTaskSize}
+// />
