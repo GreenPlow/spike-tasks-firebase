@@ -67,8 +67,8 @@ export default function TaskList({ calendarDate, triggerRender }) {
   const [incompleteTasks, setIncompleteTasks] = useState();
   const [completeTasks, setCompleteTasks] = useState();
 
-  async function getLatestTasksFromServerAndUpdateState(aDateObj) {
-    const dateISOString = aDateObj.toISOString();
+  async function getLatestTasksFromServerAndUpdateState(calendarDate) {
+    const dateISOString = calendarDate.toISOString();
     try {
       const latestTasks = await getLatestTasksFromServer(dateISOString);
       seperateTasks({ latestTasks, setCompleteTasks, setIncompleteTasks });
