@@ -57,9 +57,40 @@ function renderIncompleteTaskListOrAlert({
           }}
           doneButton={true}
           // move CalendarDate to the context
-          calendarDate={calendarDate}
         />
       ))}
+    </div>
+  );
+}
+
+function renderCompleteTasksList({
+  completeTasks,
+  getLatestTasksFromServerAndUpdateState,
+  calendarDate,
+}) {
+  return (
+    <div className="list">
+      <Accordion>
+        <Card>
+          <Accordion.Toggle as={Card.Header} eventKey="0">
+            Complete Tasks! {completeTasks.length}
+          </Accordion.Toggle>
+          <Accordion.Collapse eventKey="0">
+            <div>
+              {completeTasks.map((item) => (
+                <Task
+                  key={item._id}
+                  taskObj={item}
+                  onModification={() => {
+                    // pass in the function callback as a named prop
+                    getLatestTasksFromServerAndUpdateState(calendarDate);
+                  }}
+                />
+              ))}
+            </div>
+          </Accordion.Collapse>
+        </Card>
+      </Accordion>
     </div>
   );
 }
@@ -115,36 +146,3 @@ TaskList.propTypes = {
   calendarDate: PropTypes.object.isRequired,
   triggerRender: PropTypes.string,
 };
-
-function renderCompleteTasksList({
-  completeTasks,
-  getLatestTasksFromServerAndUpdateState,
-  calendarDate,
-}) {
-  return (
-    <div className="list">
-      <Accordion>
-        <Card>
-          <Accordion.Toggle as={Card.Header} eventKey="0">
-            Complete Tasks! {completeTasks.length}
-          </Accordion.Toggle>
-          <Accordion.Collapse eventKey="0">
-            <div>
-              {completeTasks.map((item) => (
-                <Task
-                  key={item._id}
-                  taskObj={item}
-                  onModification={() => {
-                    // pass in the function callback as a named prop
-                    getLatestTasksFromServerAndUpdateState(calendarDate);
-                  }}
-                  calendarDate={calendarDate}
-                />
-              ))}
-            </div>
-          </Accordion.Collapse>
-        </Card>
-      </Accordion>
-    </div>
-  );
-}
