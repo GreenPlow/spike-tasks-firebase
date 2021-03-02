@@ -1,16 +1,13 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 
-import Card from "react-bootstrap/Card";
-import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
-import ToggleButton from "react-bootstrap/ToggleButton";
-
+import { Card, ToggleButtonGroup, ToggleButton } from "react-bootstrap";
 import { Icon } from "semantic-ui-react";
+import EditTask from "./EditTask";
 
 import moment from "moment";
 
 import { completeTask, deleteTask, undoTask } from "../../../api/taskActions";
-import EditTask from "./EditTask";
 
 function Task({ taskObj, onModification, doneButton }) {
   const { _id, task, status, tasksize, date } = taskObj;

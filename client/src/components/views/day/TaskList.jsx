@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
-import Alert from "react-bootstrap/Alert";
-import Accordion from "react-bootstrap/Accordion";
-import Card from "react-bootstrap/Card";
-
-import Task from "./Task";
+import { Accordion, Alert, Card } from "react-bootstrap";
 import NewTask from "./NewTask";
+import Task from "./Task";
 
 import { getLatestTasksFromServer } from "../../../api/taskActions";
 import "./TaskList.css";
