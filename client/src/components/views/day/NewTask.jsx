@@ -14,11 +14,10 @@ function TaskSizeSelector({
   return (
     <div style={{ position: "relative" }}>
       <Form.Group
-        inline
         style={{
-          "vertical-align": "middle",
-          "margin-top": "4px",
-          "padding-top": "4px",
+          "verticalAlign": "middle",
+          "marginTop": "4px",
+          "paddingTop": "4px",
         }}
       >
         {sizeOptions.map((sizeOption, index) => (
