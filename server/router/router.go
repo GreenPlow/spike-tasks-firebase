@@ -12,7 +12,7 @@ func Router() *chi.Mux {
 	r := chi.NewRouter()
 
 	c := cors.New(cors.Options{
-		AllowedMethods:   []string{"DELETE", "GET", "POST", "PUT"},
+		AllowedMethods:   []string{"DELETE", "GET", "POST", "PUT", "PATCH"},
 		AllowedHeaders:   []string{"*"},
 		AllowCredentials: true,
 	})
@@ -28,7 +28,7 @@ func Router() *chi.Mux {
 	r.Post("/api/task", handlers.CreateTask)
 	// r.Delete("/api/task", handlers.CreateTask) // delete everything
 	// r.Put("/api/task/{id}", handlers.CreateTask) // everything
-	// r.Patch("/api/task/{id}", handlers.CreateTask) // only changes
+	r.Patch("/api/task/{id}", handlers.PatchTaskProperty) // change one property
 	// r.Delete("/api/task/{id}", handlers.CreateTask) // delete
 
 	// Convenience Method

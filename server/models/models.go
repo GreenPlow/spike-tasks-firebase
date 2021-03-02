@@ -14,3 +14,8 @@ type TaskList struct {
 	TaskSize string             `json:"taskSize,omitempty"`
 	DateTime time.Time          `json:"date,omitempty" bson:"date,omitempty"`
 }
+
+type TempPatchMakeThisDynamicLater struct {
+	ID       primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
+	TaskSize string             `json:"taskSize,omitempty"`
+}
