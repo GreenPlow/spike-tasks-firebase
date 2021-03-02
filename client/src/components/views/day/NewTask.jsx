@@ -107,7 +107,7 @@ function NewTask({ onCreateFinish, dateObj }) {
               value={newTaskSize}
               onChange={(value) => {
                 debugger; //eslint-disable-line
-                cb_onSizeChange(value);
+                setNewTaskSize(value);
                 onSubmit();
               }}
               onClick={(e) => {
