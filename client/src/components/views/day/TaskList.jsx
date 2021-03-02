@@ -4,8 +4,6 @@ import PropTypes from "prop-types";
 import Alert from "react-bootstrap/Alert";
 import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
-import ListGroup from "react-bootstrap/ListGroup";
-import Button from "react-bootstrap/Button";
 
 import Task from "./Task";
 import NewTask from "./NewTask";
@@ -56,8 +54,11 @@ function renderIncompleteTaskListOrAlert({
         <Task
           key={item._id}
           taskObj={item}
-          onModification={getLatestTasksFromServerAndUpdateState}
-          doneButton = {true}
+          onModification={() => {
+            // pass in the function callback as a named prop
+            getLatestTasksFromServerAndUpdateState(calendarDate);
+          }}
+          doneButton={true}
           // move CalendarDate to the context
           calendarDate={calendarDate}
         />
@@ -125,35 +126,28 @@ function renderCompleteTasksList({
 }) {
   return (
     <div className="list">
-      <Temp></Temp>
-      {completeTasks.map((item) => (
-        <Task
-          key={item._id}
-          taskObj={item}
-          onModification={getLatestTasksFromServerAndUpdateState}
-          calendarDate={calendarDate}
-        />
-      ))}
+      <Accordion>
+        <Card>
+          <Accordion.Toggle as={Card.Header} eventKey="0">
+            Complete Tasks! {completeTasks.length}
+          </Accordion.Toggle>
+          <Accordion.Collapse eventKey="0">
+            <div>
+              {completeTasks.map((item) => (
+                <Task
+                  key={item._id}
+                  taskObj={item}
+                  onModification={() => {
+                    // pass in the function callback as a named prop
+                    getLatestTasksFromServerAndUpdateState(calendarDate);
+                  }}
+                  calendarDate={calendarDate}
+                />
+              ))}
+            </div>
+          </Accordion.Collapse>
+        </Card>
+      </Accordion>
     </div>
-  );
-}
-
-function Temp() {
-  return (
-    <Accordion>
-      <Card>
-        <Accordion.Toggle as={Card.Header} eventKey="0">
-          Completed Tasks
-        </Accordion.Toggle>
-        <Accordion.Collapse eventKey="0">
-          <div>
-            <ListGroup.Item>
-              Hello!Im the body <Button variant="light">S</Button>
-            </ListGroup.Item>
-            <ListGroup.Item>Hello! Im the body2</ListGroup.Item>
-          </div>
-        </Accordion.Collapse>
-      </Card>
-    </Accordion>
   );
 }
