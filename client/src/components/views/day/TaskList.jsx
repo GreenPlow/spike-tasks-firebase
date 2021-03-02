@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
 import Alert from "react-bootstrap/Alert";
+import Accordion from "react-bootstrap/Accordion";
+import Card from "react-bootstrap/Card";
 
 import Task from "./Task";
 import NewTask from "./NewTask";
@@ -9,22 +11,36 @@ import NewTask from "./NewTask";
 import { getLatestTasksFromServer } from "../../../api/taskActions";
 import "./TaskList.css";
 
-function renderTaskListOrAlert({
-  tasks,
+function seperateTasks({ latestTasks, setCompleteTasks, setIncompleteTasks }) {
+  let completeTasks = [];
+  let incompleteTasks = [];
+  for (let i = 0; i < latestTasks.length; i++) {
+    if (latestTasks[i].status === true) {
+      completeTasks.push(latestTasks[i]);
+    } else {
+      incompleteTasks.push(latestTasks[i]);
+    }
+  }
+  setCompleteTasks(completeTasks);
+  setIncompleteTasks(incompleteTasks);
+}
+
+function renderIncompleteTaskListOrAlert({
+  incompleteTasks,
   getLatestTasksFromServerAndUpdateState,
   calendarDate,
 }) {
-  if (tasks === undefined) {
+  if (incompleteTasks === undefined) {
     return;
   }
-  if (tasks === null) {
+  if (incompleteTasks === null) {
     return (
       <Alert key="warning" variant="warning" style={{ height: "300px" }}>
         Ooops. There was a problem getting tasks from the CLOUD...
       </Alert>
     );
   }
-  if (tasks.length === 0) {
+  if (incompleteTasks.length === 0) {
     return (
       <Alert key="success" variant="success" style={{ height: "300px" }}>
         There are no tasks to display for this day. Try creating one!
@@ -34,11 +50,16 @@ function renderTaskListOrAlert({
 
   return (
     <div className="list">
-      {tasks.map((item) => (
+      {incompleteTasks.map((item) => (
         <Task
           key={item._id}
           taskObj={item}
-          onModification={getLatestTasksFromServerAndUpdateState}
+          onModification={() => {
+            // pass in the function callback as a named prop
+            getLatestTasksFromServerAndUpdateState(calendarDate);
+          }}
+          doneButton={true}
+          // move CalendarDate to the context
           calendarDate={calendarDate}
         />
       ))}
@@ -46,16 +67,16 @@ function renderTaskListOrAlert({
   );
 }
 export default function TaskList({ calendarDate, triggerRender }) {
-  const [tasks, setTasks] = useState();
+  const [incompleteTasks, setIncompleteTasks] = useState();
+  const [completeTasks, setCompleteTasks] = useState();
 
   async function getLatestTasksFromServerAndUpdateState(aDateObj) {
     const dateISOString = aDateObj.toISOString();
-
     try {
       const latestTasks = await getLatestTasksFromServer(dateISOString);
-      setTasks(latestTasks);
+      seperateTasks({ latestTasks, setCompleteTasks, setIncompleteTasks });
     } catch (error) {
-      setTasks(null);
+      setIncompleteTasks(null);
     }
   }
 
@@ -63,7 +84,6 @@ export default function TaskList({ calendarDate, triggerRender }) {
     async function getLatest() {
       await getLatestTasksFromServerAndUpdateState(calendarDate);
     }
-
     getLatest();
   }, [calendarDate, triggerRender]);
 
@@ -76,8 +96,17 @@ export default function TaskList({ calendarDate, triggerRender }) {
           getLatestTasksFromServerAndUpdateState(calendarDate);
         }}
       />
-      {renderTaskListOrAlert({
-        tasks,
+      {completeTasks === undefined
+        ? null
+        : completeTasks.length > 0
+        ? renderCompleteTasksList({
+            completeTasks,
+            getLatestTasksFromServerAndUpdateState,
+            calendarDate,
+          })
+        : null}
+      {renderIncompleteTaskListOrAlert({
+        incompleteTasks,
         getLatestTasksFromServerAndUpdateState,
         calendarDate,
       })}
@@ -89,3 +118,36 @@ TaskList.propTypes = {
   calendarDate: PropTypes.object.isRequired,
   triggerRender: PropTypes.string,
 };
+
+function renderCompleteTasksList({
+  completeTasks,
+  getLatestTasksFromServerAndUpdateState,
+  calendarDate,
+}) {
+  return (
+    <div className="list">
+      <Accordion>
+        <Card>
+          <Accordion.Toggle as={Card.Header} eventKey="0">
+            Complete Tasks! {completeTasks.length}
+          </Accordion.Toggle>
+          <Accordion.Collapse eventKey="0">
+            <div>
+              {completeTasks.map((item) => (
+                <Task
+                  key={item._id}
+                  taskObj={item}
+                  onModification={() => {
+                    // pass in the function callback as a named prop
+                    getLatestTasksFromServerAndUpdateState(calendarDate);
+                  }}
+                  calendarDate={calendarDate}
+                />
+              ))}
+            </div>
+          </Accordion.Collapse>
+        </Card>
+      </Accordion>
+    </div>
+  );
+}
