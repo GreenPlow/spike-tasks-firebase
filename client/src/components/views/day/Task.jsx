@@ -12,7 +12,7 @@ import moment from "moment";
 import { completeTask, deleteTask, undoTask } from "../../../api/taskActions";
 import EditTask from "./EditTask";
 
-function Task({ taskObj, onModification, calendarDate, doneButton }) {
+function Task({ taskObj, onModification, doneButton }) {
   const { _id, task, status, tasksize, date } = taskObj;
 
   let color = "warning";
@@ -23,17 +23,17 @@ function Task({ taskObj, onModification, calendarDate, doneButton }) {
 
   async function onDelete() {
     await deleteTask(_id);
-    await onModification(calendarDate);
+    await onModification();
   }
 
   async function onDone() {
     await completeTask(_id);
-    await onModification(calendarDate);
+    await onModification();
   }
 
   async function onUndo() {
     await undoTask(_id);
-    await onModification(calendarDate);
+    await onModification();
   }
 
   const [showEdit, setShowEdit] = useState(false);
@@ -89,7 +89,7 @@ function Task({ taskObj, onModification, calendarDate, doneButton }) {
             editObj={taskObj}
             afterUpdate={() => {
               setShowEdit(false);
-              onModification(calendarDate);
+              onModification();
             }}
             handleCancel={() => {
               setShowEdit(false);
@@ -110,7 +110,6 @@ Task.propTypes = {
     date: PropTypes.string.isRequired,
   }),
   onModification: PropTypes.func.isRequired,
-  calendarDate: PropTypes.object,
   doneButton: PropTypes.bool.isRequired,
 };
 
