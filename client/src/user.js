@@ -1,8 +1,12 @@
 let user = localStorage.getItem("user") || undefined;
 
-function set(userName) {
+function setLocal(userName) {
   user = userName;
-  localStorage.setItem("user", user);
+  if (!userName) {
+    localStorage.removeItem("user");
+  } else {
+    localStorage.setItem("user", user);
+  }
 }
 
 function get() {
@@ -12,4 +16,4 @@ function get() {
   return user;
 }
 
-export { set, get };
+export { setLocal , get };

@@ -7,7 +7,7 @@ import AppLogin from "./components/AppLogin";
 
 import "./App.css";
 
-import { get, set } from "./user";
+import { get, setLocal } from "./user";
 
 function App() {
   const [user, setUser] = useState(undefined);
@@ -22,17 +22,17 @@ function App() {
 
   function handleUserLogin(value) {
     setUser(value);
-    set(value);
+    setLocal(value);
   }
 
   return (
-      <Container fluid>
+    <Container fluid>
       {user ? (
         <AppLanding user={user} cbSetUser={handleUserLogin} />
       ) : (
         <AppLogin user={user} onSubmit={handleUserLogin} />
       )}
-      </Container>
+    </Container>
   );
 }
 
