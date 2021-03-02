@@ -7,10 +7,16 @@ import EditTask from "./EditTask";
 
 import moment from "moment";
 
-import { completeTask, deleteTask, undoTask } from "../../../api/taskActions";
+import {
+  completeTask,
+  deleteTask,
+  undoTask,
+  patchTask,
+} from "../../../api/taskActions";
 
 function Task({ taskObj, onModification, doneButton }) {
   const { _id, task, status, tasksize, date } = taskObj;
+  const [statefulTaskSize, setStatefulTaskSize] = useState([tasksize]);
 
   let color = "warning";
 
@@ -33,10 +39,20 @@ function Task({ taskObj, onModification, doneButton }) {
     await onModification();
   }
 
+  async function changeTaskSize(value) {
+    console.log("new size", value);
+    await patchTask({ _id, property: { taskSize: value } });
+    await onModification();
+
+    setStatefulTaskSize(value);
+  }
+
   const [showEdit, setShowEdit] = useState(false);
 
   // TODO can we test if the card is fluid?
   // TODO we need to test that the color is passed in
+
+  // probably need to go to managed state so the button on the screen doesn't change until the server updates
   return (
     <Card key={_id} border={color}>
       <Card.Body textalign="left">
@@ -49,8 +65,14 @@ function Task({ taskObj, onModification, doneButton }) {
                 <ToggleButtonGroup
                   type="radio"
                   name="options"
-                  defaultValue={tasksize}
+                  value={statefulTaskSize}
                   style={{ position: "absolute", top: 0 }}
+                  onChange={(value) => {
+                    changeTaskSize(value);
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
                 >
                   <ToggleButton value="small">S</ToggleButton>
                   <ToggleButton value="medium">M</ToggleButton>
@@ -107,7 +129,7 @@ Task.propTypes = {
     date: PropTypes.string.isRequired,
   }),
   onModification: PropTypes.func.isRequired,
-  doneButton: PropTypes.bool.isRequired,
+  doneButton: PropTypes.bool,
 };
 
 export default Task;
