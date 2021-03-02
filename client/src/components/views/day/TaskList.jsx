@@ -8,6 +8,8 @@ import Task from "./Task";
 import { getLatestTasksFromServer } from "../../../api/taskActions";
 import "./TaskList.css";
 
+import moment from "moment";
+
 function seperateTasks({ latestTasks, setCompleteTasks, setIncompleteTasks }) {
   let completeTasks = [];
   let incompleteTasks = [];
@@ -50,26 +52,26 @@ export default function TaskList({ calendarDate, triggerRender }) {
 
     return (
       <div className="list">
-          <Accordion>
-            <Card>
-              <Accordion.Toggle as={Card.Header} eventKey="0">
-                {completeTasks.length} Complete!
-              </Accordion.Toggle>
-              <Accordion.Collapse eventKey="0">
-                <div>
-                  {completeTasks.map((item) => (
-                    <Task
-                      key={item._id}
-                      taskObj={item}
-                      onModification={() => {
-                        getLatestTasksFromServerAndUpdateState(calendarDate);
-                      }}
-                    />
-                  ))}
-                </div>
-              </Accordion.Collapse>
-            </Card>
-          </Accordion>
+        <Accordion>
+          <Card>
+            <Accordion.Toggle as={Card.Header} eventKey="0">
+              {completeTasks.length} Complete!
+            </Accordion.Toggle>
+            <Accordion.Collapse eventKey="0">
+              <div>
+                {completeTasks.map((item) => (
+                  <Task
+                    key={item._id}
+                    taskObj={item}
+                    onModification={() => {
+                      getLatestTasksFromServerAndUpdateState(calendarDate);
+                    }}
+                  />
+                ))}
+              </div>
+            </Accordion.Collapse>
+          </Card>
+        </Accordion>
       </div>
     );
   }
@@ -87,26 +89,27 @@ export default function TaskList({ calendarDate, triggerRender }) {
     }
     if (incompleteTasks.length === 0 && completeTasks.length === 0) {
       return (
-          <Alert key="success" variant="info" style={{ height: "300px" }}>
-            There are no tasks to display for this day. Try creating one!
-          </Alert>
+        <Alert key="success" variant="info" style={{ height: "300px" }}>
+          There are no tasks to display for this day. Try creating one!
+        </Alert>
       );
     }
 
     if (incompleteTasks.length === 0 && completeTasks.length > 0) {
       return (
-          <Alert key="success" variant="success" style={{ height: "300px" }}>
-            Way to go. You completed all of the tasks for today!
-          </Alert>
+        <Alert key="success" variant="success" style={{ height: "300px" }}>
+          Way to go. You completed all of the tasks for today!
+        </Alert>
       );
     }
 
     return (
       <div className="list">
-        <Accordion>
+        <Accordion defaultActiveKey="0">
           <Card>
             <Accordion.Toggle as={Card.Header} eventKey="0">
-              {incompleteTasks.length} Remaining
+              {incompleteTasks.length} Tasks left for{" "}
+              {moment(calendarDate).format("dddd")}
             </Accordion.Toggle>
             <Accordion.Collapse eventKey="0">
               <div>
