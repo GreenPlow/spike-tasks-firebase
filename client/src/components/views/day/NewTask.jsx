@@ -89,18 +89,20 @@ function NewTask({ onCreateFinish, dateObj }) {
           onSubmit(e);
         }}
       >
-        <Form.Group className="flex-grow-1">
-          <Form.Control
-            tabIndex={1}
-            type="text"
-            name="task"
-            placeholder="Create Task"
-            value={newTask}
-            onChange={(e) => {
-              setNewTask(e.target.value);
-            }}
-          />
-          <div className="justify-content-end">
+        <Form.Row className="d-flex align-items-center">
+          <Form.Group className="flex-grow-1">
+            <Form.Control
+              tabIndex={1}
+              type="text"
+              name="task"
+              placeholder="Create Task"
+              value={newTask}
+              onChange={(e) => {
+                setNewTask(e.target.value);
+              }}
+            />
+          </Form.Group>
+          <Form.Group className="justify-content-end">
             <ToggleButtonGroup
               type="radio"
               name="options"
@@ -118,8 +120,8 @@ function NewTask({ onCreateFinish, dateObj }) {
               <ToggleButton value="medium">M</ToggleButton>
               <ToggleButton value="large">L</ToggleButton>
             </ToggleButtonGroup>
-          </div>
-        </Form.Group>
+          </Form.Group>
+        </Form.Row>
       </Form>
     </div>
   );
