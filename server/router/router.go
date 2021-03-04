@@ -27,8 +27,8 @@ func Router() *chi.Mux {
 	r.Get("/api/task", handlers.GetTasksByDate)
 	r.Post("/api/task", handlers.CreateTask)
 	// r.Delete("/api/task", handlers.CreateTask) // delete everything
-	// r.Put("/api/task/{id}", handlers.CreateTask) // everything
-	r.Patch("/api/task/{id}", handlers.PatchTaskProperty) // change one property
+	// r.Put("/api/task/{id}", handlers.CreateTask) // update everything for a given task
+	r.Patch("/api/task/{id}", handlers.PatchTaskProperty) // change one property of a given task
 	// r.Delete("/api/task/{id}", handlers.CreateTask) // delete
 
 	// Convenience Method
@@ -40,7 +40,7 @@ func Router() *chi.Mux {
 	r.Put("/api/undoTask/{id}", handlers.UndoTask)
 	r.Put("/api/updateTask/{id}", handlers.UpdateTask)
 	r.Delete("/api/deleteTask/{id}", handlers.DeleteTask)
-	r.Delete("/api/deleteAllTask", handlers.DeleteAllTask)
+	// r.Delete("/api/deleteAllTask", handlers.DeleteAllTask) // Removed
 
 	return r
 }

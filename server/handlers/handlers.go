@@ -23,13 +23,15 @@ const collPrefixTask = "tasklist"
 
 // collection object/instance
 var collection *mongo.Collection
+var client *mongo.Client
 
 func init() {
 	log.Println("Setting up the mongo connection")
 
 	clientOptions := options.Client().ApplyURI(connectionString)
 	// connect to MongoDB
-	client, err := mongo.Connect(context.TODO(), clientOptions)
+	var err error
+	client, err = mongo.Connect(context.TODO(), clientOptions)
 
 	if err != nil {
 		log.Fatal(err)
@@ -42,26 +44,20 @@ func init() {
 		log.Fatal(err)
 	}
 
-	// log.Println("Connection to MongoDB established!")
-	// // TODO should not connect to a non user prefix on init... What should it do?
-	// collection = client.Database(dbName).Collection(collPrefixTask)
-	// log.Println("Collection instance created!")
+	log.Println("Connection to MongoDB established!")
+}
+
+func getUser(r *http.Request) string {
+	return r.Header.Get("X-USERNAME")
 }
 
 // CreateTask create task route
 func CreateTask(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
-	user := r.Header.Get("X-USERNAME")
-	fmt.Println("user", user)
+	user := getUser(r)
+	var task models.TaskList
 
-	clientOptions := options.Client().ApplyURI(connectionString)
-	client, conErr := mongo.Connect(context.TODO(), clientOptions)
-	if conErr != nil {
-		log.Fatal(conErr)
-	}
 	thisCollection := client.Database(dbName).Collection(collPrefixTask + "/" + user)
 
-	var task models.TaskList
 	_ = json.NewDecoder(r.Body).Decode(&task)
 	task.ID = insertOneTask(task, thisCollection)
 	// Write the response of the task
@@ -79,7 +75,6 @@ func insertOneTask(task models.TaskList, collection *mongo.Collection) primitive
 
 // GetAllTask get all the task route
 func GetAllTask(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
 	payload := getAllTask()
 	json.NewEncoder(w).Encode(payload)
 }
@@ -118,10 +113,8 @@ func getAllTask() []primitive.M {
 
 // GetTasksByDate get all the task route
 func GetTasksByDate(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
 
-	user := r.Header.Get("X-USERNAME")
-	fmt.Println("user", user)
+	user := getUser(r)
 	clientOptions := options.Client().ApplyURI(connectionString)
 	client, conErr := mongo.Connect(context.TODO(), clientOptions)
 	if conErr != nil {
@@ -189,24 +182,16 @@ func getTasksByDate(searchDateTime string, timeZone string, collection *mongo.Co
 
 // CompleteTask complete the task route
 func CompleteTask(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
+	user := getUser(r)
+	taskID := chi.URLParam(r, "id")
 
-	user := r.Header.Get("X-USERNAME")
-	fmt.Println("user", user)
-	clientOptions := options.Client().ApplyURI(connectionString)
-	client, conErr := mongo.Connect(context.TODO(), clientOptions)
-	if conErr != nil {
-		log.Fatal(conErr)
-	}
 	thisCollection := client.Database(dbName).Collection(collPrefixTask + "/" + user)
 
-	taskID := chi.URLParam(r, "id")
 	completeTask(taskID, thisCollection)
 	json.NewEncoder(w).Encode(taskID)
 }
 
 func completeTask(task string, collection *mongo.Collection) {
-	log.Println(task)
 	id, _ := primitive.ObjectIDFromHex(task)
 	filter := bson.M{"_id": id}
 	update := bson.M{"$set": bson.M{"status": true}}
@@ -220,18 +205,11 @@ func completeTask(task string, collection *mongo.Collection) {
 
 // UndoTask undo the complete task route
 func UndoTask(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
+	user := getUser(r)
+	taskID := chi.URLParam(r, "id")
 
-	user := r.Header.Get("X-USERNAME")
-	fmt.Println("user", user)
-	clientOptions := options.Client().ApplyURI(connectionString)
-	client, conErr := mongo.Connect(context.TODO(), clientOptions)
-	if conErr != nil {
-		log.Fatal(conErr)
-	}
 	thisCollection := client.Database(dbName).Collection(collPrefixTask + "/" + user)
 
-	taskID := chi.URLParam(r, "id")
 	undoTask(taskID, thisCollection)
 	json.NewEncoder(w).Encode(taskID)
 }
@@ -249,24 +227,12 @@ func undoTask(task string, collection *mongo.Collection) {
 	log.Println("modified count: ", result.ModifiedCount)
 }
 
-// UpdateTaskOptions delete one task route
-func UpdateTaskOptions(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
-}
-
 // PatchTaskProperty on patch route
 func PatchTaskProperty(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
-
-	user := r.Header.Get("X-USERNAME")
-	clientOptions := options.Client().ApplyURI(connectionString)
-	client, conErr := mongo.Connect(context.TODO(), clientOptions)
-	if conErr != nil {
-		log.Fatal(conErr)
-	}
-	thisCollection := client.Database(dbName).Collection(collPrefixTask + "/" + user)
-
+	user := getUser(r)
 	taskID := chi.URLParam(r, "id")
+
+	thisCollection := client.Database(dbName).Collection(collPrefixTask + "/" + user)
 
 	var taskTempObj models.TempPatchMakeThisDynamicLater
 	_ = json.NewDecoder(r.Body).Decode(&taskTempObj)
@@ -303,18 +269,10 @@ func patchTaskProperty(taskTempObj models.TempPatchMakeThisDynamicLater, collect
 
 // UpdateTask update the task route
 func UpdateTask(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
-
-	user := r.Header.Get("X-USERNAME")
-	fmt.Println("user", user)
-	clientOptions := options.Client().ApplyURI(connectionString)
-	client, conErr := mongo.Connect(context.TODO(), clientOptions)
-	if conErr != nil {
-		log.Fatal(conErr)
-	}
-	thisCollection := client.Database(dbName).Collection(collPrefixTask + "/" + user)
-
+	user := getUser(r)
 	taskID := chi.URLParam(r, "id")
+
+	thisCollection := client.Database(dbName).Collection(collPrefixTask + "/" + user)
 
 	var taskObj models.TaskList
 	_ = json.NewDecoder(r.Body).Decode(&taskObj)
@@ -328,7 +286,6 @@ func UpdateTask(w http.ResponseWriter, r *http.Request) {
 }
 
 func updateTask(taskObj models.TaskList, collection *mongo.Collection) error {
-	log.Println("inside updateTask, taskObj:", taskObj)
 	filter := bson.M{"_id": taskObj.ID}
 	update := bson.M{"$set": bson.M{"task": taskObj.Task, "date": taskObj.DateTime}}
 
@@ -346,18 +303,11 @@ func updateTask(taskObj models.TaskList, collection *mongo.Collection) error {
 
 // DeleteTask delete one task route
 func DeleteTask(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
+	user := getUser(r)
+	taskID := chi.URLParam(r, "id")
 
-	user := r.Header.Get("X-USERNAME")
-	fmt.Println("user", user)
-	clientOptions := options.Client().ApplyURI(connectionString)
-	client, conErr := mongo.Connect(context.TODO(), clientOptions)
-	if conErr != nil {
-		log.Fatal(conErr)
-	}
 	thisCollection := client.Database(dbName).Collection(collPrefixTask + "/" + user)
 
-	taskID := chi.URLParam(r, "id")
 	deleteOneTask(taskID, thisCollection)
 	json.NewEncoder(w).Encode(taskID)
 }
@@ -372,32 +322,4 @@ func deleteOneTask(task string, collection *mongo.Collection) {
 	}
 
 	log.Println("deleted document", d.DeletedCount)
-
-}
-
-// DeleteAllTask delete all tasks route
-func DeleteAllTask(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
-
-	user := r.Header.Get("X-USERNAME")
-	fmt.Println("user", user)
-	clientOptions := options.Client().ApplyURI(connectionString)
-	client, conErr := mongo.Connect(context.TODO(), clientOptions)
-	if conErr != nil {
-		log.Fatal(conErr)
-	}
-	thisCollection := client.Database(dbName).Collection(collPrefixTask + "/" + user)
-
-	count := deleteAllTask(thisCollection)
-	json.NewEncoder(w).Encode(count)
-}
-
-func deleteAllTask(collection *mongo.Collection) int64 {
-	d, err := collection.DeleteMany(context.Background(), bson.D{{}}, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	log.Println("Deleted Document", d.DeletedCount)
-	return d.DeletedCount
 }
