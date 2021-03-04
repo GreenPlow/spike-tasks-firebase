@@ -114,8 +114,7 @@ func getAllTask() []primitive.M {
 // GetTasksByDate get all the task route
 func GetTasksByDate(w http.ResponseWriter, r *http.Request) {
 
-	user := r.Header.Get("X-USERNAME")
-	fmt.Println("user", user)
+	user := getUser(r)
 	clientOptions := options.Client().ApplyURI(connectionString)
 	client, conErr := mongo.Connect(context.TODO(), clientOptions)
 	if conErr != nil {
@@ -183,7 +182,7 @@ func getTasksByDate(searchDateTime string, timeZone string, collection *mongo.Co
 
 // CompleteTask complete the task route
 func CompleteTask(w http.ResponseWriter, r *http.Request) {
-	user := r.Header.Get("X-USERNAME")
+	user := getUser(r)
 	taskID := chi.URLParam(r, "id")
 
 	thisCollection := client.Database(dbName).Collection(collPrefixTask + "/" + user)
@@ -206,7 +205,7 @@ func completeTask(task string, collection *mongo.Collection) {
 
 // UndoTask undo the complete task route
 func UndoTask(w http.ResponseWriter, r *http.Request) {
-	user := r.Header.Get("X-USERNAME")
+	user := getUser(r)
 	taskID := chi.URLParam(r, "id")
 
 	thisCollection := client.Database(dbName).Collection(collPrefixTask + "/" + user)
@@ -230,7 +229,7 @@ func undoTask(task string, collection *mongo.Collection) {
 
 // PatchTaskProperty on patch route
 func PatchTaskProperty(w http.ResponseWriter, r *http.Request) {
-	user := r.Header.Get("X-USERNAME")
+	user := getUser(r)
 	taskID := chi.URLParam(r, "id")
 
 	thisCollection := client.Database(dbName).Collection(collPrefixTask + "/" + user)
@@ -270,7 +269,7 @@ func patchTaskProperty(taskTempObj models.TempPatchMakeThisDynamicLater, collect
 
 // UpdateTask update the task route
 func UpdateTask(w http.ResponseWriter, r *http.Request) {
-	user := r.Header.Get("X-USERNAME")
+	user := getUser(r)
 	taskID := chi.URLParam(r, "id")
 
 	thisCollection := client.Database(dbName).Collection(collPrefixTask + "/" + user)
@@ -304,7 +303,7 @@ func updateTask(taskObj models.TaskList, collection *mongo.Collection) error {
 
 // DeleteTask delete one task route
 func DeleteTask(w http.ResponseWriter, r *http.Request) {
-	user := r.Header.Get("X-USERNAME")
+	user := getUser(r)
 	taskID := chi.URLParam(r, "id")
 
 	thisCollection := client.Database(dbName).Collection(collPrefixTask + "/" + user)
