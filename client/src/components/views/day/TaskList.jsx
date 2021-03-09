@@ -53,7 +53,7 @@ export default function TaskList({ calendarDate, triggerRender }) {
     return (
       <div className="list">
         <Accordion>
-          <Card>
+          <Card style={{overflow: "visible"}}>
             <Accordion.Toggle as={Card.Header} eventKey="0">
               {completeTasks.length} Complete!
             </Accordion.Toggle>
@@ -106,7 +106,7 @@ export default function TaskList({ calendarDate, triggerRender }) {
     return (
       <div className="list">
         <Accordion defaultActiveKey="0">
-          <Card>
+          <Card style={{overflow: "visible"}}>
             <Accordion.Toggle as={Card.Header} eventKey="0">
               {incompleteTasks.length} Tasks left for{" "}
               {moment(calendarDate).format("dddd")}
