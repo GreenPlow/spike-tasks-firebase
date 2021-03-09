@@ -47,31 +47,23 @@ TaskSizeSelector.propTypes = {
 
 function NewTask({ onCreateFinish, dateObj }) {
   const [newTask, setNewTask] = useState("");
-  const [newTaskSize, setNewTaskSize] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const isTaskNameEmpty = !newTask;
 
-  async function onSubmit(event) {
-    event.preventDefault();
-    console.log(newTaskSize);
-    console.log(newTaskSize.length);
-    if (newTaskSize.length > 0) {
-      console.log("echo2");
-      try {
-        await createNewTask(newTask, newTaskSize, dateObj.toISOString());
-        setErrorMessage("");
-      } catch (error) {
-        setErrorMessage(error.message);
-      }
-      // This is a named callback
-      await onCreateFinish();
-      setNewTask("");
-      setNewTaskSize("");
-      // TODO this doesnt seem to be breaking the flow
+  async function onSubmit(size) {
+    document.activeElement.blur();
+    console.log(size);
+
+    try {
+      await createNewTask(newTask, size, dateObj.toISOString());
+      setErrorMessage("");
+    } catch (error) {
+      setErrorMessage(error.message);
     }
-  }
-
-  function cb_onSizeChange(size) {
-    setNewTaskSize(size);
+    // This is a named callback
+    await onCreateFinish();
+    setNewTask("");
+    // TODO this doesnt seem to be breaking the flow
   }
 
   return (
@@ -86,7 +78,8 @@ function NewTask({ onCreateFinish, dateObj }) {
       <Form
         className="d-flex"
         onSubmit={(e) => {
-          onSubmit(e);
+          e.preventDefault();
+          onSubmit();
         }}
       >
         <Form.Row className="d-flex align-items-center">
@@ -106,19 +99,22 @@ function NewTask({ onCreateFinish, dateObj }) {
             <ToggleButtonGroup
               type="radio"
               name="options"
-              value={newTaskSize}
+              value=""
               onChange={(value) => {
-                debugger; //eslint-disable-line
-                setNewTaskSize(value);
-                onSubmit();
-              }}
-              onClick={(e) => {
-                e.stopPropagation();
+                // setNewTaskSize(value);
+                // console.log("value on 113", value);
+                onSubmit(value);
               }}
             >
-              <ToggleButton value="small">S</ToggleButton>
-              <ToggleButton value="medium">M</ToggleButton>
-              <ToggleButton value="large">L</ToggleButton>
+              <ToggleButton value="small" disabled={isTaskNameEmpty}>
+                S
+              </ToggleButton>
+              <ToggleButton value="medium" disabled={isTaskNameEmpty}>
+                M
+              </ToggleButton>
+              <ToggleButton value="large" disabled={isTaskNameEmpty}>
+                L
+              </ToggleButton>
             </ToggleButtonGroup>
           </Form.Group>
         </Form.Row>
