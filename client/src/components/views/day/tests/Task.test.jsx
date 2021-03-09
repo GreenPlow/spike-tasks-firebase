@@ -16,7 +16,7 @@ describe("tests for task component", () => {
     _id: itemId,
     task: chance.string(),
     status: chance.bool(),
-    tasksize: chance.pickone(["small", "medium", "large"]),
+    taskSize: chance.pickone(["small", "medium", "large"]),
     date: chance.date().toString(),
   };
 
