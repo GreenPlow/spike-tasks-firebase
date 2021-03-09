@@ -15,8 +15,10 @@ import {
 } from "../../../api/taskActions";
 
 function Task({ taskObj, onModification, doneButton }) {
-  const { _id, task, status, tasksize, date } = taskObj;
-  const [statefulTaskSize, setStatefulTaskSize] = useState([tasksize]);
+  const { _id, task, status, taskSize, date } = taskObj;
+  console.log("line19", taskSize);
+  console.log(taskObj);
+  const [statefulTaskSize, setStatefulTaskSize] = useState([taskSize]);
 
   let color = "warning";
 
@@ -125,7 +127,7 @@ Task.propTypes = {
     _id: PropTypes.string.isRequired,
     task: PropTypes.string.isRequired,
     status: PropTypes.bool.isRequired,
-    tasksize: PropTypes.string.isRequired,
+    taskSize: PropTypes.string.isRequired,
     date: PropTypes.string.isRequired,
   }),
   onModification: PropTypes.func.isRequired,

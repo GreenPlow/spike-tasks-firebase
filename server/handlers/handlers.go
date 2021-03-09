@@ -236,7 +236,9 @@ func PatchTaskProperty(w http.ResponseWriter, r *http.Request) {
 
 	var taskTempObj models.TempPatchMakeThisDynamicLater
 	_ = json.NewDecoder(r.Body).Decode(&taskTempObj)
+
 	taskTempObj.ID, _ = primitive.ObjectIDFromHex(taskID)
+
 
 	err := patchTaskProperty(taskTempObj, thisCollection)
 	if err != nil {
@@ -253,7 +255,7 @@ func patchTaskProperty(taskTempObj models.TempPatchMakeThisDynamicLater, collect
 	// The use of taskSize in the js request object, client, does not conform with how mongo is
 	// taking everything to lowercase. This is an easy way to break this code. Can mongo be made to work with taskSize?
 	// need better error messages back from mongo, aka schema validation. Currently returning 200s when problems like this occur
-	update := bson.M{"$set": bson.M{"tasksize": taskTempObj.TaskSize}}
+	update := bson.M{"$set": bson.M{"taskSize": taskTempObj.TaskSize}}
 
 	result, err := collection.UpdateOne(context.Background(), filter, update)
 	if err != nil {
