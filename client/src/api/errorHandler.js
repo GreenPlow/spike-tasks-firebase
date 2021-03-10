@@ -1,5 +1,20 @@
-
 // TODO show the user a message that there was a problem!
+// import at the app.js level
+import axios from "axios";
+
+axios.interceptors.response.use(
+  function (response) {
+    // Any status code that lie within the range of 2xx cause this function to trigger
+    // Do something with response data
+    return response;
+  },
+  function (error) {
+    // Any status codes that falls outside the range of 2xx cause this function to trigger
+    // Do something with response error
+    handleAxiosError(error);
+    return Promise.reject(error);
+  }
+);
 
 // utility function (a. give me an axios reponse, b, call one of four functions)
 export default function handleAxiosError(error) {
@@ -23,7 +38,7 @@ export default function handleAxiosError(error) {
         break;
 
       default:
-          // generic catch all
+        // generic catch all
         console.error("general error: ", errorStatus);
     }
   } else if (error.request) {
