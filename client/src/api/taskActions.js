@@ -18,7 +18,6 @@ async function getLatestTasksFromServer(date) {
     `/api/task?searchDate=${date}&timeZone=${
       Intl.DateTimeFormat().resolvedOptions().timeZone
     }`;
-  console.log(url);
   try {
     const res = await axios.get(url);
     return res.data;
@@ -29,7 +28,7 @@ async function getLatestTasksFromServer(date) {
 
 async function createNewTask(task, taskSize, date) {
   const url = endpoint + "/api/task";
-  const body = { task, taskSize, date };
+  const body = { task, taskSize, date, status: false};
   try {
     await axios.post(url, body, {
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
