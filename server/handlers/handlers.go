@@ -111,6 +111,27 @@ func getAllTask() []primitive.M {
 // dateString := chi.URLParam(r, "date")
 // however, it makes more since for date to be a query param
 
+func convertToStartOfDay(UTCDateAndTimeString string, userTimeZone string) time.Time {
+	t, err := time.Parse(time.RFC3339, UTCDateAndTimeString)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	userLoc, _ := time.LoadLocation(userTimeZone)
+
+	dateAndTimeInUserLoc := t.In(userLoc)
+	fmt.Println("dateAndTimeInUserLoc", dateAndTimeInUserLoc)
+
+	startOfSearchDayInUserLoc := time.Date(dateAndTimeInUserLoc.Year(), dateAndTimeInUserLoc.Month(), dateAndTimeInUserLoc.Day(), 0, 0, 0, 0, userLoc)
+	fmt.Println("startOfSearchDayInUserLoc", startOfSearchDayInUserLoc)
+
+	// Lines 134 and 135 seem not needed? Same loc as line 125?
+	locUTC, _ := time.LoadLocation(userTimeZone)
+	startOfSearchDayInUTC := startOfSearchDayInUserLoc.In(locUTC)
+
+	return startOfSearchDayInUTC
+}
+
 // GetTasksByDate get all the task route
 func GetTasksByDate(w http.ResponseWriter, r *http.Request) {
 
@@ -128,34 +149,17 @@ func GetTasksByDate(w http.ResponseWriter, r *http.Request) {
 	timeZone := r.URL.Query().Get("timeZone")
 	fmt.Println("timeZone", timeZone)
 
-	payload := getTasksByDate(searchDate, timeZone, thisCollection)
+	startOfSearchDay := convertToStartOfDay(searchDate, timeZone)
+	startOfNextDay := startOfSearchDay.AddDate(0, 0, 1)
+
+	payload := getTasksByDate(startOfSearchDay, startOfNextDay, thisCollection)
 	json.NewEncoder(w).Encode(payload)
 }
 
 // get tasks by date from the DB and return it
-func getTasksByDate(searchDateTime string, timeZone string, collection *mongo.Collection) []primitive.M {
-	t, err := time.Parse(time.RFC3339, searchDateTime)
-	fmt.Println("t", t)
+func getTasksByDate(startOfSearchDay time.Time, startOfNextDay time.Time, collection *mongo.Collection) []primitive.M {
 
-	loc, _ := time.LoadLocation(timeZone)
-
-	searchDateTimeInUserLoc := t.In(loc)
-	fmt.Println("searchDateTimeInUserLoc", searchDateTimeInUserLoc)
-
-	searchDateInUserLoc := time.Date(searchDateTimeInUserLoc.Year(), searchDateTimeInUserLoc.Month(), searchDateTimeInUserLoc.Day(), 0, 0, 0, 0, loc)
-	fmt.Println("searchDateInUserLoc", searchDateInUserLoc)
-
-	locUTC, _ := time.LoadLocation(timeZone)
-	backtoUTC := searchDateInUserLoc.In(locUTC)
-
-	nextDay := backtoUTC.AddDate(0, 0, 1)
-	fmt.Println("nextDay", nextDay)
-
-	// dayStart := searchDateInUserLoc.Format(time.RFC3339)
-	// nextDay := searchDateInUserLoc.AddDate(0, 0, 1)
-	// filter := bson.M{"date": bson.M{"$gte": searchDateInUserLoc, "$lt": nextDay}}
-
-	filter := bson.M{"date": bson.M{"$gte": backtoUTC, "$lt": nextDay}}
+	filter := bson.M{"date": bson.M{"$gte": startOfSearchDay, "$lt": startOfNextDay}}
 	cur, err := collection.Find(context.Background(), filter)
 	if err != nil {
 		log.Fatal(err)
