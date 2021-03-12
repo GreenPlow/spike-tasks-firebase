@@ -52,7 +52,6 @@ function NewTask({ onCreateFinish, dateObj }) {
 
   async function onSubmit(size) {
     document.activeElement.blur();
-    console.log(size);
 
     try {
       await createNewTask(newTask, size, dateObj.toISOString());
@@ -102,7 +101,6 @@ function NewTask({ onCreateFinish, dateObj }) {
               value=""
               onChange={(value) => {
                 // setNewTaskSize(value);
-                // console.log("value on 113", value);
                 onSubmit(value);
               }}
             >
@@ -129,14 +127,3 @@ NewTask.propTypes = {
 };
 
 export default NewTask;
-
-// <TaskSizeSelector
-// sizeOptions={["small", "medium", "large"]}
-// onSizeChange={(value) => {
-//   console.log("click");
-//   setNewTaskSize(value);
-//   console.log(newTaskSize)
-//   onSubmit()
-// }}
-// selectedSize={newTaskSize}
-// />
