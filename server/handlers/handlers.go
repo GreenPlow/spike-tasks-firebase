@@ -73,39 +73,6 @@ func insertOneTask(task models.TaskList, collection *mongo.Collection) primitive
 	return insertResult.InsertedID.(primitive.ObjectID)
 }
 
-// GetAllTask get all the task route
-func GetAllTask(w http.ResponseWriter, r *http.Request) {
-	payload := getAllTask()
-	json.NewEncoder(w).Encode(payload)
-}
-
-// get all task from the DB and return it
-func getAllTask() []primitive.M {
-	cur, err := collection.Find(context.Background(), bson.D{{}})
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// make a slice to ensure nil is not returned
-	results := make([]primitive.M, 0)
-	for cur.Next(context.Background()) {
-		var result bson.M
-		e := cur.Decode(&result)
-		if e != nil {
-			log.Fatal(e)
-		}
-
-		results = append(results, result)
-	}
-
-	if err := cur.Err(); err != nil {
-		log.Fatal(err)
-	}
-
-	cur.Close(context.Background())
-	return results
-}
-
 // fetch the url parameter `"userID"` from the request of a matching
 // routing pattern. An example routing pattern could be: /users/{userID}
 // dateString := chi.URLParam(r, "date")
