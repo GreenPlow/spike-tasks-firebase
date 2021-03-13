@@ -17,6 +17,7 @@ import "react-dates/initialize";
 import "react-dates/lib/css/_datepicker.css";
 
 import TaskList from "./views/day/TaskList";
+import NewTask from "./views/day/NewTask";
 import Time from "./Time";
 import SwitchUser from "./SwitchUser";
 
@@ -91,6 +92,18 @@ export default function AppLanding({ user, cbSetUser }) {
               Logout
             </DropdownItem>
           </DropdownButton>
+        </Col>
+      </Row>
+      <NewTask
+        dateObj={calendarDate}
+        onCreateFinish={() => {
+          // pass in the function callback as a named prop
+          // getLatestTasksFromServerAndUpdateState(calendarDate);
+        }}
+      />
+      <Row>
+        <Col>
+          <h1>{calendarDate.format("dddd, MMM Do")}</h1>
         </Col>
       </Row>
       <div>

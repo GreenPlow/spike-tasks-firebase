@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
 import { Accordion, Alert, Card } from "react-bootstrap";
-import NewTask from "./NewTask";
 import Task from "./Task";
 
 import { getLatestTasksFromServer } from "../../../api/taskActions";
@@ -53,7 +52,7 @@ export default function TaskList({ calendarDate, triggerRender }) {
     return (
       <div className="list">
         <Accordion>
-          <Card style={{overflow: "visible"}}>
+          <Card style={{ overflow: "visible" }}>
             <Accordion.Toggle as={Card.Header} eventKey="0">
               {completeTasks.length} Complete!
             </Accordion.Toggle>
@@ -106,7 +105,7 @@ export default function TaskList({ calendarDate, triggerRender }) {
     return (
       <div className="list">
         <Accordion defaultActiveKey="0">
-          <Card style={{overflow: "visible"}}>
+          <Card style={{ overflow: "visible" }}>
             <Accordion.Toggle as={Card.Header} eventKey="0">
               {incompleteTasks.length} Tasks left for{" "}
               {moment(calendarDate).format("dddd")}
@@ -133,13 +132,6 @@ export default function TaskList({ calendarDate, triggerRender }) {
 
   return (
     <div>
-      <NewTask
-        dateObj={calendarDate}
-        onCreateFinish={() => {
-          // pass in the function callback as a named prop
-          getLatestTasksFromServerAndUpdateState(calendarDate);
-        }}
-      />
       {renderCompleteTasks()}
       {renderIncompleteTasks()}
     </div>
@@ -150,18 +142,3 @@ TaskList.propTypes = {
   calendarDate: PropTypes.object.isRequired,
   triggerRender: PropTypes.string,
 };
-
-// {completeTasks === undefined
-//   ? null
-//   : completeTasks.length > 0
-//   ? renderCompleteTasksList({
-//       completeTasks,
-//       getLatestTasksFromServerAndUpdateState,
-//       calendarDate,
-//     })
-//   : null}
-// {renderIncompleteTaskListOrAlert({
-//   incompleteTasks,
-//   getLatestTasksFromServerAndUpdateState,
-//   calendarDate,
-// })}
