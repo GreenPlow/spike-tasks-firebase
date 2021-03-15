@@ -1,30 +1,58 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 
-import Nav from "react-bootstrap/Nav";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-
-import { Button, ButtonToolbar } from "react-bootstrap";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
-import DropdownButton from "react-bootstrap/DropdownButton";
 import DropdownItem from "react-bootstrap/DropdownItem";
-
-import Container from "react-bootstrap/Container";
+import {
+  Alert,
+  Button,
+  ButtonGroup,
+  ButtonToolbar,
+  Col,
+  Container,
+  DropdownButton,
+  Row,
+} from "react-bootstrap";
 
 import { SingleDatePicker } from "react-dates";
 import "react-dates/initialize";
 import "react-dates/lib/css/_datepicker.css";
 
 import TaskList from "./views/day/TaskList";
+import NewTask from "./views/day/NewTask";
 import Time from "./Time";
 import SwitchUser from "./SwitchUser";
+import { init, set } from "../errorMessage";
 
 import moment from "moment";
+
+function AlertDismissible({ message }) {
+  if (message) {
+    return (
+      <Alert
+        variant="danger"
+        className="my-2"
+        onClose={() => set("")}
+        dismissible
+      >
+        <Alert.Heading>Oh snap!</Alert.Heading>
+        <p>{message}</p>
+      </Alert>
+    );
+  } else {
+    return null;
+  }
+}
+
+AlertDismissible.propTypes = {
+  message: PropTypes.string,
+};
 
 export default function AppLanding({ user, cbSetUser }) {
   const [calendarDate, setCalendarDate] = useState(moment());
   const [isFocused, setFocused] = useState(false);
+  const [errorMessage, setErrorMessage] = useState();
+
+  init(setErrorMessage);
 
   function today() {
     setCalendarDate(moment());
@@ -48,9 +76,7 @@ export default function AppLanding({ user, cbSetUser }) {
           <ButtonToolbar aria-label="Toolbar with button groups">
             <ButtonGroup>
               <Button onClick={today}>Today</Button>
-            </ButtonGroup>
-            <ButtonGroup>
-              <Button onClick={previousDay}>Previous Day</Button>
+              <Button onClick={previousDay}>Previous</Button>
               <SingleDatePicker
                 small
                 date={calendarDate} // momentPropTypes.momentObj or null
@@ -60,22 +86,9 @@ export default function AppLanding({ user, cbSetUser }) {
                 id="your_unique_id" // PropTypes.string.isRequired //why is this required and what should it be?
                 isOutsideRange={() => false}
               />
-              <Button onClick={nextDay}>Next Day</Button>
+              <Button onClick={nextDay}>Next</Button>
             </ButtonGroup>
           </ButtonToolbar>
-        </Col>
-        <Col md="auto">
-          <Nav variant="pills" defaultActiveKey="link-1">
-            <Nav.Item>
-              <Nav.Link eventKey="link-1">Day</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="link-2">Week</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="link-3">Overdue</Nav.Link>
-            </Nav.Item>
-          </Nav>
         </Col>
         <Col>
           <DropdownButton
@@ -91,6 +104,19 @@ export default function AppLanding({ user, cbSetUser }) {
               Logout
             </DropdownItem>
           </DropdownButton>
+        </Col>
+      </Row>
+      <AlertDismissible message={errorMessage} />
+      <NewTask
+        dateObj={calendarDate}
+        onCreateFinish={() => {
+          // pass in the function callback as a named prop
+          // getLatestTasksFromServerAndUpdateState(calendarDate);
+        }}
+      />
+      <Row>
+        <Col>
+          <h1>{calendarDate.format("dddd, MMM Do")}</h1>
         </Col>
       </Row>
       <div>

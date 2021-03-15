@@ -54,10 +54,9 @@ func getUser(r *http.Request) string {
 // CreateTask create task route
 func CreateTask(w http.ResponseWriter, r *http.Request) {
 	user := getUser(r)
-	var task models.TaskList
-
 	thisCollection := client.Database(dbName).Collection(collPrefixTask + "/" + user)
 
+	var task models.TaskList
 	_ = json.NewDecoder(r.Body).Decode(&task)
 	task.ID = insertOneTask(task, thisCollection)
 	// Write the response of the task
@@ -71,39 +70,6 @@ func insertOneTask(task models.TaskList, collection *mongo.Collection) primitive
 	}
 	log.Println("Inserted a single record", insertResult.InsertedID)
 	return insertResult.InsertedID.(primitive.ObjectID)
-}
-
-// GetAllTask get all the task route
-func GetAllTask(w http.ResponseWriter, r *http.Request) {
-	payload := getAllTask()
-	json.NewEncoder(w).Encode(payload)
-}
-
-// get all task from the DB and return it
-func getAllTask() []primitive.M {
-	cur, err := collection.Find(context.Background(), bson.D{{}})
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// make a slice to ensure nil is not returned
-	results := make([]primitive.M, 0)
-	for cur.Next(context.Background()) {
-		var result bson.M
-		e := cur.Decode(&result)
-		if e != nil {
-			log.Fatal(e)
-		}
-
-		results = append(results, result)
-	}
-
-	if err := cur.Err(); err != nil {
-		log.Fatal(err)
-	}
-
-	cur.Close(context.Background())
-	return results
 }
 
 // fetch the url parameter `"userID"` from the request of a matching
@@ -134,13 +100,7 @@ func convertToStartOfDay(UTCDateAndTimeString string, userTimeZone string) time.
 
 // GetTasksByDate get all the task route
 func GetTasksByDate(w http.ResponseWriter, r *http.Request) {
-
 	user := getUser(r)
-	clientOptions := options.Client().ApplyURI(connectionString)
-	client, conErr := mongo.Connect(context.TODO(), clientOptions)
-	if conErr != nil {
-		log.Fatal(conErr)
-	}
 	thisCollection := client.Database(dbName).Collection(collPrefixTask + "/" + user)
 
 	searchDate := r.URL.Query().Get("searchDate")
@@ -187,10 +147,8 @@ func getTasksByDate(startOfSearchDay time.Time, startOfNextDay time.Time, collec
 // CompleteTask complete the task route
 func CompleteTask(w http.ResponseWriter, r *http.Request) {
 	user := getUser(r)
-	taskID := chi.URLParam(r, "id")
-
 	thisCollection := client.Database(dbName).Collection(collPrefixTask + "/" + user)
-
+	taskID := chi.URLParam(r, "id")
 	completeTask(taskID, thisCollection)
 	json.NewEncoder(w).Encode(taskID)
 }
@@ -210,10 +168,8 @@ func completeTask(task string, collection *mongo.Collection) {
 // UndoTask undo the complete task route
 func UndoTask(w http.ResponseWriter, r *http.Request) {
 	user := getUser(r)
-	taskID := chi.URLParam(r, "id")
-
 	thisCollection := client.Database(dbName).Collection(collPrefixTask + "/" + user)
-
+	taskID := chi.URLParam(r, "id")
 	undoTask(taskID, thisCollection)
 	json.NewEncoder(w).Encode(taskID)
 }
@@ -234,15 +190,13 @@ func undoTask(task string, collection *mongo.Collection) {
 // PatchTaskProperty on patch route
 func PatchTaskProperty(w http.ResponseWriter, r *http.Request) {
 	user := getUser(r)
-	taskID := chi.URLParam(r, "id")
-
 	thisCollection := client.Database(dbName).Collection(collPrefixTask + "/" + user)
 
 	var taskTempObj models.TempPatchMakeThisDynamicLater
 	_ = json.NewDecoder(r.Body).Decode(&taskTempObj)
 
+	taskID := chi.URLParam(r, "id")
 	taskTempObj.ID, _ = primitive.ObjectIDFromHex(taskID)
-
 
 	err := patchTaskProperty(taskTempObj, thisCollection)
 	if err != nil {
@@ -253,7 +207,6 @@ func PatchTaskProperty(w http.ResponseWriter, r *http.Request) {
 }
 
 func patchTaskProperty(taskTempObj models.TempPatchMakeThisDynamicLater, collection *mongo.Collection) error {
-	log.Println("inside patch, taskTempObj:", taskTempObj)
 
 	filter := bson.M{"_id": taskTempObj.ID}
 	// The use of taskSize in the js request object, client, does not conform with how mongo is
@@ -276,12 +229,12 @@ func patchTaskProperty(taskTempObj models.TempPatchMakeThisDynamicLater, collect
 // UpdateTask update the task route
 func UpdateTask(w http.ResponseWriter, r *http.Request) {
 	user := getUser(r)
-	taskID := chi.URLParam(r, "id")
-
 	thisCollection := client.Database(dbName).Collection(collPrefixTask + "/" + user)
 
 	var taskObj models.TaskList
 	_ = json.NewDecoder(r.Body).Decode(&taskObj)
+
+	taskID := chi.URLParam(r, "id")
 	taskObj.ID, _ = primitive.ObjectIDFromHex(taskID)
 	err := updateTask(taskObj, thisCollection)
 	if err != nil {
@@ -310,10 +263,9 @@ func updateTask(taskObj models.TaskList, collection *mongo.Collection) error {
 // DeleteTask delete one task route
 func DeleteTask(w http.ResponseWriter, r *http.Request) {
 	user := getUser(r)
-	taskID := chi.URLParam(r, "id")
-
 	thisCollection := client.Database(dbName).Collection(collPrefixTask + "/" + user)
 
+	taskID := chi.URLParam(r, "id")
 	deleteOneTask(taskID, thisCollection)
 	json.NewEncoder(w).Encode(taskID)
 }
