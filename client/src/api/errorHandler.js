@@ -39,7 +39,7 @@ export default function handleAxiosError(error) {
 
       default:
         // generic catch all
-        console.error("general error: ", errorStatus);
+        console.error("interceptor general error: ", errorStatus);
     }
   } else if (error.request) {
     // The request was made but no response was received
@@ -54,7 +54,7 @@ export default function handleAxiosError(error) {
     );
   } else {
     // Something happened in setting up the request that triggered an Error
-    console.error("Error", error.message);
+    console.error("intereptor request error", error.message);
 
     // Something bad happened and I don't know what it was
   }
