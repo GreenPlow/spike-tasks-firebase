@@ -10,6 +10,7 @@ import "react-dates/lib/css/_datepicker.css";
 import moment from "moment";
 
 import { updateTask } from "../../../api/taskActions";
+import { setAlert } from "../../../errorMessage";
 
 export default function EditTask({ editObj, afterUpdate, handleCancel }) {
   // https://stackoverflow.com/questions/22573494/react-js-input-losing-focus-when-rerendering
@@ -35,6 +36,7 @@ export default function EditTask({ editObj, afterUpdate, handleCancel }) {
     // debugger; // eslint-disable-line
     await updateTask({ ...editObj, task, date }, async () => {
       await afterUpdate();
+      setAlert("");
     });
   }
 
