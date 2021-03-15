@@ -13,7 +13,7 @@ import {
   undoTask,
   patchTask,
 } from "../../../api/taskActions";
-import { set } from "../../../errorMessage";
+import { setAlert } from "../../../errorMessage";
 
 function Task({ taskObj, onModification, doneButton }) {
   const { _id, task, status, taskSize, date } = taskObj;
@@ -44,7 +44,7 @@ function Task({ taskObj, onModification, doneButton }) {
     await patchTask({ _id, property: { taskSize: value } }, async () => {
       await onModification();
       setStatefulTaskSize(value);
-      set("");
+      setAlert("");
     });
   }
 

@@ -1,11 +1,11 @@
-let handler;
+let globalHandler;
 
-function init(h) {
-  handler = h;
+function init(handler) {
+  globalHandler = handler;
 }
 
-function set(message) {
-  handler(message);
+function setAlert(message) {
+  globalHandler(message);
 }
 
-export { init, set };
+export { init, setAlert };

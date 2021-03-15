@@ -2,7 +2,7 @@ import axios from "axios";
 import React from "react";
 
 import { get } from "../user";
-import { set } from "../errorMessage";
+import { setAlert } from "../errorMessage";
 
 // add the axios interceptors here to do the banners and logging, able to delete the try catches
 // replace localhost with ip address to access app from a local network
@@ -50,7 +50,7 @@ async function patchTask({ _id, property }, afterSuccess) {
     });
     afterSuccess();
   } catch (errorObj) {
-    set({
+    setAlert({
       heading: "Oh Snap!",
       message: (
         <>
@@ -94,7 +94,7 @@ async function updateTask(obj, afterUpdate) {
     });
     afterUpdate();
   } catch (errorObj) {
-    set({
+    setAlert({
       heading: "Well, this is embarassing...",
       message: (
         <>

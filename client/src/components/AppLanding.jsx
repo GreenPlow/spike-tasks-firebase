@@ -21,7 +21,7 @@ import TaskList from "./views/day/TaskList";
 import NewTask from "./views/day/NewTask";
 import Time from "./Time";
 import SwitchUser from "./SwitchUser";
-import { init, set } from "../errorMessage";
+import { init, setAlert } from "../errorMessage";
 
 import moment from "moment";
 
@@ -33,7 +33,7 @@ function AlertDismissible({ msgObj }) {
       <Alert
         variant="danger"
         className="my-2"
-        onClose={() => set("")}
+        onClose={() => setAlert("")}
         dismissible
       >
         <Alert.Heading>{heading}</Alert.Heading>
