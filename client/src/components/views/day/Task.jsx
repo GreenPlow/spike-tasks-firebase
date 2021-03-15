@@ -13,6 +13,7 @@ import {
   undoTask,
   patchTask,
 } from "../../../api/taskActions";
+import { set } from "../../../errorMessage";
 
 function Task({ taskObj, onModification, doneButton }) {
   const { _id, task, status, taskSize, date } = taskObj;
@@ -40,11 +41,11 @@ function Task({ taskObj, onModification, doneButton }) {
   }
 
   async function changeTaskSize(value) {
-    console.log("new size", value);
-    await patchTask({ _id, property: { taskSize: value } });
-    await onModification();
-
-    setStatefulTaskSize(value);
+    await patchTask({ _id, property: { taskSize: value } }, async () => {
+      await onModification();
+      setStatefulTaskSize(value);
+      set("");
+    });
   }
 
   const [showEdit, setShowEdit] = useState(false);
@@ -55,32 +56,44 @@ function Task({ taskObj, onModification, doneButton }) {
   // probably need to go to managed state so the button on the screen doesn't change until the server updates
   return (
     <Card key={_id} border={color}>
-      <Card.Body textalign="left">
-        {!showEdit ? (
-          <div style={{ position: "relative" }}>
-            <div onClick={() => setShowEdit(true)}>
-              <Card.Title>{task}</Card.Title>
-              <Card.Subtitle>{moment(date).format("LTS")}</Card.Subtitle>
-              <div className="d-flex justify-content-end">
-                <ToggleButtonGroup
-                  type="radio"
-                  name="options"
-                  value={statefulTaskSize}
-                  style={{ position: "absolute", top: 0 }}
-                  onChange={(value) => {
-                    changeTaskSize(value);
-                  }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
-                >
-                  <ToggleButton value="small">S</ToggleButton>
-                  <ToggleButton value="medium">M</ToggleButton>
-                  <ToggleButton value="large">L</ToggleButton>
-                </ToggleButtonGroup>
-              </div>
-            </div>
-            <Card.Text textalign="right">
+      {showEdit ? (
+        <Card.Body textalign="left">
+          <EditTask
+            editObj={taskObj}
+            afterUpdate={() => {
+              setShowEdit(false);
+              onModification();
+            }}
+            handleCancel={() => {
+              setShowEdit(false);
+            }}
+          />
+        </Card.Body>
+      ) : (
+        <>
+          <div className="d-flex justify-content-end">
+            <ToggleButtonGroup
+              type="radio"
+              name="options"
+              value={statefulTaskSize}
+              style={{ position: "absolute", top: 0 }}
+              onChange={(value) => {
+                changeTaskSize(value);
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >
+              <ToggleButton value="small">S</ToggleButton>
+              <ToggleButton value="medium">M</ToggleButton>
+              <ToggleButton value="large">L</ToggleButton>
+            </ToggleButtonGroup>
+          </div>
+          <Card.Body textalign="left" onClick={() => setShowEdit(true)}>
+            <Card.Title>{task}</Card.Title>
+            <Card.Subtitle>{moment(date).format("LTS")}</Card.Subtitle>
+            <Card.Text></Card.Text>
+            <Card.Text>
               {doneButton ? (
                 <div>
                   <Icon
@@ -101,21 +114,9 @@ function Task({ taskObj, onModification, doneButton }) {
                 </div>
               )}
             </Card.Text>
-          </div>
-        ) : null}
-        {showEdit ? (
-          <EditTask
-            editObj={taskObj}
-            afterUpdate={() => {
-              setShowEdit(false);
-              onModification();
-            }}
-            handleCancel={() => {
-              setShowEdit(false);
-            }}
-          />
-        ) : null}
-      </Card.Body>
+          </Card.Body>
+        </>
+      )}
     </Card>
   );
 }

@@ -2,6 +2,8 @@ import axios from "axios";
 import handleAxiosError from "./errorHandler";
 
 import { get } from "../user";
+import { set } from "../errorMessage";
+
 // add the axios interceptors here to do the banners and logging, able to delete the try catches
 // replace localhost with ip address to access app from a local network
 const endpoint = "http://localhost:8000";
@@ -28,7 +30,7 @@ async function getLatestTasksFromServer(date) {
 
 async function createNewTask(task, taskSize, date) {
   const url = endpoint + "/api/task";
-  const body = { task, taskSize, date, status: false};
+  const body = { task, taskSize, date, status: false };
   try {
     await axios.post(url, body, {
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -38,13 +40,18 @@ async function createNewTask(task, taskSize, date) {
   }
 }
 
-async function patchTask({ _id, property }) {
+// Use the intereptor to throw the error
+async function patchTask({ _id, property }, afterSuccess) {
   const body = property;
   const url = endpoint + "/api/task/" + _id;
-  console.log("body", body);
-  await axios.patch(url, body, {
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-  });
+  try {
+    await axios.patch(url, body, {
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    });
+    afterSuccess();
+  } catch (errorObj) {
+    set(`Sorry, ${Object.keys(property)[0]} was not updated.`);
+  }
 }
 
 async function completeTask(id) {
@@ -56,13 +63,9 @@ async function completeTask(id) {
 
 async function deleteTask(id) {
   const url = endpoint + "/api/deleteTask/" + id;
-  try {
-    await axios.delete(url, {
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    });
-  } catch (errorObj) {
-    handleAxiosError(errorObj);
-  }
+  await axios.delete(url, {
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  });
 }
 
 async function undoTask(id) {
