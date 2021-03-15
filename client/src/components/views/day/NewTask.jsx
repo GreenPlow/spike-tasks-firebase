@@ -6,8 +6,6 @@ import {
   Form,
   ToggleButtonGroup,
   ToggleButton,
-  Row,
-  Col,
 } from "react-bootstrap";
 
 import { createNewTask } from "../../../api/taskActions";
