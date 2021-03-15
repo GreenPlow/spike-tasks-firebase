@@ -32,8 +32,10 @@ export default function EditTask({ editObj, afterUpdate, handleCancel }) {
 
   async function onSubmit(event) {
     event.preventDefault();
-    await updateTask({ ...editObj, task, date });
-    await afterUpdate();
+    // debugger; // eslint-disable-line
+    await updateTask({ ...editObj, task, date }, async () => {
+      await afterUpdate();
+    });
   }
 
   return (

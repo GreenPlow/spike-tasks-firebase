@@ -21,20 +21,22 @@ import TaskList from "./views/day/TaskList";
 import NewTask from "./views/day/NewTask";
 import Time from "./Time";
 import SwitchUser from "./SwitchUser";
-import { init, set } from "../errorMessage";
+import { init, setAlert } from "../errorMessage";
 
 import moment from "moment";
 
-function AlertDismissible({ message }) {
-  if (message) {
+function AlertDismissible({ msgObj }) {
+  if (msgObj) {
+    const { heading, message } = msgObj;
+
     return (
       <Alert
         variant="danger"
         className="my-2"
-        onClose={() => set("")}
+        onClose={() => setAlert("")}
         dismissible
       >
-        <Alert.Heading>Oh snap!</Alert.Heading>
+        <Alert.Heading>{heading}</Alert.Heading>
         <p>{message}</p>
       </Alert>
     );
@@ -44,7 +46,7 @@ function AlertDismissible({ message }) {
 }
 
 AlertDismissible.propTypes = {
-  message: PropTypes.string,
+  message: PropTypes.object,
 };
 
 export default function AppLanding({ user, cbSetUser }) {
@@ -106,7 +108,7 @@ export default function AppLanding({ user, cbSetUser }) {
           </DropdownButton>
         </Col>
       </Row>
-      <AlertDismissible message={errorMessage} />
+      <AlertDismissible msgObj={errorMessage} />
       <NewTask
         dateObj={calendarDate}
         onCreateFinish={() => {

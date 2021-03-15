@@ -1,8 +1,8 @@
 import axios from "axios";
-import handleAxiosError from "./errorHandler";
+import React from "react";
 
 import { get } from "../user";
-import { set } from "../errorMessage";
+import { setAlert } from "../errorMessage";
 
 // add the axios interceptors here to do the banners and logging, able to delete the try catches
 // replace localhost with ip address to access app from a local network
@@ -50,7 +50,15 @@ async function patchTask({ _id, property }, afterSuccess) {
     });
     afterSuccess();
   } catch (errorObj) {
-    set(`Sorry, ${Object.keys(property)[0]} was not updated.`);
+    setAlert({
+      heading: "Oh Snap!",
+      message: (
+        <>
+          <strong>{Object.keys(property)[0]} </strong>
+          {"was not updated"}
+        </>
+      ),
+    });
   }
 }
 
@@ -74,18 +82,27 @@ async function undoTask(id) {
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
   });
 }
-async function updateTask(obj) {
-  const { _id } = obj;
-  // Try pushing in the id to the body also... seems like overkill to have it as an endpoint too?
-  // TODO the Go API is not returning a Bad Request Error when json attributes are incorrect. for example, remove the _ from id and it should throw an error, but doesn't
+async function updateTask(obj, afterUpdate) {
+  const { _id, task } = obj;
+  // TODO the Go API is not returning a Bad Request Error when json attributes are incorrect.
+  // For example, remove the _ from id and it should throw an error, but doesn't
   const body = obj;
   const url = endpoint + "/api/updateTask/" + _id;
   try {
     await axios.put(url, body, {
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
     });
+    afterUpdate();
   } catch (errorObj) {
-    handleAxiosError(errorObj);
+    setAlert({
+      heading: "Well, this is embarassing...",
+      message: (
+        <>
+          <strong>{task} </strong>
+          {"was not updated"}
+        </>
+      ),
+    });
   }
 }
 
