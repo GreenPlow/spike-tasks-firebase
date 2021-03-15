@@ -25,8 +25,10 @@ import { init, set } from "../errorMessage";
 
 import moment from "moment";
 
-function AlertDismissible({ message }) {
-  if (message) {
+function AlertDismissible({ msgObj }) {
+  if (msgObj) {
+    const { heading, message } = msgObj;
+
     return (
       <Alert
         variant="danger"
@@ -34,7 +36,7 @@ function AlertDismissible({ message }) {
         onClose={() => set("")}
         dismissible
       >
-        <Alert.Heading>Oh snap!</Alert.Heading>
+        <Alert.Heading>{heading}</Alert.Heading>
         <p>{message}</p>
       </Alert>
     );
@@ -44,7 +46,7 @@ function AlertDismissible({ message }) {
 }
 
 AlertDismissible.propTypes = {
-  message: PropTypes.string,
+  message: PropTypes.object,
 };
 
 export default function AppLanding({ user, cbSetUser }) {
@@ -106,7 +108,7 @@ export default function AppLanding({ user, cbSetUser }) {
           </DropdownButton>
         </Col>
       </Row>
-      <AlertDismissible message={errorMessage} />
+      <AlertDismissible msgObj={errorMessage} />
       <NewTask
         dateObj={calendarDate}
         onCreateFinish={() => {
