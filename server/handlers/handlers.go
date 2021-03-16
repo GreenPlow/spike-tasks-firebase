@@ -211,8 +211,11 @@ func patchTaskProperty(taskTempObj models.TaskList, collection *mongo.Collection
 	// The use of taskSize in the js request object, client, does not conform with how mongo is
 	// taking everything to lowercase. This is an easy way to break this code. Can mongo be made to work with taskSize?
 	// need better error messages back from mongo, aka schema validation. Currently returning 200s when problems like this occur
+	update := bson.M{
+		"$set": taskTempObj,
+	}
 
-	result, err := collection.UpdateOne(context.Background(), filter, taskTempObj)
+	result, err := collection.UpdateOne(context.Background(), filter, update)
 	if err != nil {
 		log.Fatal(err)
 	}
