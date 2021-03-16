@@ -58,7 +58,7 @@ function Task({ taskObj, onModification, doneButton }) {
 
   // probably need to go to managed state so the button on the screen doesn't change until the server updates
   return (
-    <Card key={_id} border={color} className="my-1">
+    <Card key={_id} border={color} className="my-2">
       {showEdit ? (
         <Card.Body textalign="left">
           <EditTask
