@@ -144,49 +144,6 @@ func getTasksByDate(startOfSearchDay time.Time, startOfNextDay time.Time, collec
 	return results
 }
 
-// CompleteTask complete the task route
-func CompleteTask(w http.ResponseWriter, r *http.Request) {
-	user := getUser(r)
-	thisCollection := client.Database(dbName).Collection(collPrefixTask + "/" + user)
-	taskID := chi.URLParam(r, "id")
-	completeTask(taskID, thisCollection)
-	json.NewEncoder(w).Encode(taskID)
-}
-
-func completeTask(task string, collection *mongo.Collection) {
-	id, _ := primitive.ObjectIDFromHex(task)
-	filter := bson.M{"_id": id}
-	update := bson.M{"$set": bson.M{"status": true}}
-	result, err := collection.UpdateOne(context.Background(), filter, update)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	log.Println("modified count: ", result.ModifiedCount)
-}
-
-// UndoTask undo the complete task route
-func UndoTask(w http.ResponseWriter, r *http.Request) {
-	user := getUser(r)
-	thisCollection := client.Database(dbName).Collection(collPrefixTask + "/" + user)
-	taskID := chi.URLParam(r, "id")
-	undoTask(taskID, thisCollection)
-	json.NewEncoder(w).Encode(taskID)
-}
-
-func undoTask(task string, collection *mongo.Collection) {
-	log.Println(task)
-	id, _ := primitive.ObjectIDFromHex(task)
-	filter := bson.M{"_id": id}
-	update := bson.M{"$set": bson.M{"status": false}}
-	result, err := collection.UpdateOne(context.Background(), filter, update)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	log.Println("modified count: ", result.ModifiedCount)
-}
-
 // PatchTaskProperty on patch route
 func PatchTaskProperty(w http.ResponseWriter, r *http.Request) {
 	user := getUser(r)

@@ -8,9 +8,7 @@ import EditTask from "./EditTask";
 import moment from "moment";
 
 import {
-  completeTask,
   deleteTask,
-  undoTask,
   patchTask,
 } from "../../../api/taskActions";
 import { setAlert } from "../../../errorMessage";
@@ -33,14 +31,18 @@ function Task({ taskObj, onModification, doneButton }) {
 
   async function onDone(e) {
     e.stopPropagation();
-    await completeTask(_id);
-    await onModification();
+    await patchTask({ _id, property: { status: true } }, async () => {
+      await onModification();
+      setAlert("");
+    });
   }
 
   async function onUndo(e) {
     e.stopPropagation();
-    await undoTask(_id);
-    await onModification();
+    await patchTask({ _id, property: { status: false } }, async () => {
+      await onModification();
+      setAlert("");
+    });
   }
 
   async function changeTaskSize(value) {
@@ -111,7 +113,7 @@ function Task({ taskObj, onModification, doneButton }) {
               ) : (
                 <>
                   <Button variant="link" onClick={(e) => onUndo(e)}>
-                    <Icon name="undo" color="yellow" onClick={() => onUndo()} />
+                    <Icon name="undo" color="yellow" />
                     Undo
                   </Button>
                   <button
