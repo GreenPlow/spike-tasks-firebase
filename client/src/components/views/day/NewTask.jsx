@@ -45,15 +45,10 @@ function NewTask({ onCreateFinish, dateObj }) {
   async function onSubmit(size) {
     document.activeElement.blur();
 
-    try {
-      await createNewTask(newTask, size, dateObj.toISOString());
-    } catch (error) {
-      console.log(error);
-    }
-    // This is a named callback
-    await onCreateFinish();
-    setNewTask("");
-    // TODO this doesnt seem to be breaking the flow
+    await createNewTask(newTask, size, dateObj.toISOString(), async () => {
+      await onCreateFinish();
+      setNewTask("");
+    });
   }
 
   return (
