@@ -1,18 +1,13 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 
-import { Card, ToggleButtonGroup, ToggleButton } from "react-bootstrap";
+import { Card, ToggleButtonGroup, ToggleButton, Button } from "react-bootstrap";
 import { Icon } from "semantic-ui-react";
 import EditTask from "./EditTask";
 
 import moment from "moment";
 
-import {
-  completeTask,
-  deleteTask,
-  undoTask,
-  patchTask,
-} from "../../../api/taskActions";
+import { deleteTask, patchTask } from "../../../api/taskActions";
 import { setAlert } from "../../../errorMessage";
 
 function Task({ taskObj, onModification, doneButton }) {
@@ -25,19 +20,26 @@ function Task({ taskObj, onModification, doneButton }) {
     color = "success";
   }
 
-  async function onDelete() {
+  async function onDelete(e) {
+    e.stopPropagation();
     await deleteTask(_id);
     await onModification();
   }
 
-  async function onDone() {
-    await completeTask(_id);
-    await onModification();
+  async function onDone(e) {
+    e.stopPropagation();
+    await patchTask({ _id, property: { status: true } }, async () => {
+      await onModification();
+      setAlert("");
+    });
   }
 
-  async function onUndo() {
-    await undoTask(_id);
-    await onModification();
+  async function onUndo(e) {
+    e.stopPropagation();
+    await patchTask({ _id, property: { status: false } }, async () => {
+      await onModification();
+      setAlert("");
+    });
   }
 
   async function changeTaskSize(value) {
@@ -55,21 +57,22 @@ function Task({ taskObj, onModification, doneButton }) {
 
   // probably need to go to managed state so the button on the screen doesn't change until the server updates
   return (
-    <Card key={_id} border={color}>
+    <Card key={_id} border={color} className="my-2">
       {showEdit ? (
         <Card.Body textalign="left">
           <EditTask
             editObj={taskObj}
             afterUpdate={() => {
-              setShowEdit(false);
               onModification();
+              setShowEdit(false);
             }}
             handleCancel={() => {
               setShowEdit(false);
             }}
           />
         </Card.Body>
-      ) : (
+      ) : null}
+      {!showEdit ? (
         <>
           <div className="d-flex justify-content-end">
             <ToggleButtonGroup
@@ -92,31 +95,34 @@ function Task({ taskObj, onModification, doneButton }) {
           <Card.Body textalign="left" onClick={() => setShowEdit(true)}>
             <Card.Title>{task}</Card.Title>
             <Card.Subtitle>{moment(date).format("LTS")}</Card.Subtitle>
-            <Card.Text></Card.Text>
-            <Card.Text>
+            <Card.Text className="d-inline-flex">
               {doneButton ? (
-                <div>
-                  <Icon
-                    name="check circle"
-                    color="green"
-                    onClick={() => onDone()}
-                  />
-                  <span style={{ paddingRight: 10 }}>Done</span>
-                  <Icon name="delete" color="red" onClick={() => onDelete()} />
-                  <span style={{ paddingRight: 10 }}>Delete</span>
-                </div>
+                <>
+                  <Button variant="link" onClick={(e) => onDone(e)}>
+                    <Icon name="check circle" color="green" />
+                    Done
+                  </Button>
+                  <Button variant="link" onClick={(e) => onDelete(e)}>
+                    <Icon name="delete" color="red" />
+                    Delete
+                  </Button>
+                </>
               ) : (
-                <div>
-                  <Icon name="undo" color="yellow" onClick={() => onUndo()} />
-                  <span style={{ paddingRight: 10 }}>Undo</span>
-                  <Icon name="delete" color="red" onClick={() => onDelete()} />
-                  <span style={{ paddingRight: 10 }}>Delete</span>
-                </div>
+                <>
+                  <Button variant="link" onClick={(e) => onUndo(e)}>
+                    <Icon name="undo" color="yellow" />
+                    Undo
+                  </Button>
+                  <Button variant="link" onClick={(e) => onDelete(e)}>
+                    <Icon name="delete" color="red" />
+                    Delete
+                  </Button>
+                </>
               )}
             </Card.Text>
           </Card.Body>
         </>
-      )}
+      ) : null}
     </Card>
   );
 }

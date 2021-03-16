@@ -144,55 +144,12 @@ func getTasksByDate(startOfSearchDay time.Time, startOfNextDay time.Time, collec
 	return results
 }
 
-// CompleteTask complete the task route
-func CompleteTask(w http.ResponseWriter, r *http.Request) {
-	user := getUser(r)
-	thisCollection := client.Database(dbName).Collection(collPrefixTask + "/" + user)
-	taskID := chi.URLParam(r, "id")
-	completeTask(taskID, thisCollection)
-	json.NewEncoder(w).Encode(taskID)
-}
-
-func completeTask(task string, collection *mongo.Collection) {
-	id, _ := primitive.ObjectIDFromHex(task)
-	filter := bson.M{"_id": id}
-	update := bson.M{"$set": bson.M{"status": true}}
-	result, err := collection.UpdateOne(context.Background(), filter, update)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	log.Println("modified count: ", result.ModifiedCount)
-}
-
-// UndoTask undo the complete task route
-func UndoTask(w http.ResponseWriter, r *http.Request) {
-	user := getUser(r)
-	thisCollection := client.Database(dbName).Collection(collPrefixTask + "/" + user)
-	taskID := chi.URLParam(r, "id")
-	undoTask(taskID, thisCollection)
-	json.NewEncoder(w).Encode(taskID)
-}
-
-func undoTask(task string, collection *mongo.Collection) {
-	log.Println(task)
-	id, _ := primitive.ObjectIDFromHex(task)
-	filter := bson.M{"_id": id}
-	update := bson.M{"$set": bson.M{"status": false}}
-	result, err := collection.UpdateOne(context.Background(), filter, update)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	log.Println("modified count: ", result.ModifiedCount)
-}
-
 // PatchTaskProperty on patch route
 func PatchTaskProperty(w http.ResponseWriter, r *http.Request) {
 	user := getUser(r)
 	thisCollection := client.Database(dbName).Collection(collPrefixTask + "/" + user)
 
-	var taskTempObj models.TempPatchMakeThisDynamicLater
+	var taskTempObj models.TaskList
 	_ = json.NewDecoder(r.Body).Decode(&taskTempObj)
 
 	taskID := chi.URLParam(r, "id")
@@ -206,13 +163,14 @@ func PatchTaskProperty(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(taskTempObj)
 }
 
-func patchTaskProperty(taskTempObj models.TempPatchMakeThisDynamicLater, collection *mongo.Collection) error {
-
+func patchTaskProperty(taskTempObj models.TaskList, collection *mongo.Collection) error {
 	filter := bson.M{"_id": taskTempObj.ID}
 	// The use of taskSize in the js request object, client, does not conform with how mongo is
 	// taking everything to lowercase. This is an easy way to break this code. Can mongo be made to work with taskSize?
 	// need better error messages back from mongo, aka schema validation. Currently returning 200s when problems like this occur
-	update := bson.M{"$set": bson.M{"taskSize": taskTempObj.TaskSize}}
+	update := bson.M{
+		"$set": taskTempObj,
+	}
 
 	result, err := collection.UpdateOne(context.Background(), filter, update)
 	if err != nil {

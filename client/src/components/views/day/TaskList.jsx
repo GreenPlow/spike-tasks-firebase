@@ -5,7 +5,6 @@ import { Accordion, Alert, Card } from "react-bootstrap";
 import Task from "./Task";
 
 import { getLatestTasksFromServer } from "../../../api/taskActions";
-import "./TaskList.css";
 
 import moment from "moment";
 
@@ -50,10 +49,10 @@ export default function TaskList({ calendarDate, triggerRender }) {
     }
 
     return (
-      <div className="list">
+      <>
         <Accordion>
-          <Card style={{ overflow: "visible" }}>
-            <Accordion.Toggle as={Card.Header} eventKey="0">
+          <Card className="border-0 my-2" style={{ overflow: "visible" }}>
+            <Accordion.Toggle className="border" as={Card.Header} eventKey="0">
               {completeTasks.length} Complete!
             </Accordion.Toggle>
             <Accordion.Collapse eventKey="0">
@@ -71,7 +70,7 @@ export default function TaskList({ calendarDate, triggerRender }) {
             </Accordion.Collapse>
           </Card>
         </Accordion>
-      </div>
+      </>
     );
   }
 
@@ -103,10 +102,10 @@ export default function TaskList({ calendarDate, triggerRender }) {
     }
 
     return (
-      <div className="list">
+      <>
         <Accordion defaultActiveKey="0">
-          <Card style={{ overflow: "visible" }}>
-            <Accordion.Toggle as={Card.Header} eventKey="0">
+          <Card className="border-0 my-2" style={{ overflow: "visible" }}>
+            <Accordion.Toggle className="border" as={Card.Header} eventKey="0">
               {incompleteTasks.length} Tasks left for{" "}
               {moment(calendarDate).format("dddd")}
             </Accordion.Toggle>
@@ -126,15 +125,15 @@ export default function TaskList({ calendarDate, triggerRender }) {
             </Accordion.Collapse>
           </Card>
         </Accordion>
-      </div>
+      </>
     );
   }
 
   return (
-    <div>
+    <>
       {renderCompleteTasks()}
       {renderIncompleteTasks()}
-    </div>
+    </>
   );
 }
 

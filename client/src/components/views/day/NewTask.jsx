@@ -1,12 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 
-import {
-  Alert,
-  Form,
-  ToggleButtonGroup,
-  ToggleButton,
-} from "react-bootstrap";
+import { Form, ToggleButtonGroup, ToggleButton } from "react-bootstrap";
 
 import { createNewTask } from "../../../api/taskActions";
 
@@ -45,7 +40,6 @@ TaskSizeSelector.propTypes = {
 
 function NewTask({ onCreateFinish, dateObj }) {
   const [newTask, setNewTask] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
   const isTaskNameEmpty = !newTask;
 
   async function onSubmit(size) {
@@ -53,9 +47,8 @@ function NewTask({ onCreateFinish, dateObj }) {
 
     try {
       await createNewTask(newTask, size, dateObj.toISOString());
-      setErrorMessage("");
     } catch (error) {
-      setErrorMessage(error.message);
+      console.log(error);
     }
     // This is a named callback
     await onCreateFinish();
@@ -64,14 +57,7 @@ function NewTask({ onCreateFinish, dateObj }) {
   }
 
   return (
-    <div>
-      {errorMessage ? (
-        <Alert variant="warning">
-          There was a problem! <strong>{errorMessage}</strong>
-        </Alert>
-      ) : (
-        <Alert variant="light" />
-      )}
+    <>
       <Form
         className="d-flex"
         onSubmit={(e) => {
@@ -80,7 +66,7 @@ function NewTask({ onCreateFinish, dateObj }) {
         }}
       >
         <Form.Row className="d-flex align-items-center">
-          <Form.Group className="flex-grow-1">
+          <Form.Group>
             <Form.Control
               tabIndex={1}
               type="text"
@@ -115,7 +101,7 @@ function NewTask({ onCreateFinish, dateObj }) {
           </Form.Group>
         </Form.Row>
       </Form>
-    </div>
+    </>
   );
 }
 

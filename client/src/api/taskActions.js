@@ -62,13 +62,6 @@ async function patchTask({ _id, property }, afterSuccess) {
   }
 }
 
-async function completeTask(id) {
-  const url = endpoint + "/api/completeTask/" + id;
-  await axios.put(url, {
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-  });
-}
-
 async function deleteTask(id) {
   const url = endpoint + "/api/deleteTask/" + id;
   await axios.delete(url, {
@@ -76,12 +69,6 @@ async function deleteTask(id) {
   });
 }
 
-async function undoTask(id) {
-  const url = endpoint + "/api/undoTask/" + id;
-  await axios.put(url, {
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-  });
-}
 async function updateTask(obj, afterUpdate) {
   const { _id, task } = obj;
   // TODO the Go API is not returning a Bad Request Error when json attributes are incorrect.
@@ -109,9 +96,7 @@ async function updateTask(obj, afterUpdate) {
 export {
   getLatestTasksFromServer,
   createNewTask,
-  completeTask,
   deleteTask,
-  undoTask,
   updateTask,
   patchTask,
 };

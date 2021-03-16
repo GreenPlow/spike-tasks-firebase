@@ -8,7 +8,6 @@ import {
   ButtonGroup,
   ButtonToolbar,
   Col,
-  Container,
   DropdownButton,
   Row,
 } from "react-bootstrap";
@@ -69,7 +68,7 @@ export default function AppLanding({ user, cbSetUser }) {
   }
 
   return (
-    <div>
+    <>
       <Row>
         <Time />
       </Row>
@@ -108,26 +107,39 @@ export default function AppLanding({ user, cbSetUser }) {
           </DropdownButton>
         </Col>
       </Row>
-      <AlertDismissible msgObj={errorMessage} />
-      <NewTask
-        dateObj={calendarDate}
-        onCreateFinish={() => {
-          // pass in the function callback as a named prop
-          // getLatestTasksFromServerAndUpdateState(calendarDate);
-        }}
-      />
+      <Row>
+        <Col>
+          <AlertDismissible msgObj={errorMessage} />
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <NewTask
+            dateObj={calendarDate}
+            onCreateFinish={() => {
+              today(); // this needs to be replaced by lifting up the task state
+              // pass in the function callback as a named prop
+              // getLatestTasksFromServerAndUpdateState(calendarDate);
+            }}
+          />
+        </Col>
+      </Row>
       <Row>
         <Col>
           <h1>{calendarDate.format("dddd, MMM Do")}</h1>
         </Col>
       </Row>
-      <div>
-        <TaskList calendarDate={calendarDate} triggerRender={user} />
-      </div>
-      <Container>
-        <SwitchUser cbSetUser={cbSetUser} />
-      </Container>
-    </div>
+      <Row>
+        <Col>
+          <TaskList calendarDate={calendarDate} triggerRender={user} />
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <SwitchUser cbSetUser={cbSetUser} />
+        </Col>
+      </Row>
+    </>
   );
 }
 
