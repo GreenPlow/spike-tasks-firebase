@@ -51,11 +51,11 @@ export default function TaskList({ calendarDate, triggerRender }) {
     return (
       <div className="list">
         <Accordion>
-          <Card style={{ overflow: "visible" }}>
-            <Accordion.Toggle as={Card.Header} eventKey="0">
+          <Card className="border-0" style={{ overflow: "visible" }}>
+            <Accordion.Toggle className="border" as={Card.Header} eventKey="0">
               {completeTasks.length} Complete!
             </Accordion.Toggle>
-            <Accordion.Collapse eventKey="0" className="border-0" style={{border: "none"}}>
+            <Accordion.Collapse eventKey="0">
               <div>
                 {completeTasks.map((item) => (
                   <Task
