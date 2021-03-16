@@ -8,7 +8,6 @@ import EditTask from "./EditTask";
 import moment from "moment";
 
 import { deleteTask, patchTask } from "../../../api/taskActions";
-import { setAlert } from "../../../errorMessage";
 
 function Task({ taskObj, onModification, doneButton }) {
   const { _id, task, status, taskSize, date } = taskObj;
@@ -30,7 +29,6 @@ function Task({ taskObj, onModification, doneButton }) {
     e.stopPropagation();
     await patchTask({ _id, property: { status: true } }, async () => {
       await onModification();
-      setAlert("");
     });
   }
 
@@ -38,7 +36,6 @@ function Task({ taskObj, onModification, doneButton }) {
     e.stopPropagation();
     await patchTask({ _id, property: { status: false } }, async () => {
       await onModification();
-      setAlert("");
     });
   }
 
@@ -46,7 +43,6 @@ function Task({ taskObj, onModification, doneButton }) {
     await patchTask({ _id, property: { taskSize: value } }, async () => {
       await onModification();
       setStatefulTaskSize(value);
-      setAlert("");
     });
   }
 

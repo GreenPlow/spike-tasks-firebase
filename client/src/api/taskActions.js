@@ -8,11 +8,6 @@ import { setAlert } from "../errorMessage";
 // replace localhost with ip address to access app from a local network
 const endpoint = "http://localhost:8000";
 
-axios.interceptors.request.use(function (config) {
-  config.headers["X-USERNAME"] = get();
-  return config;
-});
-
 async function getLatestTasksFromServer(date) {
   console.log(get());
   const url =
@@ -28,15 +23,24 @@ async function getLatestTasksFromServer(date) {
   }
 }
 
-async function createNewTask(task, taskSize, date) {
+async function createNewTask(task, taskSize, date, afterSuccess) {
   const url = endpoint + "/api/task";
   const body = { task, taskSize, date, status: false };
   try {
     await axios.post(url, body, {
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
     });
+    afterSuccess();
   } catch (errorObj) {
-    throw new Error(`failed to create task: ${task}`);
+    setAlert({
+      heading: "Oh Snap!",
+      message: (
+        <>
+          <strong>{task} </strong>
+          {"was not created..."}
+        </>
+      ),
+    });
   }
 }
 
