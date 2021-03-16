@@ -108,7 +108,9 @@ export default function AppLanding({ user, cbSetUser }) {
         </Col>
       </Row>
       <Row>
-        <AlertDismissible msgObj={errorMessage} />
+        <Col>
+          <AlertDismissible msgObj={errorMessage} />
+        </Col>
       </Row>
       <Row>
         <Col>
