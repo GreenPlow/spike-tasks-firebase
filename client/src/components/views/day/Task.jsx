@@ -7,10 +7,7 @@ import EditTask from "./EditTask";
 
 import moment from "moment";
 
-import {
-  deleteTask,
-  patchTask,
-} from "../../../api/taskActions";
+import { deleteTask, patchTask } from "../../../api/taskActions";
 import { setAlert } from "../../../errorMessage";
 
 function Task({ taskObj, onModification, doneButton }) {
@@ -101,14 +98,14 @@ function Task({ taskObj, onModification, doneButton }) {
             <Card.Text className="d-inline-flex">
               {doneButton ? (
                 <>
-                  <button onClick={(e) => onDone(e)}>
+                  <Button variant="link" onClick={(e) => onDone(e)}>
                     <Icon name="check circle" color="green" />
-                    <span style={{ paddingRight: 10 }}>Done</span>
-                  </button>
-                  <button onClick={(e) => onDelete(e)}>
+                    Done
+                  </Button>
+                  <Button variant="link" onClick={(e) => onDelete(e)}>
                     <Icon name="delete" color="red" />
-                    <span style={{ paddingRight: 10 }}>Delete</span>
-                  </button>
+                    Delete
+                  </Button>
                 </>
               ) : (
                 <>
@@ -116,14 +113,10 @@ function Task({ taskObj, onModification, doneButton }) {
                     <Icon name="undo" color="yellow" />
                     Undo
                   </Button>
-                  <button
-                    type="button"
-                    className="btn btn-link"
-                    onClick={(e) => onDelete(e)}
-                  >
+                  <Button variant="link" onClick={(e) => onDelete(e)}>
                     <Icon name="delete" color="red" />
                     Delete
-                  </button>
+                  </Button>
                 </>
               )}
             </Card.Text>
