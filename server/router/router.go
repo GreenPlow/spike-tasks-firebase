@@ -38,7 +38,6 @@ func Router() *chi.Mux {
 	// Will eventually remove these endpoints below
 	r.Put("/api/updateTask/{id}", handlers.UpdateTask)
 	r.Delete("/api/deleteTask/{id}", handlers.DeleteTask)
-	// r.Delete("/api/deleteAllTask", handlers.DeleteAllTask) // Removed
 
 	return r
 }
