@@ -5,7 +5,6 @@ import { Accordion, Alert, Card } from "react-bootstrap";
 import Task from "./Task";
 
 import { getLatestTasksFromServer } from "../../../api/taskActions";
-import "./TaskList.css";
 
 import moment from "moment";
 
@@ -56,7 +55,7 @@ export default function TaskList({ calendarDate, triggerRender }) {
             <Accordion.Toggle as={Card.Header} eventKey="0">
               {completeTasks.length} Complete!
             </Accordion.Toggle>
-            <Accordion.Collapse eventKey="0">
+            <Accordion.Collapse eventKey="0" className="border-0" style={{border: "none"}}>
               <div>
                 {completeTasks.map((item) => (
                   <Task

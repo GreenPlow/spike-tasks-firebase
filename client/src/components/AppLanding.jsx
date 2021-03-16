@@ -112,6 +112,7 @@ export default function AppLanding({ user, cbSetUser }) {
       <NewTask
         dateObj={calendarDate}
         onCreateFinish={() => {
+          today() // is this an okay way to re-render the sibling?
           // pass in the function callback as a named prop
           // getLatestTasksFromServerAndUpdateState(calendarDate);
         }}

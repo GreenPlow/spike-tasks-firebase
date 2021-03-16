@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 
-import { Card, ToggleButtonGroup, ToggleButton } from "react-bootstrap";
+import { Card, ToggleButtonGroup, ToggleButton, Button } from "react-bootstrap";
 import { Icon } from "semantic-ui-react";
 import EditTask from "./EditTask";
 
@@ -25,17 +25,20 @@ function Task({ taskObj, onModification, doneButton }) {
     color = "success";
   }
 
-  async function onDelete() {
+  async function onDelete(e) {
+    e.stopPropagation();
     await deleteTask(_id);
     await onModification();
   }
 
-  async function onDone() {
+  async function onDone(e) {
+    e.stopPropagation();
     await completeTask(_id);
     await onModification();
   }
 
-  async function onUndo() {
+  async function onUndo(e) {
+    e.stopPropagation();
     await undoTask(_id);
     await onModification();
   }
@@ -55,21 +58,22 @@ function Task({ taskObj, onModification, doneButton }) {
 
   // probably need to go to managed state so the button on the screen doesn't change until the server updates
   return (
-    <Card key={_id} border={color}>
+    <Card key={_id} border={color} className="my-1">
       {showEdit ? (
         <Card.Body textalign="left">
           <EditTask
             editObj={taskObj}
             afterUpdate={() => {
-              setShowEdit(false);
               onModification();
+              setShowEdit(false);
             }}
             handleCancel={() => {
               setShowEdit(false);
             }}
           />
         </Card.Body>
-      ) : (
+      ) : null}
+      {!showEdit ? (
         <>
           <div className="d-flex justify-content-end">
             <ToggleButtonGroup
@@ -92,31 +96,38 @@ function Task({ taskObj, onModification, doneButton }) {
           <Card.Body textalign="left" onClick={() => setShowEdit(true)}>
             <Card.Title>{task}</Card.Title>
             <Card.Subtitle>{moment(date).format("LTS")}</Card.Subtitle>
-            <Card.Text></Card.Text>
-            <Card.Text>
+            <Card.Text className="d-inline-flex">
               {doneButton ? (
-                <div>
-                  <Icon
-                    name="check circle"
-                    color="green"
-                    onClick={() => onDone()}
-                  />
-                  <span style={{ paddingRight: 10 }}>Done</span>
-                  <Icon name="delete" color="red" onClick={() => onDelete()} />
-                  <span style={{ paddingRight: 10 }}>Delete</span>
-                </div>
+                <>
+                  <button onClick={(e) => onDone(e)}>
+                    <Icon name="check circle" color="green" />
+                    <span style={{ paddingRight: 10 }}>Done</span>
+                  </button>
+                  <button onClick={(e) => onDelete(e)}>
+                    <Icon name="delete" color="red" />
+                    <span style={{ paddingRight: 10 }}>Delete</span>
+                  </button>
+                </>
               ) : (
-                <div>
-                  <Icon name="undo" color="yellow" onClick={() => onUndo()} />
-                  <span style={{ paddingRight: 10 }}>Undo</span>
-                  <Icon name="delete" color="red" onClick={() => onDelete()} />
-                  <span style={{ paddingRight: 10 }}>Delete</span>
-                </div>
+                <>
+                  <Button variant="link" onClick={(e) => onUndo(e)}>
+                    <Icon name="undo" color="yellow" onClick={() => onUndo()} />
+                    Undo
+                  </Button>
+                  <button
+                    type="button"
+                    className="btn btn-link"
+                    onClick={(e) => onDelete(e)}
+                  >
+                    <Icon name="delete" color="red" />
+                    Delete
+                  </button>
+                </>
               )}
             </Card.Text>
           </Card.Body>
         </>
-      )}
+      ) : null}
     </Card>
   );
 }
