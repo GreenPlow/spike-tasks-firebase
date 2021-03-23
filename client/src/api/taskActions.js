@@ -4,6 +4,10 @@ import React from "react";
 import { get } from "../user";
 import { setAlert } from "../errorMessage";
 
+import firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/firestore";
+
 // add the axios interceptors here to do the banners and logging, able to delete the try catches
 // replace localhost with ip address to access app from a local network
 const endpoint = "http://localhost:8000";
@@ -24,12 +28,16 @@ async function getLatestTasksFromServer(date) {
 }
 
 async function createNewTask(task, taskSize, date, afterSuccess) {
-  const url = endpoint + "/api/task";
-  const body = { task, taskSize, date, status: false };
   try {
-    await axios.post(url, body, {
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    });
+    await firebase
+      .firestore()
+      .collection(`users/${firebase.auth().currentUser.uid}/tasklist`)
+      .add({
+        task,
+        taskSize,
+        date,
+        satus: false,
+      });
     afterSuccess();
   } catch (errorObj) {
     setAlert({
