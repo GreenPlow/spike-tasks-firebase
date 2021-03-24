@@ -56,7 +56,7 @@ async function createNewTask(task, taskSize, momentjsObj, afterSuccess) {
       .add({
         task,
         taskSize,
-        date: firebase.firestore.fromDate(momentjsObj.toDate()),
+        date: firebase.firestore.Timestamp.fromDate(momentjsObj.toDate()),
         status: false,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       });
