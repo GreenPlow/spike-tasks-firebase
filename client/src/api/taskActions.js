@@ -5,12 +5,33 @@ import { get } from "../user";
 import { setAlert } from "../errorMessage";
 
 import firebase from "firebase/app";
-import "firebase/auth";
 import "firebase/firestore";
+
+
+// const firebase = require("firebase");
+// // Required for side-effects
+// require("firebase/firestore");
 
 // add the axios interceptors here to do the banners and logging, able to delete the try catches
 // replace localhost with ip address to access app from a local network
 const endpoint = "http://localhost:8000";
+
+// var citiesRef = db.collection("cities");
+
+// async function getLatestTasksFromServer(date) {
+//   const url =
+//     endpoint +
+//     `/api/task?searchDate=${date}&timeZone=${
+//       Intl.DateTimeFormat().resolvedOptions().timeZone
+//     }`;
+//   try {
+//     citiesRef.where("date", ">=", date);
+//     const res = await axios.get(url);
+//     return res.data;
+//   } catch (errorObj) {
+//     throw new Error(`failed to get tasks for ${date}`);
+//   }
+// }
 
 async function getLatestTasksFromServer(date) {
   console.log(get());
@@ -27,19 +48,21 @@ async function getLatestTasksFromServer(date) {
   }
 }
 
-async function createNewTask(task, taskSize, date, afterSuccess) {
+async function createNewTask(task, taskSize, momentjsObj, afterSuccess) {
+  const db = firebase.firestore();
   try {
-    await firebase
-      .firestore()
+    await db
       .collection(`users/${firebase.auth().currentUser.uid}/tasklist`)
       .add({
         task,
         taskSize,
-        date,
-        satus: false,
+        date: firebase.firestore.fromDate(momentjsObj.toDate()),
+        status: false,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       });
     afterSuccess();
   } catch (errorObj) {
+    console.log(errorObj);
     setAlert({
       heading: "Oh Snap!",
       message: (

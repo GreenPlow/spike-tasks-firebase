@@ -115,7 +115,7 @@ export default function AppLanding({ user, cbSetUser }) {
       <Row>
         <Col>
           <NewTask
-            dateObj={calendarDate}
+            momentjsObj={calendarDate}
             onCreateFinish={() => {
               today(); // this needs to be replaced by lifting up the task state
               // pass in the function callback as a named prop
