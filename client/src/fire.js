@@ -1,5 +1,5 @@
 // Firebase App (the core Firebase SDK) is always required and must be listed first
-import firebase from "firebase";
+import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 
@@ -20,11 +20,14 @@ function init() {
     measurementId: "G-M7VKFY9CV1",
   };
 
+  // TODO Should these sdk calls be handled for errors? They occur before react is rendered.
+
   app = firebase.initializeApp(config);
   appAuth = firebase.auth(app);
   appDb = firebase.firestore(app);
   firestore = firebase.firestore;
-  console.log("init finished");
+  // TODO remove this console.log before publishing. Here for debugging.
+  console.log("firebase init finished");
 }
 
 export { init, app, appDb, firestore, appAuth };
