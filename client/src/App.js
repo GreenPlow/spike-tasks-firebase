@@ -46,6 +46,7 @@ axios.interceptors.request.use(function (config) {
   return config;
 });
 
+// These should be able to be moved backed to the errorHandler.js
 axios.interceptors.response.use(
   function (response) {
     // Any status code that lie within the range of 2xx cause this function to trigger
