@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { setAlert } from "./errorMessage";
-import handleAxiosError from "./api/errorHandler";
+import handleAxiosError from "../app/api/errorHandler";
 
 import Container from "react-bootstrap/Container";
 
@@ -10,7 +10,7 @@ import AppLogin from "./components/AppLogin";
 
 import "./App.css";
 
-import { get, setLocal } from "./user";
+import { get, setLocal } from "../user";
 
 function App() {
   const [user, setUser] = useState(undefined);
