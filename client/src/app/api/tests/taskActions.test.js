@@ -1,7 +1,7 @@
 import Chance from "chance";
 import { createNewTask } from "../taskActions";
-import { setLocal } from "../../user";
-import { getTasks } from "../../mocks/db";
+import { setLocal } from "../../../user";
+import { getTasks } from "../../../mocks/db";
 
 const chance = new Chance();
 
