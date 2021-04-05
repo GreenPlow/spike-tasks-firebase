@@ -1,9 +1,8 @@
 import axios from "axios";
 import React from "react";
 
-import { setAlert } from "../../errorMessage";
-
-import { auth, appDb, firestore } from "../../fire";
+import { setAlert } from "../errorMessage";
+import { appAuth as auth, appDb, firestore } from "../config/fire";
 
 // add the axios interceptors here to do the banners and logging, able to delete the try catches
 // replace localhost with ip address to access app from a local network
