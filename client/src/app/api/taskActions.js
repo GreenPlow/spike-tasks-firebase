@@ -14,6 +14,14 @@ export function dataFromSnapshot(snapshot) {
   if (!snapshot.exists) return undefined;
   const data = snapshot.data();
 
+  for (const prop in data) {
+    if (Object.prototype.hasOwnProperty.call(data, prop)) {
+      if (data[prop] instanceof firebase.firestore.Timestamp) {
+        data[prop] = data[prop].toDate();
+      }
+    }
+  }
+
   return {
     ...data,
     id: snapshot.id,
@@ -44,9 +52,7 @@ async function getLatestTasksFromServer({ momentjsObj }) {
     .get();
 
   const docsWithData = query.docs.map((doc) => {
-    let data = dataFromSnapshot(doc);
-    data.startDateTime = data.startDateTime.toDate();
-    return data;
+    return dataFromSnapshot(doc);
   });
   return docsWithData;
 }
