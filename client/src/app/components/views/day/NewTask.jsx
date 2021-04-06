@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import { Form, ToggleButtonGroup, ToggleButton } from "react-bootstrap";
 
-import { createNewTask } from "../../../api/taskActions";
+import { createTask } from "../../../api/taskActions";
 
 function TaskSizeSelector({ sizeOptions, selectedSize, onSizeChange }) {
   return (
@@ -39,15 +39,15 @@ TaskSizeSelector.propTypes = {
 };
 
 function NewTask({ onCreateFinish, momentjsObj }) {
-  const [newTask, setNewTask] = useState("");
-  const isTaskNameEmpty = !newTask;
+  const [task, setTask] = useState("");
+  const isTaskNameEmpty = !task;
 
   async function onSubmit(size) {
     document.activeElement.blur();
 
-    await createNewTask(newTask, size, momentjsObj, async () => {
+    await createTask({ task, size, momentjsObj }, async () => {
       await onCreateFinish();
-      setNewTask("");
+      setTask("");
     });
   }
 
@@ -67,9 +67,9 @@ function NewTask({ onCreateFinish, momentjsObj }) {
               type="text"
               name="task"
               placeholder="Create Task"
-              value={newTask}
+              value={task}
               onChange={(e) => {
-                setNewTask(e.target.value);
+                setTask(e.target.value);
               }}
             />
           </Form.Group>
