@@ -1,4 +1,3 @@
-// import axios from "axios";
 import React from "react";
 
 import { setAlert } from "../errorMessage";
@@ -6,9 +5,6 @@ import { firebase } from "../config/fire";
 
 import moment from "moment";
 
-// add the axios interceptors here to do the banners and logging, able to delete the try catches
-// replace localhost with ip address to access app from a local network
-// const endpoint = "http://localhost:8000";
 const Timestamp = firebase.firestore.Timestamp;
 const FieldValue = firebase.firestore.FieldValue;
 
@@ -165,30 +161,6 @@ async function updateTask(taskObj, afterUpdate) {
     });
   }
 }
-
-// async function updateTask(obj, afterUpdate) {
-//   const { _id, task } = obj;
-//   // TODO the Go API is not returning a Bad Request Error when json attributes are incorrect.
-//   // For example, remove the _ from id and it should throw an error, but doesn't
-//   const body = obj;
-//   const url = endpoint + "/api/updateTask/" + _id;
-//   try {
-//     await axios.put(url, body, {
-//       headers: { "Content-Type": "application/x-www-form-urlencoded" },
-//     });
-//     afterUpdate();
-//   } catch (errorObj) {
-//     setAlert({
-//       heading: "Well, this is embarassing...",
-//       message: (
-//         <>
-//           <strong>{task} </strong>
-//           {"was not updated"}
-//         </>
-//       ),
-//     });
-//   }
-// }
 
 export {
   getLatestTasksFromServer,
