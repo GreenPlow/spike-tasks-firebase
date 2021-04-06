@@ -28,10 +28,13 @@ export default function TaskList({ calendarDate, triggerRender }) {
 
   async function getLatestTasksFromServerAndUpdateState(calendarDate) {
     try {
-      const latestTasks = await getLatestTasksFromServer(calendarDate);
+      const latestTasks = await getLatestTasksFromServer({
+        momentjsObj: calendarDate,
+      });
       seperateTasks({ latestTasks, setCompleteTasks, setIncompleteTasks });
     } catch (error) {
       setIncompleteTasks(null);
+      console.log("this error");
       throw error;
     }
   }

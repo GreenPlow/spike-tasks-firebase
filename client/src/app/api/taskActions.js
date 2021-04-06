@@ -7,7 +7,6 @@ import { firebase } from "../config/fire";
 // add the axios interceptors here to do the banners and logging, able to delete the try catches
 // replace localhost with ip address to access app from a local network
 const endpoint = "http://localhost:8000";
-
 const Timestamp = firebase.firestore.Timestamp;
 const FieldValue = firebase.firestore.FieldValue;
 
@@ -15,34 +14,47 @@ function getUserUid() {
   return firebase.auth().currentUser.uid;
 }
 
-async function getLatestTasksFromServer(date) {
-  var citiesRef = firebase
+async function getLatestTasksFromServer({momentjsObj}) {
+  console.log("the moment", momentjsObj);
+  console.log("here1");
+  const tasklistRef = firebase
     .firestore()
-    .collection(`users/${getUserUid()}/tasklist`);
+    .collection(`users/${firebase.auth().currentUser.uid}/tasklist`);
+  const queryfield = "startDateTime";
 
-  const querySnapshot = await citiesRef
-    .where("date", ">=", Timestamp.fromDate(date.startOf("day").toDate()))
-    .where("date", "<=", Timestamp.fromDate(date.endOf("day").toDate()))
+  console.log("here2");
+
+  const query = await tasklistRef
+    .where(
+      queryfield,
+      ">=",
+      Timestamp.fromDate(momentjsObj.startOf("day").toDate())
+    )
+    .where(
+      queryfield,
+      "<=",
+      Timestamp.fromDate(momentjsObj.endOf("day").toDate())
+    )
     .get();
 
-  const docsWithData = querySnapshot.docs.map((doc) => {
+  const docsWithData = query.docs.map((doc) => {
     const data = doc.data();
-    data.startTimestamp = data.date.toDate();
+    data.startDateTime = data.startDateTime.toDate();
     return data;
   });
   return docsWithData;
 }
 
 async function createTask({ task, size, momentjsObj }, afterSuccess) {
+  const tasklistRef = firebase
+    .firestore()
+    .collection(`users/${firebase.auth().currentUser.uid}/tasklist`);
   try {
-    let refCollection = firebase
-      .firestore()
-      .collection(`users/${getUserUid()}/tasklist`);
     // TODO Do I need to await these?
-    await refCollection.add({
+    await tasklistRef.add({
       task,
       size,
-      startTimestamp: Timestamp.fromDate(momentjsObj.toDate()),
+      startDateTime: Timestamp.fromDate(momentjsObj.toDate()),
       status: false,
       createdAt: FieldValue.serverTimestamp(),
     });
