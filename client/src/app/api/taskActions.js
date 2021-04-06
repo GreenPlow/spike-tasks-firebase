@@ -30,6 +30,7 @@ export function dataFromSnapshot(snapshot) {
 }
 
 async function getLatestTasksFromServer({ momentjsObj }) {
+  // TODO does the collection referece need to be await and try caught?
   const tasklistRef = firebase
     .firestore()
     .collection(`users/${firebase.auth().currentUser.uid}/tasklist`);
@@ -82,14 +83,12 @@ async function createTask({ task, size, momentjsObj }, afterSuccess) {
   }
 }
 
-// Use the intereptor to throw the error
 async function patchTask({ _id, property }, afterSuccess) {
-  const body = property;
-  const url = endpoint + "/api/task/" + _id;
+  const tasklistRef = firebase
+    .firestore()
+    .collection(`users/${firebase.auth().currentUser.uid}/tasklist`);
   try {
-    await axios.patch(url, body, {
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    });
+    await tasklistRef.doc(_id).update(property);
     afterSuccess();
   } catch (errorObj) {
     setAlert({
@@ -103,6 +102,28 @@ async function patchTask({ _id, property }, afterSuccess) {
     });
   }
 }
+
+// // Use the intereptor to throw the error
+// async function patchTask({ _id, property }, afterSuccess) {
+//   const body = property;
+//   const url = endpoint + "/api/task/" + _id;
+//   try {
+//     await axios.patch(url, body, {
+//       headers: { "Content-Type": "application/x-www-form-urlencoded" },
+//     });
+//     afterSuccess();
+//   } catch (errorObj) {
+//     setAlert({
+//       heading: "Oh Snap!",
+//       message: (
+//         <>
+//           <strong>{Object.keys(property)[0]} </strong>
+//           {"was not updated"}
+//         </>
+//       ),
+//     });
+//   }
+// }
 
 async function deleteTask({ _id }, afterSuccess) {
   const tasklistRef = firebase
