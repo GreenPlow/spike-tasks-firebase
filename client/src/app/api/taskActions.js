@@ -11,35 +11,38 @@ const endpoint = "http://localhost:8000";
 const Timestamp = firebase.firestore.Timestamp;
 const FieldValue = firebase.firestore.FieldValue;
 
-async function getLatestTasksFromServer(date) {
-  console.log(date);
-  const getUser = firebase.auth().currentUser.uid;
+function getUserUid() {
+  return firebase.auth().currentUser.uid;
+}
 
-  var citiesRef = firebase.firestore().collection(`users/${getUser}/tasklist`);
+async function getLatestTasksFromServer(date) {
+  var citiesRef = firebase
+    .firestore()
+    .collection(`users/${getUserUid()}/tasklist`);
 
   const querySnapshot = await citiesRef
     .where("date", ">=", Timestamp.fromDate(date.startOf("day").toDate()))
     .where("date", "<=", Timestamp.fromDate(date.endOf("day").toDate()))
-    .get()
+    .get();
 
   const docsWithData = querySnapshot.docs.map((doc) => {
     const data = doc.data();
-    data.date = data.date.toDate();
+    data.startTimestamp = data.date.toDate();
     return data;
   });
   return docsWithData;
 }
 
-async function createNewTask({task, taskSize, momentjsObj}, afterSuccess) {
+async function createTask({ task, size, momentjsObj }, afterSuccess) {
   try {
     let refCollection = firebase
       .firestore()
-      .collection(`users/${firebase.auth().currentUser.uid}/tasklist`);
+      .collection(`users/${getUserUid()}/tasklist`);
     // TODO Do I need to await these?
     await refCollection.add({
       task,
-      taskSize,
-      date: Timestamp.fromDate(momentjsObj.toDate()),
+      size,
+      startTimestamp: Timestamp.fromDate(momentjsObj.toDate()),
       status: false,
       createdAt: FieldValue.serverTimestamp(),
     });
@@ -113,7 +116,7 @@ async function updateTask(obj, afterUpdate) {
 
 export {
   getLatestTasksFromServer,
-  createNewTask,
+  createTask,
   deleteTask,
   updateTask,
   patchTask,
