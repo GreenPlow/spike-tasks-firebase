@@ -10,11 +10,17 @@ const endpoint = "http://localhost:8000";
 const Timestamp = firebase.firestore.Timestamp;
 const FieldValue = firebase.firestore.FieldValue;
 
-function getUserUid() {
-  return firebase.auth().currentUser.uid;
+export function dataFromSnapshot(snapshot) {
+  if (!snapshot.exists) return undefined;
+  const data = snapshot.data();
+
+  return {
+    ...data,
+    id: snapshot.id,
+  };
 }
 
-async function getLatestTasksFromServer({momentjsObj}) {
+async function getLatestTasksFromServer({ momentjsObj }) {
   console.log("the moment", momentjsObj);
   console.log("here1");
   const tasklistRef = firebase
@@ -38,7 +44,7 @@ async function getLatestTasksFromServer({momentjsObj}) {
     .get();
 
   const docsWithData = query.docs.map((doc) => {
-    const data = doc.data();
+    let data = dataFromSnapshot(doc);
     data.startDateTime = data.startDateTime.toDate();
     return data;
   });
