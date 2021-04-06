@@ -10,7 +10,7 @@ import moment from "moment";
 import { deleteTask, patchTask } from "../../../api/taskActions";
 
 function Task({ taskObj, onModification, doneButton }) {
-  const { _id, task, status, size, startDateTime} = taskObj;
+  const { _id, task, status, size, startDateTime } = taskObj;
   // Set a staeful taskSize so it can be updated without edit the task
   const [statefulTaskSize, setStatefulTaskSize] = useState([size]);
 
@@ -22,8 +22,9 @@ function Task({ taskObj, onModification, doneButton }) {
 
   async function onDelete(e) {
     e.stopPropagation();
-    await deleteTask(_id);
-    await onModification();
+    await deleteTask({ _id }, async () => {
+      await onModification();
+    });
   }
 
   async function onDone(e) {
@@ -130,7 +131,8 @@ Task.propTypes = {
     task: PropTypes.string.isRequired,
     status: PropTypes.bool.isRequired,
     size: PropTypes.string.isRequired,
-    startDateTime: PropTypes.object.isRequired
+    startDateTime: PropTypes.object.isRequired,
+    createdAt: PropTypes.object,
   }),
   onModification: PropTypes.func.isRequired,
   doneButton: PropTypes.bool,

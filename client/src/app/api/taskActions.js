@@ -24,19 +24,16 @@ export function dataFromSnapshot(snapshot) {
 
   return {
     ...data,
-    id: snapshot.id,
+    // underscore _ is a carryover from mongodb. To refactor, _ will need to be removed from all components
+    _id: snapshot.id,
   };
 }
 
 async function getLatestTasksFromServer({ momentjsObj }) {
-  console.log("the moment", momentjsObj);
-  console.log("here1");
   const tasklistRef = firebase
     .firestore()
     .collection(`users/${firebase.auth().currentUser.uid}/tasklist`);
   const queryfield = "startDateTime";
-
-  console.log("here2");
 
   const query = await tasklistRef
     .where(
@@ -107,12 +104,32 @@ async function patchTask({ _id, property }, afterSuccess) {
   }
 }
 
-async function deleteTask(id) {
-  const url = endpoint + "/api/deleteTask/" + id;
-  await axios.delete(url, {
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-  });
+async function deleteTask({ _id }, afterSuccess) {
+  const tasklistRef = firebase
+    .firestore()
+    .collection(`users/${firebase.auth().currentUser.uid}/tasklist`);
+  try {
+    await tasklistRef.doc(_id).delete();
+    afterSuccess();
+  } catch (errorObj) {
+    setAlert({
+      heading: "Well, this is embarassing...",
+      message: (
+        <>
+          <strong>{_id} </strong>
+          {"was not deleted"}
+        </>
+      ),
+    });
+  }
 }
+
+// async function deleteTask(id) {
+//   const url = endpoint + "/api/deleteTask/" + id;
+//   await axios.delete(url, {
+//     headers: { "Content-Type": "application/x-www-form-urlencoded" },
+//   });
+// }
 
 async function updateTask(obj, afterUpdate) {
   const { _id, task } = obj;
