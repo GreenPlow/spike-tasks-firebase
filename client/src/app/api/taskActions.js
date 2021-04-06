@@ -113,7 +113,7 @@ async function getLatestTasksFromServer(date) {
   // return res.data;
 }
 
-async function createNewTask(task, taskSize, momentjsObj, afterSuccess) {
+async function createNewTask({task, taskSize, momentjsObj}, afterSuccess) {
   try {
     let refCollection = firebase
       .firestore()
