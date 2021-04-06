@@ -103,28 +103,6 @@ async function patchTask({ _id, property }, afterSuccess) {
   }
 }
 
-// // Use the intereptor to throw the error
-// async function patchTask({ _id, property }, afterSuccess) {
-//   const body = property;
-//   const url = endpoint + "/api/task/" + _id;
-//   try {
-//     await axios.patch(url, body, {
-//       headers: { "Content-Type": "application/x-www-form-urlencoded" },
-//     });
-//     afterSuccess();
-//   } catch (errorObj) {
-//     setAlert({
-//       heading: "Oh Snap!",
-//       message: (
-//         <>
-//           <strong>{Object.keys(property)[0]} </strong>
-//           {"was not updated"}
-//         </>
-//       ),
-//     });
-//   }
-// }
-
 async function deleteTask({ _id }, afterSuccess) {
   const tasklistRef = firebase
     .firestore()
