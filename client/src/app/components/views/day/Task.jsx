@@ -59,7 +59,7 @@ function Task({ taskObj, onModification, doneButton }) {
       {showEdit ? (
         <Card.Body textalign="left">
           <EditTask
-            editObj={taskObj}
+            taskObj={taskObj}
             afterUpdate={() => {
               onModification();
               setShowEdit(false);

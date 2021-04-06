@@ -1,12 +1,14 @@
-import axios from "axios";
+// import axios from "axios";
 import React from "react";
 
 import { setAlert } from "../errorMessage";
 import { firebase } from "../config/fire";
 
+import moment from "moment";
+
 // add the axios interceptors here to do the banners and logging, able to delete the try catches
 // replace localhost with ip address to access app from a local network
-const endpoint = "http://localhost:8000";
+// const endpoint = "http://localhost:8000";
 const Timestamp = firebase.firestore.Timestamp;
 const FieldValue = firebase.firestore.FieldValue;
 
@@ -123,18 +125,35 @@ async function deleteTask({ _id }, afterSuccess) {
   }
 }
 
-async function updateTask(obj, afterUpdate) {
-  const { _id, task } = obj;
+export function transformForFirebase(data) {
+  // TODO this got around the firebase error, but hard to tell how the objects are different
+  console.log("pre transform", data);
+  for (const prop in data) {
+    if (Object.prototype.hasOwnProperty.call(data, prop)) {
+      if (data[prop] instanceof moment) {
+        data[prop] = Timestamp.fromDate(data[prop].toDate());
+      }
+    }
+  }
+  console.log("post", data);
+  return data;
+}
+
+async function updateTask(taskObj, afterUpdate) {
+  const transformedObj = transformForFirebase(taskObj);
+  // This is writing the _id back to the document when it was not previously there
+  const { _id, task } = transformedObj;
   // TODO the Go API is not returning a Bad Request Error when json attributes are incorrect.
   // For example, remove the _ from id and it should throw an error, but doesn't
-  const body = obj;
-  const url = endpoint + "/api/updateTask/" + _id;
+  const tasklistRef = firebase
+    .firestore()
+    .collection(`users/${firebase.auth().currentUser.uid}/tasklist`);
   try {
-    await axios.put(url, body, {
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    });
+    await tasklistRef.doc(_id).update(transformedObj);
     afterUpdate();
   } catch (errorObj) {
+    // TODO still need to surface the errors somehow for logs/dev
+    console.log(errorObj);
     setAlert({
       heading: "Well, this is embarassing...",
       message: (
@@ -146,6 +165,30 @@ async function updateTask(obj, afterUpdate) {
     });
   }
 }
+
+// async function updateTask(obj, afterUpdate) {
+//   const { _id, task } = obj;
+//   // TODO the Go API is not returning a Bad Request Error when json attributes are incorrect.
+//   // For example, remove the _ from id and it should throw an error, but doesn't
+//   const body = obj;
+//   const url = endpoint + "/api/updateTask/" + _id;
+//   try {
+//     await axios.put(url, body, {
+//       headers: { "Content-Type": "application/x-www-form-urlencoded" },
+//     });
+//     afterUpdate();
+//   } catch (errorObj) {
+//     setAlert({
+//       heading: "Well, this is embarassing...",
+//       message: (
+//         <>
+//           <strong>{task} </strong>
+//           {"was not updated"}
+//         </>
+//       ),
+//     });
+//   }
+// }
 
 export {
   getLatestTasksFromServer,
