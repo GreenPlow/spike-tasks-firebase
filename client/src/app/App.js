@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { setAlert } from "./errorMessage";
-import handleAxiosError from "./api/errorHandler";
+import handleAxiosError from "../app/api/errorHandler";
 
 import Container from "react-bootstrap/Container";
 
@@ -10,30 +10,34 @@ import AppLogin from "./components/AppLogin";
 
 import "./App.css";
 
-import { get, setLocal } from "./user";
+import { get, setLocal } from "../user";
+import { firebase } from "../app/config/fire";
 
 function App() {
   const [user, setUser] = useState(undefined);
 
-  if (!user) {
-    try {
-      setUser(get());
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  function handleUserLogin(value) {
-    setUser(value);
-    setLocal(value);
-  }
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        console.log(user);
+        setUser(user.uid);
+        setLocal(user.uid);
+      } else {
+        // User is signed out
+        console.log("logmeinbro");
+        setUser(null);
+      }
+    });
+  }, []);
 
   return (
     <Container fluid>
       {user ? (
-        <AppLanding user={user} cbSetUser={handleUserLogin} />
+        <AppLanding user={user} cbSetUser={() => {}} />
       ) : (
-        <AppLogin user={user} onSubmit={handleUserLogin} />
+        <AppLogin user={user} />
       )}
     </Container>
   );
@@ -46,6 +50,7 @@ axios.interceptors.request.use(function (config) {
   return config;
 });
 
+// These should be able to be moved backed to the errorHandler.js
 axios.interceptors.response.use(
   function (response) {
     // Any status code that lie within the range of 2xx cause this function to trigger

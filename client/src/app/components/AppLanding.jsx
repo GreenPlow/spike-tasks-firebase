@@ -21,6 +21,7 @@ import NewTask from "./views/day/NewTask";
 import Time from "./Time";
 import SwitchUser from "./SwitchUser";
 import { init, setAlert } from "../errorMessage";
+import { firebase } from "../config/fire";
 
 import moment from "moment";
 
@@ -99,7 +100,8 @@ export default function AppLanding({ user, cbSetUser }) {
           >
             <DropdownItem
               onClick={() => {
-                cbSetUser(undefined);
+                // cbSetUser(undefined);
+                firebase.auth().signOut();
               }}
             >
               Logout
@@ -115,7 +117,7 @@ export default function AppLanding({ user, cbSetUser }) {
       <Row>
         <Col>
           <NewTask
-            dateObj={calendarDate}
+            momentjsObj={calendarDate}
             onCreateFinish={() => {
               today(); // this needs to be replaced by lifting up the task state
               // pass in the function callback as a named prop

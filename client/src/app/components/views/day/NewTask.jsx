@@ -38,14 +38,14 @@ TaskSizeSelector.propTypes = {
   onSizeChange: PropTypes.func.isRequired,
 };
 
-function NewTask({ onCreateFinish, dateObj }) {
+function NewTask({ onCreateFinish, momentjsObj }) {
   const [newTask, setNewTask] = useState("");
   const isTaskNameEmpty = !newTask;
 
   async function onSubmit(size) {
     document.activeElement.blur();
 
-    await createNewTask(newTask, size, dateObj.toISOString(), async () => {
+    await createNewTask(newTask, size, momentjsObj, async () => {
       await onCreateFinish();
       setNewTask("");
     });
@@ -102,7 +102,7 @@ function NewTask({ onCreateFinish, dateObj }) {
 
 NewTask.propTypes = {
   onCreateFinish: PropTypes.func.isRequired,
-  dateObj: PropTypes.object,
+  momentjsObj: PropTypes.object,
 };
 
 export default NewTask;

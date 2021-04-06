@@ -1,10 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { firebase } from "../config/fire";
 
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 
-export default function LoginScreen({ user, onSubmit }) {
+export default function LoginScreen({ user }) {
   return (
     <Container fluid>
       <div
@@ -13,17 +14,20 @@ export default function LoginScreen({ user, onSubmit }) {
           padding: "180px",
         }}
       >
-        <Form
-          onSubmit={(e) => {
-            e.preventDefault();
-            onSubmit(e.target[0].value);
-          }}
-        >
+        <Form>
           <Form.Group>
             <Form.Label>
-              you done logged out.. type a username to log in
+              You are no logged in, please choose an option below.
             </Form.Label>
-            <Form.Control defaultValue={user} />
+            <button
+              onClick={function (e) {
+                e.preventDefault();
+                var provider = new firebase.auth.GoogleAuthProvider();
+                firebase.auth().signInWithPopup(provider);
+              }}
+            >
+              Login with Google
+            </button>
           </Form.Group>
         </Form>
       </div>
