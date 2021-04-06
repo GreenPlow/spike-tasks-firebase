@@ -1,35 +1,5 @@
 version: '3.7'
 services:
-    # go server
-    go_server:
-        build: ./server
-        container_name: spike_task_go_server
-        depends_on:
-            - 'mongo'
-        environment:
-            - PORT=8000
-        ports:
-            - '8000:8000'
-        volumes:
-            - './server:/opt/server:cached'
-    # MongoDB
-    mongo:
-        image: 'mongo:4-bionic'
-        container_name: mongo
-        ports:
-            - '27017:27017'
-        volumes:
-            - ./mongodata:/data/db
-        restart: always
-    # web-based MongoDB admin interface
-    mongo_express:
-        image: mongo-express
-        container_name: mongo_express
-        depends_on:
-            - 'mongo'
-        ports:
-            - '8081:8081'
-        restart: always
     # # react client
     # react_client:
     #     build: ./client
