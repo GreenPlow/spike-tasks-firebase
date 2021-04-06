@@ -10,8 +10,9 @@ import moment from "moment";
 import { deleteTask, patchTask } from "../../../api/taskActions";
 
 function Task({ taskObj, onModification, doneButton }) {
-  const { _id, task, status, taskSize, date } = taskObj;
-  const [statefulTaskSize, setStatefulTaskSize] = useState([taskSize]);
+  const { _id, task, status, size, startDateTime } = taskObj;
+  // Set a staeful taskSize so it can be updated without edit the task
+  const [statefulTaskSize, setStatefulTaskSize] = useState([size]);
 
   let color = "warning";
 
@@ -21,8 +22,9 @@ function Task({ taskObj, onModification, doneButton }) {
 
   async function onDelete(e) {
     e.stopPropagation();
-    await deleteTask(_id);
-    await onModification();
+    await deleteTask({ _id }, async () => {
+      await onModification();
+    });
   }
 
   async function onDone(e) {
@@ -40,7 +42,7 @@ function Task({ taskObj, onModification, doneButton }) {
   }
 
   async function changeTaskSize(value) {
-    await patchTask({ _id, property: { taskSize: value } }, async () => {
+    await patchTask({ _id, property: { size: value } }, async () => {
       await onModification();
       setStatefulTaskSize(value);
     });
@@ -57,7 +59,7 @@ function Task({ taskObj, onModification, doneButton }) {
       {showEdit ? (
         <Card.Body textalign="left">
           <EditTask
-            editObj={taskObj}
+            taskObj={taskObj}
             afterUpdate={() => {
               onModification();
               setShowEdit(false);
@@ -90,7 +92,7 @@ function Task({ taskObj, onModification, doneButton }) {
           </div>
           <Card.Body textalign="left" onClick={() => setShowEdit(true)}>
             <Card.Title>{task}</Card.Title>
-            <Card.Subtitle>{moment(date).format("LTS")}</Card.Subtitle>
+            <Card.Subtitle>{moment(startDateTime).format("LTS")}</Card.Subtitle>
             <Card.Text className="d-inline-flex">
               {doneButton ? (
                 <>
@@ -128,8 +130,9 @@ Task.propTypes = {
     _id: PropTypes.string.isRequired,
     task: PropTypes.string.isRequired,
     status: PropTypes.bool.isRequired,
-    taskSize: PropTypes.string.isRequired,
-    date: PropTypes.string.isRequired,
+    size: PropTypes.string.isRequired,
+    startDateTime: PropTypes.object.isRequired,
+    createdAt: PropTypes.object,
   }),
   onModification: PropTypes.func.isRequired,
   doneButton: PropTypes.bool,

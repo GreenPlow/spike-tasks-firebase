@@ -12,12 +12,16 @@ import moment from "moment";
 import { updateTask } from "../../../api/taskActions";
 import { setAlert } from "../../../errorMessage";
 
-export default function EditTask({ editObj, afterUpdate, handleCancel }) {
+export default function EditTask({
+  taskObj,
+  afterUpdate,
+  handleCancel,
+}) {
   // https://stackoverflow.com/questions/22573494/react-js-input-losing-focus-when-rerendering
 
-  const [task, setTask] = useState(editObj.task);
+  const [task, setTask] = useState(taskObj.task);
   // const [date, setDate] = useState(moment(editObj.date).format("L"));
-  const [date, setDate] = useState(moment(editObj.date));
+  const [date, setDate] = useState(moment(taskObj.startDateTime));
   const [isFocused, setFocused] = useState(false);
 
   const inputRef = useRef(null);
@@ -33,8 +37,8 @@ export default function EditTask({ editObj, afterUpdate, handleCancel }) {
 
   async function onSubmit(event) {
     event.preventDefault();
-    // debugger; // eslint-disable-line
-    await updateTask({ ...editObj, task, date }, async () => {
+    // TODO should date be refactored to startDateTime?
+    await updateTask({ ...taskObj, task, startDateTime: date }, async () => {
       await afterUpdate();
       setAlert("");
     });
@@ -74,12 +78,12 @@ export default function EditTask({ editObj, afterUpdate, handleCancel }) {
 }
 
 EditTask.propTypes = {
-  editObj: PropTypes.exact({
+  taskObj: PropTypes.exact({
     _id: PropTypes.string.isRequired,
     task: PropTypes.string.isRequired,
     status: PropTypes.bool.isRequired,
     taskSize: PropTypes.string.isRequired,
-    date: PropTypes.string.isRequired,
+    startDateTime: PropTypes.string.isRequired,
   }),
   afterUpdate: PropTypes.func.isRequired,
   handleCancel: PropTypes.func.isRequired,
