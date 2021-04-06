@@ -10,74 +10,9 @@ const endpoint = "http://localhost:8000";
 
 const Timestamp = firebase.firestore.Timestamp;
 const FieldValue = firebase.firestore.FieldValue;
-// async function getLatestTasksFromServer(date) {
-//   console.log(get());
-//   const url =
-//     endpoint +
-//     `/api/task?searchDate=${date}&timeZone=${
-//       Intl.DateTimeFormat().resolvedOptions().timeZone
-//     }`;
-//   try {
-//     const res = await axios.get(url);
-//     return res.data;
-//   } catch (errorObj) {
-//     throw new Error(`failed to get tasks for ${date}`);
-//   }
-// }
 
 async function getLatestTasksFromServer(date) {
   console.log(date);
-  //   let tasksRef = appDb.collection(`users/${auth.currentUser.uid}/tasklist`);
-  //   let results = await tasksRef
-  //     .where("date", ">=", firestore.Timestamp.fromDate(date.toDate()))
-  //     .get();
-  //   .then((querySnapshot) => {
-  //     querySnapshot.forEach((doc) => {
-  //       // doc.data() is never undefined for query doc snapshots
-  //       console.log(doc.id, " => ", doc.data());
-  //     });
-  //   });
-
-  // citiesRef.doc("SF").set({
-  //   name: "San Francisco",
-  //   state: "CA",
-  //   country: "USA",
-  //   capital: false,
-  //   population: 860000,
-  //   regions: ["west_coast", "norcal"],
-  // });
-  // citiesRef.doc("LA").set({
-  //   name: "Los Angeles",
-  //   state: "CA",
-  //   country: "USA",
-  //   capital: false,
-  //   population: 3900000,
-  //   regions: ["west_coast", "socal"],
-  // });
-  // citiesRef.doc("DC").set({
-  //   name: "Washington, D.C.",
-  //   state: null,
-  //   country: "USA",
-  //   capital: true,
-  //   population: 680000,
-  //   regions: ["east_coast"],
-  // });
-  // citiesRef.doc("TOK").set({
-  //   name: "Tokyo",
-  //   state: null,
-  //   country: "Japan",
-  //   capital: true,
-  //   population: 9000000,
-  //   regions: ["kanto", "honshu"],
-  // });
-  // citiesRef.doc("BJ").set({
-  //   name: "Beijing",
-  //   state: null,
-  //   country: "China",
-  //   capital: true,
-  //   population: 21500000,
-  //   regions: ["jingjinji", "hebei"],
-  // });
   const getUser = firebase.auth().currentUser.uid;
 
   var citiesRef = firebase.firestore().collection(`users/${getUser}/tasklist`);
@@ -93,24 +28,6 @@ async function getLatestTasksFromServer(date) {
     return data;
   });
   return docsWithData;
-
-  // var docRef = await appDb.collection(`users/${auth.currentUser.uid}/cities`);
-  // citiesRef
-  //   .where("state", "==", "CA")
-  //   .get()
-  //   .then((doc) => {
-  //     if (doc.exists) {
-  //       console.log("Document data:", doc.data());
-  //     } else {
-  //       // doc.data() will be undefined in this case
-  //       console.log("No such document!");
-  //     }
-  //   })
-  //   .catch((error) => {
-  //     console.log("Error getting document:", error);
-  //   });
-
-  // return res.data;
 }
 
 async function createNewTask({task, taskSize, momentjsObj}, afterSuccess) {
