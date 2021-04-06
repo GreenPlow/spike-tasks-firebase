@@ -124,13 +124,6 @@ async function deleteTask({ _id }, afterSuccess) {
   }
 }
 
-// async function deleteTask(id) {
-//   const url = endpoint + "/api/deleteTask/" + id;
-//   await axios.delete(url, {
-//     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-//   });
-// }
-
 async function updateTask(obj, afterUpdate) {
   const { _id, task } = obj;
   // TODO the Go API is not returning a Bad Request Error when json attributes are incorrect.
