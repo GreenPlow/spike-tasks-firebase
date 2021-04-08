@@ -94,14 +94,15 @@ export default function AppLanding({ user, cbSetUser }) {
         </Col>
         <Col>
           <DropdownButton
-            title={`Hi ${user}!`}
+            title={`Hi ${firebase.auth().currentUser.displayName}!`}
             id="bg-nested-dropdown"
             className="d-flex justify-content-end"
           >
             <DropdownItem
               onClick={() => {
-                // cbSetUser(undefined);
+                // TODO is there any necessary error handling?
                 firebase.auth().signOut();
+                cbSetUser(undefined);
               }}
             >
               Logout
