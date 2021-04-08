@@ -35,7 +35,7 @@ function App() {
   return (
     <Container fluid>
       {user ? (
-        <AppLanding user={user} cbSetUser={() => {}} />
+        <AppLanding user={user} cbSetUser={setUser}/>
       ) : (
         <AppLogin user={user} />
       )}
