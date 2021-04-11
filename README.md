@@ -1,16 +1,13 @@
-# spike-list
+# spike-tasks-firebase
 
-To start this project run `npm start` from `./client`
-
-Note - The client is commented out in the docker-compose file for the purposes of fast reloading during development. Starting the app with `npm start` will enable Air to reload the app when changes are made.
+Start the app locally with `npm start`.
 
 Client App GUI
 http://localhost:3000/
 
 
 To use eslint ensure the plugins are installed on your machine.
-```
-cd /client
+```shell
 npm install eslint-plugin-testing-library eslint-plugin-jest-dom
 ```
 
