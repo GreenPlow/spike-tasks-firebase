@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 
 import DropdownItem from "react-bootstrap/DropdownItem";
 import {
-  Alert,
   Button,
   ButtonGroup,
   ButtonToolbar,
@@ -18,37 +17,14 @@ import "react-dates/lib/css/_datepicker.css";
 
 import moment from "moment";
 
-import TaskList from "../../components/tasks/TaskList";
-import NewTask from "../../components/tasks/NewTask";
-import Time from "../../components/common/Time";
-import SwitchUser from "../../components/common/SwitchUser";
+import AlertDismissible from "components/common/AlertDismissible";
+import TaskList from "components/tasks/TaskList";
+import NewTask from "components/tasks/NewTask";
+import Time from "components/common/Time";
+import SwitchUser from "components/common/SwitchUser";
 
-import { init, setAlert } from "../api/errorMessage";
-import { firebase } from "../config/fire";
-
-function AlertDismissible({ msgObj }) {
-  if (msgObj) {
-    const { heading, message } = msgObj;
-
-    return (
-      <Alert
-        variant="danger"
-        className="my-2"
-        onClose={() => setAlert("")}
-        dismissible
-      >
-        <Alert.Heading>{heading}</Alert.Heading>
-        <p>{message}</p>
-      </Alert>
-    );
-  } else {
-    return null;
-  }
-}
-
-AlertDismissible.propTypes = {
-  message: PropTypes.object,
-};
+import { init } from "app/api/errorMessage";
+import { firebase } from "app/config/fire";
 
 export default function AppLanding({ user, cbSetUser }) {
   const [calendarDate, setCalendarDate] = useState(moment());
