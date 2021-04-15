@@ -1,9 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { firebase } from "../config/fire";
 
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
+
+import { firebase } from "../config/fire";
 
 export default function LoginScreen({ user }) {
   return (

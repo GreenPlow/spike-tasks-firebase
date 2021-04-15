@@ -9,8 +9,8 @@ import "react-dates/lib/css/_datepicker.css";
 
 import moment from "moment";
 
-import { updateTask } from "../../../app/api/taskActions";
-import { setAlert } from "../../../app/errorMessage";
+import { updateTask } from "app/api/taskActions";
+import { setAlert } from "app/api/errorMessage";
 
 export default function EditTask({
   taskObj,

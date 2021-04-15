@@ -16,14 +16,15 @@ import { SingleDatePicker } from "react-dates";
 import "react-dates/initialize";
 import "react-dates/lib/css/_datepicker.css";
 
-import TaskList from "./views/day/TaskList";
-import NewTask from "./views/day/NewTask";
-import Time from "./Time";
-import SwitchUser from "./SwitchUser";
-import { init, setAlert } from "../app/errorMessage";
-import { firebase } from "../app/config/fire";
-
 import moment from "moment";
+
+import TaskList from "../../components/tasks/TaskList";
+import NewTask from "../../components/tasks/NewTask";
+import Time from "../../components/common/Time";
+import SwitchUser from "../../components/common/SwitchUser";
+
+import { init, setAlert } from "../api/errorMessage";
+import { firebase } from "../config/fire";
 
 function AlertDismissible({ msgObj }) {
   if (msgObj) {

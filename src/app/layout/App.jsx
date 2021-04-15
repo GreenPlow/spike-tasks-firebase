@@ -3,14 +3,14 @@ import Container from "react-bootstrap/Container";
 
 import axios from "axios"; // TODO replace axios interceptors and remove depend
 
-import { get, setLocal } from "./user";
-import { firebase } from "./config/fire";
-import { setAlert } from "./api/errorMessage";
-import handleAxiosError from "./api/errorHandler";
-import AppLanding from "./layout/AppLanding";
-import AppLogin from "./layout/AppLogin";
+import { get, setLocal } from "app/user";
+import { firebase } from "app/config/fire";
+import { setAlert } from "app/api/errorMessage";
+import handleAxiosError from "app/api/errorHandler";
+import AppLanding from "app/layout/AppLanding";
+import AppLogin from "app/layout/AppLogin";
 
-import "./App.css";
+import "app/layout/App.css";
 
 function App() {
   const [user, setUser] = useState(undefined);

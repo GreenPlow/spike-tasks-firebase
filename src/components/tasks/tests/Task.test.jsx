@@ -2,10 +2,12 @@ import React from "react";
 import Chance from "chance";
 
 import { render, screen } from "@testing-library/react";
-import Task from "../Task";
+// import Task from "../../tasks/Task";
+import Task from "src/components/tasks/Task";
+
 // TODO is there a better where to import things so the path doesn't easily break?
 
-jest.mock("../../../../api/taskActions");
+jest.mock("src/app/api/taskActions");
 
 // afterEach(cleanup);
 const chance = new Chance();

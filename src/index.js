@@ -2,11 +2,11 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 
-import App from "./app/App";
 import reportWebVitals from "./reportWebVitals";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
+import App from "./app/layout/App";
 import "./app/config/fire";
 
 ReactDOM.render(
