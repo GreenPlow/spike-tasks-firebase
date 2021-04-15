@@ -3,11 +3,11 @@ import PropTypes from "prop-types";
 
 import { Card, ToggleButtonGroup, ToggleButton, Button } from "react-bootstrap";
 import { Icon } from "semantic-ui-react";
-import EditTask from "./EditTask";
 
 import moment from "moment";
 
-import { deleteTask, patchTask } from "../../../api/taskActions";
+import EditTask from "components/tasks/EditTask";
+import { deleteTask, patchTask } from "app/api/taskActions";
 
 function Task({ taskObj, onModification, doneButton }) {
   const { _id, task, status, size, startDateTime } = taskObj;

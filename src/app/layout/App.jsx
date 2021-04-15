@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { setAlert } from "./errorMessage";
-import handleAxiosError from "../app/api/errorHandler";
-
 import Container from "react-bootstrap/Container";
 
-import AppLanding from "./components/AppLanding";
-import AppLogin from "./components/AppLogin";
+import axios from "axios"; // TODO replace axios interceptors and remove depend
 
-import "./App.css";
+import { get, setLocal } from "app/user";
+import { firebase } from "app/config/fire";
+import { setAlert } from "app/api/errorMessage";
+import handleAxiosError from "app/api/errorHandler";
+import AppLanding from "app/layout/AppLanding";
+import AppLogin from "app/layout/AppLogin";
 
-import { get, setLocal } from "../user";
-import { firebase } from "../app/config/fire";
+import "app/layout/App.css";
 
 function App() {
   const [user, setUser] = useState(undefined);
@@ -26,7 +25,7 @@ function App() {
         setLocal(user.uid);
       } else {
         // User is signed out
-        console.log("logmeinbro");
+        console.log("logmeinplease");
         setUser(null);
       }
     });
@@ -35,7 +34,7 @@ function App() {
   return (
     <Container fluid>
       {user ? (
-        <AppLanding user={user} cbSetUser={setUser}/>
+        <AppLanding user={user} cbSetUser={setUser} />
       ) : (
         <AppLogin user={user} />
       )}

@@ -1,7 +1,7 @@
 import React from "react";
 
-import { setAlert } from "../errorMessage";
-import { firebase } from "../config/fire";
+import { setAlert } from "app/api/errorMessage";
+import { firebase } from "app/config/fire";
 
 import moment from "moment";
 

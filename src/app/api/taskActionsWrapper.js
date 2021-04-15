@@ -2,8 +2,8 @@ import React from "react";
 import {
   getLatestTasksFromServer as getLatestTasksFromServerOG,
   createNewTask as createNewTaskOG,
-} from "./taskActions";
-import { setAlert } from "../errorMessage";
+} from "app/api/taskActions";
+import { setAlert } from "app/api/errorMessage";
 
 export async function getLatestTasksFromServer() {
   let result;
