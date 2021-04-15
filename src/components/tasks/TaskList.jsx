@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { Accordion, Alert, Card } from "react-bootstrap";
 import moment from "moment";
 
-import Task from "./Task";
+import Task from "components/tasks/Task";
 import { getLatestTasksFromServer } from "app/api/taskActions";
 
 function seperateTasks({ latestTasks, setCompleteTasks, setIncompleteTasks }) {

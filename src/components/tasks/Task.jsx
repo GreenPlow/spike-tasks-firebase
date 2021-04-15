@@ -6,7 +6,7 @@ import { Icon } from "semantic-ui-react";
 
 import moment from "moment";
 
-import EditTask from "./EditTask";
+import EditTask from "components/tasks/EditTask";
 import { deleteTask, patchTask } from "app/api/taskActions";
 
 function Task({ taskObj, onModification, doneButton }) {
