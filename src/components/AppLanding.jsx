@@ -20,8 +20,8 @@ import TaskList from "./views/day/TaskList";
 import NewTask from "./views/day/NewTask";
 import Time from "./Time";
 import SwitchUser from "./SwitchUser";
-import { init, setAlert } from "../errorMessage";
-import { firebase } from "../config/fire";
+import { init, setAlert } from "../app/errorMessage";
+import { firebase } from "../app/config/fire";
 
 import moment from "moment";
 

@@ -7,7 +7,7 @@ import EditTask from "./EditTask";
 
 import moment from "moment";
 
-import { deleteTask, patchTask } from "../../../api/taskActions";
+import { deleteTask, patchTask } from "../../../app/api/taskActions";
 
 function Task({ taskObj, onModification, doneButton }) {
   const { _id, task, status, size, startDateTime } = taskObj;
