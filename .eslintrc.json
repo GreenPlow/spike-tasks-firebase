@@ -13,6 +13,13 @@
     "plugin:testing-library/react",
     "plugin:jest-dom/recommended"
   ],
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "paths": ["src/", "node_modules"]
+      }
+    }
+  },
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
