@@ -1,6 +1,7 @@
 import React from "react";
 
 import { setAlert } from "app/api/errorMessage";
+import { addTask } from "app/api/taskRepository";
 import { firebase } from "app/config/fire";
 
 import moment from "moment";
@@ -29,12 +30,9 @@ export function dataFromSnapshot(snapshot) {
 
 async function getLatestTasksFromServer({ momentjsObj }) {
   // TODO does the collection referece need to be await and try caught?
-  const tasklistRef = firebase
-    .firestore()
-    .collection(`users/${firebase.auth().currentUser.uid}/tasklist`);
   const queryfield = "startDateTime";
 
-  const query = await tasklistRef
+  const query = await getCollectionRef()
     .where(
       queryfield,
       ">=",
@@ -53,40 +51,50 @@ async function getLatestTasksFromServer({ momentjsObj }) {
   return docsWithData;
 }
 
-async function createTask({ task, size, momentjsObj }, afterSuccess) {
-  const tasklistRef = firebase
+function getCollectionRef() {
+  return firebase
     .firestore()
     .collection(`users/${firebase.auth().currentUser.uid}/tasklist`);
-  try {
-    // TODO Do I need to await these?
-    await tasklistRef.add({
-      task,
-      size,
-      startDateTime: Timestamp.fromDate(momentjsObj.toDate()),
-      status: false,
-      createdAt: FieldValue.serverTimestamp(),
-    });
-    afterSuccess();
-  } catch (errorObj) {
-    console.log(errorObj);
-    setAlert({
-      heading: "Oh Snap!",
-      message: (
-        <>
-          <strong>{task} </strong>
-          {"was not created..."}
-        </>
-      ),
-    });
-  }
+}
+
+async function createTask({ task, size, momentjsObj }, afterSuccess) {
+  addTask();
+  afterSuccess();
+  // const user = firebase.auth().currentUser.uid;
+  // addTask(user, {
+  // task,
+  //   size: size || null,
+  //   startDateTime: Timestamp.fromDate(momentjsObj.toDate()),
+  //   status: false,
+  //   createdAt: FieldValue.serverTimestamp(),
+  // });
+  // afterSuccess();
+  // try {
+  //   await getCollectionRef().add({
+  //     task,
+  //     size: size || null,
+  //     startDateTime: Timestamp.fromDate(momentjsObj.toDate()),
+  //     status: false,
+  //     createdAt: FieldValue.serverTimestamp(),
+  //   });
+  //   afterSuccess();
+  // } catch (errorObj) {
+  //   console.log(errorObj);
+  //   setAlert({
+  //     heading: "Oh Snap!",
+  //     message: (
+  //       <>
+  //         <strong>{task} </strong>
+  //         {"was not created..."}
+  //       </>
+  //     ),
+  //   });
+  // }
 }
 
 async function patchTask({ _id, property }, afterSuccess) {
-  const tasklistRef = firebase
-    .firestore()
-    .collection(`users/${firebase.auth().currentUser.uid}/tasklist`);
   try {
-    await tasklistRef.doc(_id).update(property);
+    await getCollectionRef().doc(_id).update(property);
     afterSuccess();
   } catch (errorObj) {
     setAlert({
@@ -102,13 +110,11 @@ async function patchTask({ _id, property }, afterSuccess) {
 }
 
 async function deleteTask({ _id }, afterSuccess) {
-  const tasklistRef = firebase
-    .firestore()
-    .collection(`users/${firebase.auth().currentUser.uid}/tasklist`);
   try {
-    await tasklistRef.doc(_id).delete();
+    await getCollectionRef().doc(_id).delete();
     afterSuccess();
   } catch (errorObj) {
+    console.log(errorObj);
     setAlert({
       heading: "Well, this is embarassing...",
       message: (
@@ -141,11 +147,8 @@ async function updateTask(taskObj, afterUpdate) {
   const { _id, task } = transformedObj;
   // TODO the Go API is not returning a Bad Request Error when json attributes are incorrect.
   // For example, remove the _ from id and it should throw an error, but doesn't
-  const tasklistRef = firebase
-    .firestore()
-    .collection(`users/${firebase.auth().currentUser.uid}/tasklist`);
   try {
-    await tasklistRef.doc(_id).update(transformedObj);
+    await getCollectionRef.doc(_id).update(transformedObj);
     afterUpdate();
   } catch (errorObj) {
     // TODO still need to surface the errors somehow for logs/dev
