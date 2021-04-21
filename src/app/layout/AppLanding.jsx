@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
 import DropdownItem from "react-bootstrap/DropdownItem";
@@ -26,6 +26,24 @@ import SwitchUser from "components/common/SwitchUser";
 import { init } from "app/api/errorMessage";
 import { firebase } from "app/config/fire";
 
+import { getLatestTasksFromServer } from "app/api/taskActions";
+
+function seperateTasks({ latestTasks }) {
+  let completeTasks = [];
+  let incompleteTasks = [];
+  for (let i = 0; i < latestTasks.length; i++) {
+    if (latestTasks[i].status === true) {
+      completeTasks.push(latestTasks[i]);
+    } else {
+      incompleteTasks.push(latestTasks[i]);
+    }
+  }
+  return {
+    completeTasks,
+    incompleteTasks,
+  };
+}
+
 export default function AppLanding({ user, cbSetUser }) {
   const [calendarDate, setCalendarDate] = useState(moment());
   const [isFocused, setFocused] = useState(false);
@@ -33,17 +51,68 @@ export default function AppLanding({ user, cbSetUser }) {
 
   init(setErrorMessage);
 
-  function today() {
+  async function today() {
+    const {
+      completeTasks,
+      incompleteTasks,
+    } = await getLatestTasksFromServerAndUpdateState(moment());
+    setCompleteTasks(completeTasks);
+    setIncompleteTasks(incompleteTasks);
     setCalendarDate(moment());
   }
 
-  function nextDay() {
+  async function nextDay() {
+    const {
+      completeTasks,
+      incompleteTasks,
+    } = await getLatestTasksFromServerAndUpdateState(
+      calendarDate.clone().add(1, "days")
+    );
+    setCompleteTasks(completeTasks);
+    setIncompleteTasks(incompleteTasks);
     setCalendarDate(calendarDate.clone().add(1, "days"));
   }
 
-  function previousDay() {
+  async function previousDay() {
+    const {
+      completeTasks,
+      incompleteTasks,
+    } = await getLatestTasksFromServerAndUpdateState(
+      calendarDate.clone().subtract(1, "days")
+    );
+    setCompleteTasks(completeTasks);
+    setIncompleteTasks(incompleteTasks);
     setCalendarDate(calendarDate.clone().subtract(1, "days"));
   }
+
+  const [incompleteTasks, setIncompleteTasks] = useState();
+  const [completeTasks, setCompleteTasks] = useState();
+
+  async function getLatestTasksFromServerAndUpdateState(calendarDate) {
+    try {
+      const latestTasks = await getLatestTasksFromServer({
+        momentjsObj: calendarDate,
+      });
+      return seperateTasks({ latestTasks });
+    } catch (error) {
+      setIncompleteTasks(null);
+      console.log("this error");
+      throw error;
+    }
+  }
+
+  useEffect(() => {
+    async function getLatest() {
+      const {
+        completeTasks,
+        incompleteTasks,
+      } = await getLatestTasksFromServerAndUpdateState(calendarDate);
+      setCompleteTasks(completeTasks);
+      setIncompleteTasks(incompleteTasks);
+    }
+
+    getLatest();
+  }, []);
 
   return (
     <>
@@ -96,10 +165,13 @@ export default function AppLanding({ user, cbSetUser }) {
         <Col>
           <NewTask
             momentjsObj={calendarDate}
-            onCreateFinish={() => {
-              today(); // this needs to be replaced by lifting up the task state
-              // pass in the function callback as a named prop
-              // getLatestTasksFromServerAndUpdateState(calendarDate);
+            onCreateFinish={async () => {
+              const {
+                completeTasks,
+                incompleteTasks,
+              } = await getLatestTasksFromServerAndUpdateState(calendarDate);
+              setCompleteTasks(completeTasks);
+              setIncompleteTasks(incompleteTasks);
             }}
           />
         </Col>
@@ -111,12 +183,19 @@ export default function AppLanding({ user, cbSetUser }) {
       </Row>
       <Row>
         <Col>
-          <TaskList calendarDate={calendarDate} triggerRender={user} />
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <SwitchUser cbSetUser={cbSetUser} />
+          <TaskList
+            cb={async () => {
+              const {
+                completeTasks,
+                incompleteTasks,
+              } = await getLatestTasksFromServerAndUpdateState(calendarDate);
+              setCompleteTasks(completeTasks);
+              setIncompleteTasks(incompleteTasks);
+            }}
+            calendarDate={calendarDate}
+            completeTasks={completeTasks}
+            incompleteTasks={incompleteTasks}
+          />
         </Col>
       </Row>
     </>
