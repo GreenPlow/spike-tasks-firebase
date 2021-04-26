@@ -7,8 +7,8 @@ import { get, setLocal } from "app/user";
 import { firebase } from "app/config/fire";
 import { setAlert } from "app/api/errorMessage";
 import handleAxiosError from "app/api/errorHandler";
-import AppLanding from "app/layout/AppLanding";
-import AppLogin from "app/layout/AppLogin";
+import AppLanding from "app/layout/views/AppLanding";
+import AppLogin from "app/layout/views/AppLogin";
 
 import "app/layout/App.css";
 
