@@ -18,7 +18,7 @@ import "react-dates/lib/css/_datepicker.css";
 import moment from "moment";
 
 import AlertDismissible from "components/common/AlertDismissible";
-import TaskList from "components/tasks/TaskList";
+import ListOfTasks from "components/tasks/ListOfTasks";
 import NewTask from "components/tasks/NewTask";
 import Time from "components/common/Time";
 
@@ -182,7 +182,7 @@ export default function AppLanding({ user, cbSetUser }) {
       </Row>
       <Row>
         <Col>
-          <TaskList
+          <ListOfTasks
             cb={async () => {
               const {
                 completeTasks,
