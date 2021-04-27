@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
+import { taskObjPropTypes } from "components/common/propTypes";
 
 import Edit from "components/tasks/Edit";
 import Preview from "components/tasks/Preview";
@@ -45,14 +46,7 @@ export default function Task({ taskObj, onModification, styleAttributes }) {
 }
 
 Task.propTypes = {
-  taskObj: PropTypes.exact({
-    _id: PropTypes.string.isRequired,
-    task: PropTypes.string.isRequired,
-    status: PropTypes.bool.isRequired,
-    size: PropTypes.string.isRequired,
-    startDateTime: PropTypes.object.isRequired,
-    createdAt: PropTypes.object,
-  }),
+  taskObj: taskObjPropTypes,
   onModification: PropTypes.func.isRequired,
   styleAttributes: PropTypes.object,
 };
