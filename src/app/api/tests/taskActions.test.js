@@ -1,53 +1,121 @@
+import React from "react";
 import Chance from "chance";
-// import { createNewTask, patchTask } from "../taskActions";
 import { createTask } from "app/api/taskActions";
-
-// import { setLocal } from "../../user";
-// import { getTasks } from "../../mocks/db";
 import { addTask } from "../taskRepository";
-import { firebase } from "app/config/fire";
+import { setAlert } from "../errorMessage";
 
 const chance = new Chance();
 
-// jest.mock("../../../../api/taskActions");
+const expectedUserId = "horse";
+
 jest.mock("../taskRepository");
 jest.mock("../../config/fire", () => {
-  const actuualModule = jest.requireActual("app/config/fire");
+  const actualModule = jest.requireActual("app/config/fire");
   return {
     firebase: {
       auth: () => {
-        console.log("help");
         return {
           currentUser: {
-            uid: "horse",
+            uid: expectedUserId,
           },
         };
       },
-      firestore: actuualModule.firebase.firestore,
+      firestore: actualModule.firebase.firestore,
     },
   };
 });
+jest.mock("../errorMessage");
 
 test("should save task for user", async () => {
   // given a user and an input tasks
   const doneNotification = jest.fn();
-  const testObj = {
-    task: chance.string(),
-    size: chance.string(),
-    momentjs: chance.string(),
-  };
+  const task = chance.string();
+  const size = chance.string();
+  const momentjsObj = chance.string();
+
+  addTask.mockResolvedValue();
 
   // setup user?
   // firebase.auth().currentUser.uid
 
-  // when I tryto create task
-  await createTask(testObj, doneNotification);
+  // when I try to create task
+  await createTask(
+    {
+      task: task,
+      size: size,
+      momentjsObj: momentjsObj,
+    },
+    doneNotification
+  );
 
-  // then I shoule call create for full specified task and notify calller when complete
+  // then I should call create for full specified task and notify caller when complete
   expect(addTask).toHaveBeenCalledTimes(1);
+  expect(addTask).toHaveBeenCalledWith(expectedUserId, {
+    task: task,
+    size: size,
+    momentjsObj,
+    status: false,
+  });
   expect(doneNotification).toHaveBeenCalledTimes(1);
 });
 
-// ("should save task without size for user");
+test("should save task without size for user", async () => {
+  // given
+  const doneNotification = jest.fn();
+  const task = chance.string();
+  const size = undefined;
+  const momentjsObj = chance.string();
 
-// ("should show user error when task is unable to be saved");
+  addTask.mockResolvedValue();
+
+  // when
+  await createTask(
+    {
+      task: task,
+      size: size,
+      momentjsObj,
+    },
+    doneNotification
+  );
+
+  // then
+  expect(addTask).toHaveBeenCalledTimes(1);
+  expect(addTask).toHaveBeenCalledWith(expectedUserId, {
+    task: task,
+    size: null,
+    momentjsObj,
+    status: false,
+  });
+});
+
+test("should show user error when task is unable to be saved", async () => {
+  // given
+  const doneNotification = jest.fn();
+  const task = chance.string();
+  const size = chance.string();
+  const momentjsObj = chance.string();
+
+  addTask.mockRejectedValue();
+
+  // when
+  await createTask(
+    {
+      task: task,
+      size: size,
+      momentjsObj,
+    },
+    doneNotification
+  );
+
+  // then
+  expect(setAlert).toHaveBeenCalledTimes(1);
+  expect(setAlert).toHaveBeenCalledWith({
+    heading: "Oh Snap!",
+    message: (
+      <>
+        <strong>{task} </strong>
+        {"was not created..."}
+      </>
+    ),
+  });
+});

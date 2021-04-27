@@ -29,7 +29,6 @@ export function dataFromSnapshot(snapshot) {
 }
 
 async function getLatestTasksFromServer({ momentjsObj }) {
-  // TODO does the collection referece need to be await and try caught?
   const queryfield = "startDateTime";
 
   const query = await getCollectionRef()
@@ -57,39 +56,25 @@ function getCollectionRef() {
     .collection(`users/${firebase.auth().currentUser.uid}/tasklist`);
 }
 
-async function createTask({ task, size, momentjsObj }, afterSuccess) {
-  addTask();
-  afterSuccess();
-  // const user = firebase.auth().currentUser.uid;
-  // addTask(user, {
-  // task,
-  //   size: size || null,
-  //   startDateTime: Timestamp.fromDate(momentjsObj.toDate()),
-  //   status: false,
-  //   createdAt: FieldValue.serverTimestamp(),
-  // });
-  // afterSuccess();
-  // try {
-  //   await getCollectionRef().add({
-  //     task,
-  //     size: size || null,
-  //     startDateTime: Timestamp.fromDate(momentjsObj.toDate()),
-  //     status: false,
-  //     createdAt: FieldValue.serverTimestamp(),
-  //   });
-  //   afterSuccess();
-  // } catch (errorObj) {
-  //   console.log(errorObj);
-  //   setAlert({
-  //     heading: "Oh Snap!",
-  //     message: (
-  //       <>
-  //         <strong>{task} </strong>
-  //         {"was not created..."}
-  //       </>
-  //     ),
-  //   });
-  // }
+async function createTask(input, afterSuccess) {
+  try {
+    await addTask(firebase.auth().currentUser.uid, {
+      ...input,
+      status: false,
+      size: input.size || null,
+    });
+    afterSuccess();
+  } catch (error) {
+    setAlert({
+      heading: "Oh Snap!",
+      message: (
+        <>
+          <strong>{input.task} </strong>
+          {"was not created..."}
+        </>
+      ),
+    });
+  }
 }
 
 async function patchTask({ _id, property }, afterSuccess) {
