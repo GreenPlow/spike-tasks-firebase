@@ -3,7 +3,12 @@ import PropTypes from "prop-types";
 
 import { ToggleButtonGroup, ToggleButton } from "react-bootstrap";
 
-export function SizeSelector({ disabled, onSizeChange, value, styleAttributes }) {
+export function SizeSelector({
+  disabled,
+  onSizeChange,
+  value,
+  styleAttributes,
+}) {
   return (
     <ToggleButtonGroup
       type="radio"
@@ -39,5 +44,5 @@ SizeSelector.propTypes = {
   value: PropTypes.oneOf(["small", "medium", "large", ""]),
   onSizeChange: PropTypes.func.isRequired,
   disabled: PropTypes.bool,
-  styleAttributes: PropTypes.object
+  styleAttributes: PropTypes.object,
 };
