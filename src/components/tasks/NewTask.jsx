@@ -13,7 +13,7 @@ function NewTask({ onCreateFinish, momentjsObj }) {
   async function onSubmit(size) {
     document.activeElement.blur();
 
-    await createTask({ task, size, momentjsObj }, async () => {
+    await createTask({ task, size, startDateTime: momentjsObj }, async () => {
       await onCreateFinish();
       setTask("");
     });
