@@ -1,42 +1,10 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 
-import { Form, ToggleButtonGroup, ToggleButton } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 
 import { createTask } from "app/api/taskActions";
-
-function TaskSizeSelector({ sizeOptions, selectedSize, onSizeChange }) {
-  return (
-    <ToggleButtonGroup
-      className="align-self-end"
-      type="radio"
-      name="options"
-      value={selectedSize}
-      onChange={onSizeChange}
-      onClick={(e) => {
-        e.stopPropagation();
-      }}
-    >
-      {sizeOptions.map((sizeOption, index) => (
-        <ToggleButton
-          key={`formField${index}`}
-          tabIndex={index + 2}
-          name={sizeOption}
-          label={sizeOption}
-          value={sizeOption}
-        >
-          {sizeOption}
-        </ToggleButton>
-      ))}
-    </ToggleButtonGroup>
-  );
-}
-
-TaskSizeSelector.propTypes = {
-  sizeOptions: PropTypes.arrayOf(PropTypes.string).isRequired,
-  selectedSize: PropTypes.oneOf(["small", "medium", "large", ""]).isRequired,
-  onSizeChange: PropTypes.func.isRequired,
-};
+import { SizeSelector } from "components/common/SizeSelector";
 
 function NewTask({ onCreateFinish, momentjsObj }) {
   const [task, setTask] = useState("");
@@ -74,25 +42,12 @@ function NewTask({ onCreateFinish, momentjsObj }) {
             />
           </Form.Group>
           <Form.Group className="justify-content-end">
-            <ToggleButtonGroup
-              type="radio"
-              name="options"
-              value=""
-              onChange={(value) => {
-                // setNewTaskSize(value);
+            <SizeSelector
+              onSizeChange={(value) => {
                 onSubmit(value);
               }}
-            >
-              <ToggleButton value="small" disabled={isTaskNameEmpty}>
-                S
-              </ToggleButton>
-              <ToggleButton value="medium" disabled={isTaskNameEmpty}>
-                M
-              </ToggleButton>
-              <ToggleButton value="large" disabled={isTaskNameEmpty}>
-                L
-              </ToggleButton>
-            </ToggleButtonGroup>
+              disabled={isTaskNameEmpty}
+            />
           </Form.Group>
         </Form.Row>
       </Form>

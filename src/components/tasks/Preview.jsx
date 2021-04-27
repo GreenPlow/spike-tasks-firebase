@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 
-import { Card, ToggleButtonGroup, ToggleButton, Button } from "react-bootstrap";
+import { Card, Button } from "react-bootstrap";
 import { Icon } from "semantic-ui-react";
+import { SizeSelector } from "components/common/SizeSelector";
 
 import moment from "moment";
 
@@ -69,22 +70,13 @@ export default function Preview({
           </Button>
         </Card.Text>
         <div className="d-flex justify-content-end">
-          <ToggleButtonGroup
-            type="radio"
-            name="options"
+          <SizeSelector
             value={statefulTaskSize}
-            style={{ position: "absolute", top: 0, right: 0 }}
-            onChange={(value) => {
+            onSizeChange={(value) => {
               changeTaskSize(value);
             }}
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-          >
-            <ToggleButton value="small">S</ToggleButton>
-            <ToggleButton value="medium">M</ToggleButton>
-            <ToggleButton value="large">L</ToggleButton>
-          </ToggleButtonGroup>
+            styleAttributes={{ position: "absolute", top: 0, right: 0 }}
+          />
         </div>
       </Card.Body>
     </Card>
