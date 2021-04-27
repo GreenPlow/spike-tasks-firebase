@@ -12,7 +12,7 @@ import moment from "moment";
 import { updateTask } from "app/api/taskActions";
 import { setAlert } from "app/api/errorMessage";
 
-export default function EditTask({ taskObj, afterUpdate, handleCancel }) {
+export default function Edit({ taskObj, afterUpdate, handleCancel }) {
   // https://stackoverflow.com/questions/22573494/react-js-input-losing-focus-when-rerendering
 
   const [task, setTask] = useState(taskObj.task);
@@ -83,13 +83,14 @@ export default function EditTask({ taskObj, afterUpdate, handleCancel }) {
   );
 }
 
-EditTask.propTypes = {
+Edit.propTypes = {
   taskObj: PropTypes.exact({
     _id: PropTypes.string.isRequired,
     task: PropTypes.string.isRequired,
     status: PropTypes.bool.isRequired,
-    taskSize: PropTypes.string.isRequired,
-    startDateTime: PropTypes.string.isRequired,
+    size: PropTypes.string.isRequired,
+    startDateTime: PropTypes.object.isRequired,
+    createdAt: PropTypes.object,
   }),
   afterUpdate: PropTypes.func.isRequired,
   handleCancel: PropTypes.func.isRequired,
