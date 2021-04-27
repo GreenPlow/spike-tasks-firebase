@@ -15,7 +15,7 @@ export default function Preview({
   styleAttributes,
 }) {
   const { _id, task, size, startDateTime } = taskObj;
-  const { color, toggleDoneButton } = styleAttributes;
+  const { cardBorderColor, toggleDoneButton } = styleAttributes;
   const [statefulTaskSize, setStatefulTaskSize] = useState([size]);
 
   async function onDelete(e) {
@@ -47,7 +47,7 @@ export default function Preview({
   }
 
   return (
-    <Card key={_id} border={color} className="my-2">
+    <Card key={_id} border={cardBorderColor} className="my-2">
       <Card.Body textalign="left" onClick={onClick}>
         <Card.Title>{task}</Card.Title>
         <Card.Subtitle>{moment(startDateTime).format("LTS")}</Card.Subtitle>

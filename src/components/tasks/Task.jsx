@@ -4,21 +4,21 @@ import PropTypes from "prop-types";
 import Edit from "components/tasks/Edit";
 import Preview from "components/tasks/Preview";
 
-function Task({ taskObj, onModification, styleAttributes }) {
+export default function Task({ taskObj, onModification, styleAttributes }) {
   const { status } = taskObj;
   const [showEdit, setShowEdit] = useState(false);
 
-  let color = "warning";
+  let cardBorderColor = "warning";
 
   if (status) {
-    color = "success";
+    cardBorderColor = "success";
   }
 
   return (
     <>
       {showEdit ? (
         <Edit
-          styleAttributes={{ ...styleAttributes, color }}
+          styleAttributes={{ cardBorderColor }}
           taskObj={taskObj}
           afterUpdate={() => {
             onModification();
@@ -30,7 +30,8 @@ function Task({ taskObj, onModification, styleAttributes }) {
         />
       ) : (
         <Preview
-          color={color}
+          styleAttributes={{ ...styleAttributes, cardBorderColor }}
+          taskObj={taskObj}
           onClick={() => {
             setShowEdit(true);
           }}
@@ -56,9 +57,6 @@ Task.propTypes = {
   styleAttributes: PropTypes.object,
 };
 
-export default Task;
-
 // 1 test for the structure: assert is a card, icons, header
 // one test for each action and that they call their action creator properly
 // 2 tests for either status color
-// <Card.Text>{tasksize}</Card.Text>
