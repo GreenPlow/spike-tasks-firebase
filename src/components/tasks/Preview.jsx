@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import {taskObjPropTypes} from "components/common/propTypes"
+import { taskObjPropTypes } from "components/common/propTypes";
 
 import { Card, Button } from "react-bootstrap";
 import { Icon } from "semantic-ui-react";
@@ -18,7 +18,7 @@ export default function Preview({
 }) {
   const { _id, task, size, startDateTime } = taskObj;
   const { cardBorderColor, toggleDoneButton } = styleAttributes;
-  const [statefulTaskSize, setStatefulTaskSize] = useState([size]);
+  const [statefulTaskSize, setStatefulTaskSize] = useState(size);
 
   async function onDelete(e) {
     e.stopPropagation();
