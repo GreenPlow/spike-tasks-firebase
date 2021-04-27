@@ -21,7 +21,6 @@ import AlertDismissible from "components/common/AlertDismissible";
 import TaskList from "components/tasks/TaskList";
 import NewTask from "components/tasks/NewTask";
 import Time from "components/common/Time";
-import SwitchUser from "components/common/SwitchUser";
 
 import { init } from "app/api/errorMessage";
 import { firebase } from "app/config/fire";
@@ -112,7 +111,7 @@ export default function AppLanding({ user, cbSetUser }) {
     }
 
     getLatest();
-  }, []);
+  }, [calendarDate]);
 
   return (
     <>
