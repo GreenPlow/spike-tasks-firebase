@@ -6,7 +6,7 @@ import moment from "moment";
 
 import Task from "components/tasks/Task";
 
-export default function TaskList({
+export default function ListOfTasks({
   cb,
   calendarDate,
   completeTasks,
@@ -79,7 +79,7 @@ export default function TaskList({
                     key={item._id}
                     taskObj={item}
                     onModification={cb}
-                    doneButton={true}
+                    styleAttributes={{ toggleDoneButton: true }}
                   />
                 ))}
               </div>
@@ -98,7 +98,7 @@ export default function TaskList({
   );
 }
 
-TaskList.propTypes = {
+ListOfTasks.propTypes = {
   cb: PropTypes.func.isRequired,
   calendarDate: PropTypes.object.isRequired,
   completeTasks: PropTypes.array,
