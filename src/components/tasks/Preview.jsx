@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
+import {taskObjPropTypes} from "components/common/propTypes"
 
 import { Card, Button } from "react-bootstrap";
 import { Icon } from "semantic-ui-react";
@@ -84,14 +85,7 @@ export default function Preview({
 }
 
 Preview.propTypes = {
-  taskObj: PropTypes.exact({
-    _id: PropTypes.string.isRequired,
-    task: PropTypes.string.isRequired,
-    status: PropTypes.bool.isRequired,
-    size: PropTypes.string.isRequired,
-    startDateTime: PropTypes.object.isRequired,
-    createdAt: PropTypes.object,
-  }),
+  taskObj: taskObjPropTypes,
   onModification: PropTypes.func.isRequired,
   styleAttributes: PropTypes.object,
   onClick: PropTypes.func,

@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import PropTypes from "prop-types";
+import { taskObjPropTypes } from "components/common/propTypes";
 
 import { Card, Form, Button } from "react-bootstrap";
 
@@ -84,14 +85,7 @@ export default function Edit({ taskObj, afterUpdate, handleCancel }) {
 }
 
 Edit.propTypes = {
-  taskObj: PropTypes.exact({
-    _id: PropTypes.string.isRequired,
-    task: PropTypes.string.isRequired,
-    status: PropTypes.bool.isRequired,
-    size: PropTypes.string.isRequired,
-    startDateTime: PropTypes.object.isRequired,
-    createdAt: PropTypes.object,
-  }),
+  taskObj: taskObjPropTypes,
   afterUpdate: PropTypes.func.isRequired,
   handleCancel: PropTypes.func.isRequired,
 };
