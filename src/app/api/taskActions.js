@@ -7,7 +7,6 @@ import { firebase } from "app/config/fire";
 import moment from "moment";
 
 const Timestamp = firebase.firestore.Timestamp;
-const FieldValue = firebase.firestore.FieldValue;
 
 export function dataFromSnapshot(snapshot) {
   if (!snapshot.exists) return undefined;
@@ -74,6 +73,7 @@ async function createTask(input, afterSuccess) {
         </>
       ),
     });
+    throw error;
   }
 }
 
