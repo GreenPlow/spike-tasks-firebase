@@ -133,7 +133,7 @@ async function updateTask(taskObj, afterUpdate) {
   // TODO the Go API is not returning a Bad Request Error when json attributes are incorrect.
   // For example, remove the _ from id and it should throw an error, but doesn't
   try {
-    await getCollectionRef.doc(_id).update(transformedObj);
+    await getCollectionRef().doc(_id).update(transformedObj);
     afterUpdate();
   } catch (errorObj) {
     // TODO still need to surface the errors somehow for logs/dev
