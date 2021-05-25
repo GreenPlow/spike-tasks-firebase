@@ -1,50 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 
 import { Accordion, Alert, Card } from "react-bootstrap";
 import moment from "moment";
 
 import Task from "components/tasks/Task";
-import { getLatestTasksFromServer } from "app/api/taskActions";
 
-function seperateTasks({ latestTasks, setCompleteTasks, setIncompleteTasks }) {
-  let completeTasks = [];
-  let incompleteTasks = [];
-  for (let i = 0; i < latestTasks.length; i++) {
-    if (latestTasks[i].status === true) {
-      completeTasks.push(latestTasks[i]);
-    } else {
-      incompleteTasks.push(latestTasks[i]);
-    }
-  }
-  setCompleteTasks(completeTasks);
-  setIncompleteTasks(incompleteTasks);
-}
-
-export default function TaskList({ calendarDate, triggerRender }) {
-  const [incompleteTasks, setIncompleteTasks] = useState();
-  const [completeTasks, setCompleteTasks] = useState();
-
-  async function getLatestTasksFromServerAndUpdateState(calendarDate) {
-    try {
-      const latestTasks = await getLatestTasksFromServer({
-        momentjsObj: calendarDate,
-      });
-      seperateTasks({ latestTasks, setCompleteTasks, setIncompleteTasks });
-    } catch (error) {
-      setIncompleteTasks(null);
-      console.log("this error");
-      throw error;
-    }
-  }
-
-  useEffect(() => {
-    async function getLatest() {
-      await getLatestTasksFromServerAndUpdateState(calendarDate);
-    }
-    getLatest();
-  }, [calendarDate, triggerRender]);
-
+export default function ListOfTasks({
+  cb,
+  calendarDate,
+  completeTasks,
+  incompleteTasks,
+}) {
   function renderCompleteTasks() {
     if (completeTasks === undefined || completeTasks.length === 0) {
       return;
@@ -60,13 +27,7 @@ export default function TaskList({ calendarDate, triggerRender }) {
             <Accordion.Collapse eventKey="0">
               <div>
                 {completeTasks.map((item) => (
-                  <Task
-                    key={item._id}
-                    taskObj={item}
-                    onModification={() => {
-                      getLatestTasksFromServerAndUpdateState(calendarDate);
-                    }}
-                  />
+                  <Task key={item._id} taskObj={item} onModification={cb} />
                 ))}
               </div>
             </Accordion.Collapse>
@@ -117,10 +78,8 @@ export default function TaskList({ calendarDate, triggerRender }) {
                   <Task
                     key={item._id}
                     taskObj={item}
-                    onModification={() => {
-                      getLatestTasksFromServerAndUpdateState(calendarDate);
-                    }}
-                    doneButton={true}
+                    onModification={cb}
+                    styleAttributes={{ toggleDoneButton: true }}
                   />
                 ))}
               </div>
@@ -139,7 +98,9 @@ export default function TaskList({ calendarDate, triggerRender }) {
   );
 }
 
-TaskList.propTypes = {
+ListOfTasks.propTypes = {
+  cb: PropTypes.func.isRequired,
   calendarDate: PropTypes.object.isRequired,
-  triggerRender: PropTypes.string,
+  completeTasks: PropTypes.array,
+  incompleteTasks: PropTypes.array,
 };

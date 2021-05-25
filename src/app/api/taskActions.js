@@ -1,12 +1,10 @@
 import React from "react";
 
-import { setAlert } from "app/api/errorMessage";
-import { firebase } from "app/config/fire";
-
-import moment from "moment";
+import {setAlert} from "app/api/errorMessage";
+import {addTask, deleteTaskFromDB, updateTaskFromDB} from "app/api/taskRepository";
+import {firebase} from "app/config/fire";
 
 const Timestamp = firebase.firestore.Timestamp;
-const FieldValue = firebase.firestore.FieldValue;
 
 export function dataFromSnapshot(snapshot) {
   if (!snapshot.exists) return undefined;
@@ -27,14 +25,10 @@ export function dataFromSnapshot(snapshot) {
   };
 }
 
-async function getLatestTasksFromServer({ momentjsObj }) {
-  // TODO does the collection referece need to be await and try caught?
-  const tasklistRef = firebase
-    .firestore()
-    .collection(`users/${firebase.auth().currentUser.uid}/tasklist`);
+async function getLatestTasksFromServer({momentjsObj}) {
   const queryfield = "startDateTime";
 
-  const query = await tasklistRef
+  const query = await getCollectionRef()
     .where(
       queryfield,
       ">=",
@@ -50,43 +44,41 @@ async function getLatestTasksFromServer({ momentjsObj }) {
   const docsWithData = query.docs.map((doc) => {
     return dataFromSnapshot(doc);
   });
+  console.log(docsWithData);
   return docsWithData;
 }
 
-async function createTask({ task, size, momentjsObj }, afterSuccess) {
-  const tasklistRef = firebase
+function getCollectionRef() {
+  return firebase
     .firestore()
     .collection(`users/${firebase.auth().currentUser.uid}/tasklist`);
+}
+
+async function createTask(input, afterSuccess) {
   try {
-    // TODO Do I need to await these?
-    await tasklistRef.add({
-      task,
-      size,
-      startDateTime: Timestamp.fromDate(momentjsObj.toDate()),
+    await addTask(firebase.auth().currentUser.uid, {
+      ...input,
       status: false,
-      createdAt: FieldValue.serverTimestamp(),
+      size: input.size || null,
     });
     afterSuccess();
-  } catch (errorObj) {
-    console.log(errorObj);
+  } catch (error) {
     setAlert({
       heading: "Oh Snap!",
       message: (
         <>
-          <strong>{task} </strong>
+          <strong>{input.task} </strong>
           {"was not created..."}
         </>
       ),
     });
+    throw error;
   }
 }
 
-async function patchTask({ _id, property }, afterSuccess) {
-  const tasklistRef = firebase
-    .firestore()
-    .collection(`users/${firebase.auth().currentUser.uid}/tasklist`);
+async function patchTask({_id, property}, afterSuccess) {
   try {
-    await tasklistRef.doc(_id).update(property);
+    await getCollectionRef().doc(_id).update(property);
     afterSuccess();
   } catch (errorObj) {
     setAlert({
@@ -101,12 +93,9 @@ async function patchTask({ _id, property }, afterSuccess) {
   }
 }
 
-async function deleteTask({ _id }, afterSuccess) {
-  const tasklistRef = firebase
-    .firestore()
-    .collection(`users/${firebase.auth().currentUser.uid}/tasklist`);
+async function deleteTask({_id}, afterSuccess) {
   try {
-    await tasklistRef.doc(_id).delete();
+    await deleteTaskFromDB(firebase.auth().currentUser.uid, {_id})
     afterSuccess();
   } catch (errorObj) {
     setAlert({
@@ -118,38 +107,17 @@ async function deleteTask({ _id }, afterSuccess) {
         </>
       ),
     });
+    throw errorObj;
   }
-}
-
-export function transformForFirebase(data) {
-  // TODO this got around the firebase error, but hard to tell how the objects are different
-  console.log("pre transform", data);
-  for (const prop in data) {
-    if (Object.prototype.hasOwnProperty.call(data, prop)) {
-      if (data[prop] instanceof moment) {
-        data[prop] = Timestamp.fromDate(data[prop].toDate());
-      }
-    }
-  }
-  console.log("post", data);
-  return data;
 }
 
 async function updateTask(taskObj, afterUpdate) {
-  const transformedObj = transformForFirebase(taskObj);
-  // This is writing the _id back to the document when it was not previously there
-  const { _id, task } = transformedObj;
-  // TODO the Go API is not returning a Bad Request Error when json attributes are incorrect.
-  // For example, remove the _ from id and it should throw an error, but doesn't
-  const tasklistRef = firebase
-    .firestore()
-    .collection(`users/${firebase.auth().currentUser.uid}/tasklist`);
+  const {task} = taskObj;
+
   try {
-    await tasklistRef.doc(_id).update(transformedObj);
+    await updateTaskFromDB(firebase.auth().currentUser.uid, taskObj)
     afterUpdate();
   } catch (errorObj) {
-    // TODO still need to surface the errors somehow for logs/dev
-    console.log(errorObj);
     setAlert({
       heading: "Well, this is embarassing...",
       message: (
@@ -159,6 +127,7 @@ async function updateTask(taskObj, afterUpdate) {
         </>
       ),
     });
+    throw errorObj;
   }
 }
 
