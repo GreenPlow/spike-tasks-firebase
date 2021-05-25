@@ -1,8 +1,8 @@
 import React from "react";
 import Chance from "chance";
-import { createTask } from "app/api/taskActions";
-import { addTask } from "app/api/taskRepository";
-import { setAlert } from "app/api/errorMessage";
+import {createTask} from "app/api/taskActions";
+import {addTask} from "app/api/taskRepository";
+import {setAlert} from "app/api/errorMessage";
 
 const chance = new Chance();
 
@@ -27,7 +27,7 @@ jest.mock("../../config/fire", () => {
 });
 
 test("should save task for user", async () => {
-  // given a user and an input tasks
+  // given a user and an input task
   const doneNotification = jest.fn();
   const task = chance.string();
   const size = chance.string();
@@ -35,15 +35,12 @@ test("should save task for user", async () => {
 
   addTask.mockResolvedValue();
 
-  // setup user?
-  // firebase.auth().currentUser.uid
-
   // when I try to create task
   await createTask(
     {
       task: task,
       size: size,
-      momentjsObj: momentjsObj,
+      momentjsObj,
     },
     doneNotification
   );
@@ -94,54 +91,24 @@ test("should show user error when task is unable to be saved", async () => {
   const task = chance.string();
   const size = chance.string();
   const startDateTime = chance.string();
+  const fakeError = new Error(chance.string());
 
-  const testError = new Error();
-  addTask.mockRejectedValue(testError);
+  addTask.mockRejectedValue(fakeError);
 
   // when
-  try {
-    await createTask(
-      {
-        task,
-        size,
-        startDateTime,
-      },
-      doneNotification
-    );
-    expect(true).toBe(false);
-  } catch (error) {
-    expect(setAlert).toHaveBeenCalledTimes(1);
-    expect(setAlert).toHaveBeenCalledWith({
-      heading: "Oh Snap!",
-      message: (
-        <>
-          <strong>{task} </strong>
-          {"was not created..."}
-        </>
-      ),
-    });
-    expect(error).toBe(testError);
-  }
-});
+  await expect(
+    () => createTask({task, size, startDateTime}, doneNotification)
+  ).rejects.toThrow(fakeError);
 
-// TODO - This test works if a new Error(error) is thrown, but has less clarity compare to initial error
-// await expect(
-//   createTask(
-//     {
-//       task,
-//       size,
-//       startDateTime,
-//     },
-//     doneNotification
-//   )
-// ).rejects.toThrow();
-// expect(setAlert).toHaveBeenCalledTimes(1);
-// expect(setAlert).toHaveBeenCalledWith({
-//   heading: "Oh Snap!",
-//   message: (
-//     <>
-//       <strong>{task} </strong>
-//       {"was not created..."}
-//     </>
-//   ),
-// });
+  // then
+  expect(setAlert).toHaveBeenCalledTimes(1);
+  expect(setAlert).toHaveBeenCalledWith({
+    heading: "Oh Snap!",
+    message: (
+      <>
+        <strong>{task} </strong>
+        {"was not created..."}
+      </>
+    ),
+  });
+});
