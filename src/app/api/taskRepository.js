@@ -12,4 +12,9 @@ async function addTask(user, taskObj) {
   });
 }
 
-export { addTask };
+async function deleteTaskFromDB(user, {_id}) {
+  const ref = firebase.firestore().collection(`users/${user}/tasklist`);
+  await ref.doc(_id).delete()
+}
+
+export { addTask, deleteTaskFromDB };

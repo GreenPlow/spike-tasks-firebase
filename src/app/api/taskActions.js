@@ -1,8 +1,8 @@
 import React from "react";
 
-import { setAlert } from "app/api/errorMessage";
-import { addTask } from "app/api/taskRepository";
-import { firebase } from "app/config/fire";
+import {setAlert} from "app/api/errorMessage";
+import {addTask, deleteTaskFromDB} from "app/api/taskRepository";
+import {firebase} from "app/config/fire";
 
 import moment from "moment";
 
@@ -27,7 +27,7 @@ export function dataFromSnapshot(snapshot) {
   };
 }
 
-async function getLatestTasksFromServer({ momentjsObj }) {
+async function getLatestTasksFromServer({momentjsObj}) {
   const queryfield = "startDateTime";
 
   const query = await getCollectionRef()
@@ -77,7 +77,7 @@ async function createTask(input, afterSuccess) {
   }
 }
 
-async function patchTask({ _id, property }, afterSuccess) {
+async function patchTask({_id, property}, afterSuccess) {
   try {
     await getCollectionRef().doc(_id).update(property);
     afterSuccess();
@@ -94,12 +94,11 @@ async function patchTask({ _id, property }, afterSuccess) {
   }
 }
 
-async function deleteTask({ _id }, afterSuccess) {
+async function deleteTask({_id}, afterSuccess) {
   try {
-    await getCollectionRef().doc(_id).delete();
+    await deleteTaskFromDB(firebase.auth().currentUser.uid, {_id})
     afterSuccess();
   } catch (errorObj) {
-    console.log(errorObj);
     setAlert({
       heading: "Well, this is embarassing...",
       message: (
@@ -109,6 +108,7 @@ async function deleteTask({ _id }, afterSuccess) {
         </>
       ),
     });
+    throw errorObj;
   }
 }
 
@@ -129,7 +129,7 @@ export function transformForFirebase(data) {
 async function updateTask(taskObj, afterUpdate) {
   const transformedObj = transformForFirebase(taskObj);
   // This is writing the _id back to the document when it was not previously there
-  const { _id, task } = transformedObj;
+  const {_id, task} = transformedObj;
   // TODO the Go API is not returning a Bad Request Error when json attributes are incorrect.
   // For example, remove the _ from id and it should throw an error, but doesn't
   try {
