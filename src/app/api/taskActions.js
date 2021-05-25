@@ -1,10 +1,8 @@
 import React from "react";
 
 import {setAlert} from "app/api/errorMessage";
-import {addTask, deleteTaskFromDB} from "app/api/taskRepository";
+import {addTask, deleteTaskFromDB, updateTaskFromDB} from "app/api/taskRepository";
 import {firebase} from "app/config/fire";
-
-import moment from "moment";
 
 const Timestamp = firebase.firestore.Timestamp;
 
@@ -46,6 +44,7 @@ async function getLatestTasksFromServer({momentjsObj}) {
   const docsWithData = query.docs.map((doc) => {
     return dataFromSnapshot(doc);
   });
+  console.log(docsWithData);
   return docsWithData;
 }
 
@@ -112,32 +111,13 @@ async function deleteTask({_id}, afterSuccess) {
   }
 }
 
-export function transformForFirebase(data) {
-  // TODO this got around the firebase error, but hard to tell how the objects are different
-  console.log("pre transform", data);
-  for (const prop in data) {
-    if (Object.prototype.hasOwnProperty.call(data, prop)) {
-      if (data[prop] instanceof moment) {
-        data[prop] = Timestamp.fromDate(data[prop].toDate());
-      }
-    }
-  }
-  console.log("post", data);
-  return data;
-}
-
 async function updateTask(taskObj, afterUpdate) {
-  const transformedObj = transformForFirebase(taskObj);
-  // This is writing the _id back to the document when it was not previously there
-  const {_id, task} = transformedObj;
-  // TODO the Go API is not returning a Bad Request Error when json attributes are incorrect.
-  // For example, remove the _ from id and it should throw an error, but doesn't
+  const {task} = taskObj;
+
   try {
-    await getCollectionRef().doc(_id).update(transformedObj);
+    await updateTaskFromDB(firebase.auth().currentUser.uid, taskObj)
     afterUpdate();
   } catch (errorObj) {
-    // TODO still need to surface the errors somehow for logs/dev
-    console.log(errorObj);
     setAlert({
       heading: "Well, this is embarassing...",
       message: (
@@ -147,6 +127,7 @@ async function updateTask(taskObj, afterUpdate) {
         </>
       ),
     });
+    throw errorObj;
   }
 }
 

@@ -1,7 +1,7 @@
 import React from "react";
 import Chance from "chance";
-import {createTask, deleteTask} from "app/api/taskActions";
-import {addTask, deleteTaskFromDB} from "app/api/taskRepository";
+import {createTask, deleteTask, updateTask} from "app/api/taskActions";
+import {addTask, deleteTaskFromDB, updateTaskFromDB} from "app/api/taskRepository";
 import {setAlert} from "app/api/errorMessage";
 
 const chance = new Chance();
@@ -169,6 +169,69 @@ describe("taskActions", () => {
       });
 
       expect(afterNotification).toHaveBeenCalledTimes(0)
+    })
+  })
+  describe("UpdateTask", () => {
+    test("should update a task for a user", async () => {
+      // given a user and an input task
+      const doneNotification = jest.fn();
+      const task = chance.string();
+      const size = chance.string();
+      const momentjsObj = chance.string();
+
+      updateTaskFromDB.mockResolvedValue();
+
+      // when I try to update a task
+      await updateTask(
+        {
+          task: task,
+          size: size,
+          momentjsObj,
+        },
+        doneNotification
+      );
+
+      // then I should call update for full specified task and notify caller when complete
+      expect(updateTaskFromDB).toHaveBeenCalledTimes(1);
+      expect(updateTaskFromDB).toHaveBeenCalledWith(expectedUserId, {
+        task: task,
+        size: size,
+        momentjsObj,
+      });
+
+      expect(setAlert).toHaveBeenCalledTimes(0);
+      expect(doneNotification).toHaveBeenCalledTimes(1);
+
+    })
+
+    test("should throw an error and set an alert if the task fails to update", async () => {
+      // give the task object to the repository so it can update the db to match it
+      const doneNotification = jest.fn();
+      const task = chance.string();
+      const size = chance.string();
+      const startDateTime = chance.string();
+      const fakeError = new Error(chance.string());
+
+      updateTaskFromDB.mockRejectedValue(fakeError);
+
+      // when
+      await expect(
+        () => updateTask({task, size, startDateTime}, doneNotification)
+      ).rejects.toThrow(fakeError);
+
+      // then
+      expect(setAlert).toHaveBeenCalledTimes(1);
+      expect(setAlert).toHaveBeenCalledWith({
+        heading: "Well, this is embarassing...",
+        message: (
+          <>
+            <strong>{task} </strong>
+            {"was not updated"}
+          </>
+        ),
+      });
+
+      expect(doneNotification).toHaveBeenCalledTimes(0)
     })
   })
 })
