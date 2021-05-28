@@ -9,7 +9,6 @@
     "bootstrap": "^4.6.0",
     "firebase": "^8.6.2",
     "moment": "^2.29.1",
-    "msw": "^0.27.1",
     "prop-types": "^15.7.2",
     "react": "^17.0.1",
     "react-bootstrap": "^1.5.1",
