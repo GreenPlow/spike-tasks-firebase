@@ -7,13 +7,13 @@ var app;
 
 // For Firebase JavaScript SDK v7.20.0 and later, `measurementId` is an optional field
 const config = {
-  apiKey: "AIzaSyAoubU_6fV8SwNKGRjKxgQas9mXG7OmfLE",
-  authDomain: "spike-task-firebase.firebaseapp.com",
-  projectId: "spike-task-firebase",
-  storageBucket: "spike-task-firebase.appspot.com",
-  messagingSenderId: "80902187036",
-  appId: "1:80902187036:web:229a4feebedf1b9e8f97d9",
-  measurementId: "G-M7VKFY9CV1",
+  apiKey: "AIzaSyBQte0t0CUcPYvaP31E5EPB3GXUxxoDJEk",
+  authDomain: "spike-tasks-2.firebaseapp.com",
+  projectId: "spike-tasks-2",
+  storageBucket: "spike-tasks-2.appspot.com",
+  messagingSenderId: "147423274705",
+  appId: "1:147423274705:web:3144a9cb3972039d9747f0",
+  measurementId: "G-TX1BXW63EW"
 };
 
 // TODO Should these sdk calls be handled for errors? They occur before react is rendered.
