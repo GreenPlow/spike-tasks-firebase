@@ -1,8 +1,8 @@
-import {firebase} from "app/config/fire";
-import moment from "moment";
+import { firebase } from 'app/config/fire';
+import moment from 'moment';
 
-const Timestamp = firebase.firestore.Timestamp;
-const FieldValue = firebase.firestore.FieldValue;
+const { Timestamp } = firebase.firestore;
+const { FieldValue } = firebase.firestore;
 
 // not a behavior
 // update the database with the object that firebase expects
@@ -27,18 +27,18 @@ async function addTask(user, taskObj) {
   });
 }
 
-async function deleteTaskFromDB(user, {_id}) {
+async function deleteTaskFromDB(user, { _id }) {
   const ref = firebase.firestore().collection(`users/${user}/tasklist`);
-  await ref.doc(_id).delete()
+  await ref.doc(_id).delete();
 }
 
 async function updateTaskFromDB(user, taskObj) {
   const transformedObj = transformForFirebase(taskObj);
   const ref = firebase.firestore().collection(`users/${user}/tasklist`);
   // This is writing the _id back to the document when it was not previously there
-  const deepCopy = {...transformedObj};
+  const deepCopy = { ...transformedObj };
   delete deepCopy._id;
   await ref.doc(transformedObj._id).update(deepCopy);
 }
 
-export {addTask, deleteTaskFromDB, updateTaskFromDB};
+export { addTask, deleteTaskFromDB, updateTaskFromDB };

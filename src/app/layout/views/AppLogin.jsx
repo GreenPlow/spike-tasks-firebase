@@ -1,18 +1,18 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 
-import Container from "react-bootstrap/Container";
-import Form from "react-bootstrap/Form";
+import Container from 'react-bootstrap/Container';
+import Form from 'react-bootstrap/Form';
 
-import { firebase } from "app/config/fire";
+import { firebase } from 'app/config/fire';
 
 export default function LoginScreen({ user }) {
   return (
     <Container fluid>
       <div
         style={{
-          textAlign: "center",
-          padding: "180px",
+          textAlign: 'center',
+          padding: '180px',
         }}
       >
         <Form>
@@ -23,7 +23,7 @@ export default function LoginScreen({ user }) {
             <button
               onClick={function (e) {
                 e.preventDefault();
-                var provider = new firebase.auth.GoogleAuthProvider();
+                const provider = new firebase.auth.GoogleAuthProvider();
                 firebase.auth().signInWithPopup(provider);
               }}
             >

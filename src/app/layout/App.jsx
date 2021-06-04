@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
-import Container from "react-bootstrap/Container";
+import React, { useState, useEffect } from 'react';
+import Container from 'react-bootstrap/Container';
 
-import { setLocal } from "app/user";
-import { firebase } from "app/config/fire";
-import AppLanding from "app/layout/views/AppLanding";
-import AppLogin from "app/layout/views/AppLogin";
+import { setLocal } from 'app/user';
+import { firebase } from 'app/config/fire';
+import AppLanding from 'app/layout/views/AppLanding';
+import AppLogin from 'app/layout/views/AppLogin';
 
-import "app/layout/App.css";
+import 'app/layout/App.css';
 
 function App() {
   const [user, setUser] = useState(undefined);
@@ -21,7 +21,7 @@ function App() {
         setLocal(user.uid);
       } else {
         // User is signed out
-        console.log("logmeinplease");
+        console.log('logmeinplease');
         setUser(null);
       }
     });

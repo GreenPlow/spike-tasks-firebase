@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 
-import { Form } from "react-bootstrap";
+import { Form } from 'react-bootstrap';
 
-import { createTask } from "app/api/taskActions";
-import { SizeSelector } from "components/common/SizeSelector";
+import { createTask } from 'app/api/taskActions';
+import { SizeSelector } from 'components/common/SizeSelector';
 
 function NewTask({ onCreateFinish, momentjsObj }) {
-  const [task, setTask] = useState("");
+  const [task, setTask] = useState('');
   const isTaskNameEmpty = !task;
 
   async function onSubmit(size) {
@@ -15,7 +15,7 @@ function NewTask({ onCreateFinish, momentjsObj }) {
 
     await createTask({ task, size, startDateTime: momentjsObj }, async () => {
       await onCreateFinish();
-      setTask("");
+      setTask('');
     });
   }
 

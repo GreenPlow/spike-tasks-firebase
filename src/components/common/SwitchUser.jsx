@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 
-import Form from "react-bootstrap/Form";
+import Form from 'react-bootstrap/Form';
 
 export default function SwitchUser({ cbSetUser }) {
   const [validated, setValidated] = useState(false);
@@ -13,7 +13,7 @@ export default function SwitchUser({ cbSetUser }) {
     if (form.checkValidity()) {
       setValidated(false);
       cbSetUser(event.target[0].value);
-      event.target[0].value = "";
+      event.target[0].value = '';
     } else {
       event.stopPropagation();
       setValidated(true);
