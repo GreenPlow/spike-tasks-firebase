@@ -17,9 +17,7 @@ export default function LoginScreen({ user }) {
       >
         <Form>
           <Form.Group>
-            <Form.Label>
-              You are no logged in, please choose an option below.
-            </Form.Label>
+            <Form.Label>You are not logged in.</Form.Label>
             <button
               onClick={function (e) {
                 e.preventDefault();
