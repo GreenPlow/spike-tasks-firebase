@@ -25,5 +25,8 @@ export default function AlertDismissible({ msgObj }) {
 }
 
 AlertDismissible.propTypes = {
-  message: PropTypes.object,
+  msgObj: PropTypes.shape({
+    heading: PropTypes.string,
+    message: PropTypes.element,
+  }),
 };
