@@ -26,7 +26,7 @@ export function SizeSelector({
         { value: 'large', label: 'L' },
       ].map((sizeOption, index) => (
         <ToggleButton
-          key={`formField${index}`}
+          key={`formField${sizeOption.value}`}
           tabIndex={index + 2}
           name={sizeOption.value}
           label={sizeOption.label}
