@@ -43,12 +43,26 @@ function seperateTasks({ latestTasks }) {
   };
 }
 
-export default function AppLanding({ user, cbSetUser }) {
+export default function AppLanding({ cbSetUser }) {
   const [calendarDate, setCalendarDate] = useState(moment());
   const [isFocused, setFocused] = useState(false);
   const [errorMessage, setErrorMessage] = useState();
+  const [incompleteTasks, setIncompleteTasks] = useState();
+  const [completeTasks, setCompleteTasks] = useState();
 
   init(setErrorMessage);
+
+  async function getLatestTasksFromServerAndUpdateState(calendarDate) {
+    try {
+      const latestTasks = await getLatestTasksFromServer({
+        momentjsObj: calendarDate,
+      });
+      return seperateTasks({ latestTasks });
+    } catch (error) {
+      setIncompleteTasks(null);
+      throw error;
+    }
+  }
 
   async function today() {
     const {
@@ -84,21 +98,6 @@ export default function AppLanding({ user, cbSetUser }) {
     setCalendarDate(calendarDate.clone().subtract(1, 'days'));
   }
 
-  const [incompleteTasks, setIncompleteTasks] = useState();
-  const [completeTasks, setCompleteTasks] = useState();
-
-  async function getLatestTasksFromServerAndUpdateState(calendarDate) {
-    try {
-      const latestTasks = await getLatestTasksFromServer({
-        momentjsObj: calendarDate,
-      });
-      return seperateTasks({ latestTasks });
-    } catch (error) {
-      setIncompleteTasks(null);
-      throw error;
-    }
-  }
-
   useEffect(() => {
     async function getLatest() {
       const {
@@ -108,7 +107,6 @@ export default function AppLanding({ user, cbSetUser }) {
       setCompleteTasks(completeTasks);
       setIncompleteTasks(incompleteTasks);
     }
-
     getLatest();
   }, [calendarDate]);
 
@@ -202,6 +200,5 @@ export default function AppLanding({ user, cbSetUser }) {
 }
 
 AppLanding.propTypes = {
-  user: PropTypes.string.isRequired,
   cbSetUser: PropTypes.func.isRequired,
 };
