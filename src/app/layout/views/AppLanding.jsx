@@ -30,7 +30,7 @@ import { getLatestTasksFromServer } from 'app/api/taskActions';
 function seperateTasks({ latestTasks }) {
   const completeTasks = [];
   const incompleteTasks = [];
-  for (let i = 0; i < latestTasks.length; i++) {
+  for (let i = 0; i < latestTasks.length; i += 1) {
     if (latestTasks[i].status === true) {
       completeTasks.push(latestTasks[i]);
     } else {
@@ -95,7 +95,6 @@ export default function AppLanding({ user, cbSetUser }) {
       return seperateTasks({ latestTasks });
     } catch (error) {
       setIncompleteTasks(null);
-      console.log('this error');
       throw error;
     }
   }
@@ -127,7 +126,8 @@ export default function AppLanding({ user, cbSetUser }) {
               <SingleDatePicker
                 small
                 date={calendarDate} // momentPropTypes.momentObj or null
-                onDateChange={(calendarDate) => setCalendarDate(calendarDate)} // PropTypes.func.isRequired
+                onDateChange={(calendarDate) => setCalendarDate(calendarDate)}
+                  // PropTypes.func.isRequired
                 focused={isFocused} // PropTypes.bool
                 onFocusChange={({ focused }) => setFocused(focused)} // PropTypes.func.isRequired
                 id="your_unique_id" // PropTypes.string.isRequired //why is this required and what should it be?
