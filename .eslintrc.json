@@ -9,7 +9,8 @@
     "airbnb/hooks",
     "plugin:testing-library/recommended",
     "plugin:testing-library/react",
-    "plugin:jest-dom/recommended"
+    "plugin:jest-dom/recommended",
+    "plugin:jest/recommended"
   ],
   "settings": {
     "import/resolver": {
