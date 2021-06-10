@@ -1,34 +1,32 @@
-import React from "react";
-import Chance from "chance";
-import {createTask, deleteTask, updateTask} from "app/api/taskActions";
-import {addTask, deleteTaskFromDB, updateTaskFromDB} from "app/api/taskRepository";
-import {setAlert} from "app/api/errorMessage";
+import React from 'react';
+import Chance from 'chance';
+import { createTask, deleteTask, updateTask } from 'app/api/taskActions';
+import { addTask, deleteTaskFromDB, updateTaskFromDB } from 'app/api/taskRepository';
+import { setAlert } from 'app/api/errorMessage';
 
 const chance = new Chance();
 
-const expectedUserId = "horse";
+const expectedUserId = 'horse';
 
-jest.mock("../errorMessage");
-jest.mock("../taskRepository");
-jest.mock("../../config/fire", () => {
-  const actualModule = jest.requireActual("app/config/fire");
+jest.mock('../errorMessage');
+jest.mock('../taskRepository');
+jest.mock('../../config/fire', () => {
+  const actualModule = jest.requireActual('app/config/fire');
   return {
     firebase: {
-      auth: () => {
-        return {
-          currentUser: {
-            uid: expectedUserId,
-          },
-        };
-      },
+      auth: () => ({
+        currentUser: {
+          uid: expectedUserId,
+        },
+      }),
       firestore: actualModule.firebase.firestore,
     },
   };
 });
 
-describe("taskActions", () => {
-  describe("createTask", () => {
-    test("should save task for user", async () => {
+describe('taskActions', () => {
+  describe('createTask', () => {
+    test('should save task for user', async () => {
       // given a user and an input task
       const doneNotification = jest.fn();
       const task = chance.string();
@@ -40,18 +38,18 @@ describe("taskActions", () => {
       // when I try to create task
       await createTask(
         {
-          task: task,
-          size: size,
+          task,
+          size,
           momentjsObj,
         },
-        doneNotification
+        doneNotification,
       );
 
       // then I should call create for full specified task and notify caller when complete
       expect(addTask).toHaveBeenCalledTimes(1);
       expect(addTask).toHaveBeenCalledWith(expectedUserId, {
-        task: task,
-        size: size,
+        task,
+        size,
         momentjsObj,
         status: false,
       });
@@ -60,7 +58,7 @@ describe("taskActions", () => {
       expect(doneNotification).toHaveBeenCalledTimes(1);
     });
 
-    test("should save task without size for user", async () => {
+    test('should save task without size for user', async () => {
       // given
       const doneNotification = jest.fn();
       const task = chance.string();
@@ -72,17 +70,17 @@ describe("taskActions", () => {
       // when
       await createTask(
         {
-          task: task,
-          size: size,
+          task,
+          size,
           momentjsObj,
         },
-        doneNotification
+        doneNotification,
       );
 
       // then
       expect(addTask).toHaveBeenCalledTimes(1);
       expect(addTask).toHaveBeenCalledWith(expectedUserId, {
-        task: task,
+        task,
         size: null,
         momentjsObj,
         status: false,
@@ -92,7 +90,7 @@ describe("taskActions", () => {
       expect(doneNotification).toHaveBeenCalledTimes(1);
     });
 
-    test("should show user error when task is unable to be saved", async () => {
+    test('should show user error when task is unable to be saved', async () => {
       // given
       const doneNotification = jest.fn();
       const task = chance.string();
@@ -104,46 +102,49 @@ describe("taskActions", () => {
 
       // when
       await expect(
-        () => createTask({task, size, startDateTime}, doneNotification)
+        () => createTask({ task, size, startDateTime }, doneNotification),
       ).rejects.toThrow(fakeError);
 
       // then
       expect(setAlert).toHaveBeenCalledTimes(1);
       expect(setAlert).toHaveBeenCalledWith({
-        heading: "Oh Snap!",
+        heading: 'Oh Snap!',
         message: (
           <>
-            <strong>{task} </strong>
-            {"was not created..."}
+            <strong>
+              {task}
+              {' '}
+            </strong>
+            was not created...
           </>
         ),
       });
 
-      expect(doneNotification).toHaveBeenCalledTimes(0)
+      expect(doneNotification).toHaveBeenCalledTimes(0);
     });
-  })
-  describe("deleteTask", () => {
-    test("should delete a task for a user", async () => {
+  });
+  describe('deleteTask', () => {
+    test('should delete a task for a user', async () => {
       // given a task Id
       const _id = chance.guid();
-      const afterNotification = jest.fn()
+      const afterNotification = jest.fn();
 
-      deleteTaskFromDB.mockResolvedValue()
+      deleteTaskFromDB.mockResolvedValue();
 
       // when I try to delete a task
-      await deleteTask({_id}, afterNotification)
+      await deleteTask({ _id }, afterNotification);
 
       // then I should
-      expect(deleteTaskFromDB).toHaveBeenCalledTimes(1)
+      expect(deleteTaskFromDB).toHaveBeenCalledTimes(1);
       expect(deleteTaskFromDB).toHaveBeenCalledWith(
-        expectedUserId, {_id}
-      )
+        expectedUserId, { _id },
+      );
 
-      expect(setAlert).toHaveBeenCalledTimes(0)
-      expect(afterNotification).toHaveBeenCalledTimes(1)
-    })
+      expect(setAlert).toHaveBeenCalledTimes(0);
+      expect(afterNotification).toHaveBeenCalledTimes(1);
+    });
 
-    test("should throw an error and set an alert if deleting a task fails", async () => {
+    test('should throw an error and set an alert if deleting a task fails', async () => {
       // given
       const _id = chance.guid();
       const afterNotification = jest.fn();
@@ -153,26 +154,29 @@ describe("taskActions", () => {
 
       // when
       await expect(
-        () => deleteTask({_id}, afterNotification)
+        () => deleteTask({ _id }, afterNotification),
       ).rejects.toThrow(fakeError);
 
       // then
       expect(setAlert).toHaveBeenCalledTimes(1);
       expect(setAlert).toHaveBeenCalledWith({
-        heading: "Well, this is embarassing...",
+        heading: 'Well, this is embarassing...',
         message: (
           <>
-            <strong>{_id} </strong>
-            {"was not deleted"}
+            <strong>
+              {_id}
+              {' '}
+            </strong>
+            was not deleted
           </>
         ),
       });
 
-      expect(afterNotification).toHaveBeenCalledTimes(0)
-    })
-  })
-  describe("UpdateTask", () => {
-    test("should update a task for a user", async () => {
+      expect(afterNotification).toHaveBeenCalledTimes(0);
+    });
+  });
+  describe('UpdateTask', () => {
+    test('should update a task for a user', async () => {
       // given a user and an input task
       const doneNotification = jest.fn();
       const task = chance.string();
@@ -184,27 +188,26 @@ describe("taskActions", () => {
       // when I try to update a task
       await updateTask(
         {
-          task: task,
-          size: size,
+          task,
+          size,
           momentjsObj,
         },
-        doneNotification
+        doneNotification,
       );
 
       // then I should call update for full specified task and notify caller when complete
       expect(updateTaskFromDB).toHaveBeenCalledTimes(1);
       expect(updateTaskFromDB).toHaveBeenCalledWith(expectedUserId, {
-        task: task,
-        size: size,
+        task,
+        size,
         momentjsObj,
       });
 
       expect(setAlert).toHaveBeenCalledTimes(0);
       expect(doneNotification).toHaveBeenCalledTimes(1);
+    });
 
-    })
-
-    test("should throw an error and set an alert if the task fails to update", async () => {
+    test('should throw an error and set an alert if the task fails to update', async () => {
       // give the task object to the repository so it can update the db to match it
       const doneNotification = jest.fn();
       const task = chance.string();
@@ -216,22 +219,25 @@ describe("taskActions", () => {
 
       // when
       await expect(
-        () => updateTask({task, size, startDateTime}, doneNotification)
+        () => updateTask({ task, size, startDateTime }, doneNotification),
       ).rejects.toThrow(fakeError);
 
       // then
       expect(setAlert).toHaveBeenCalledTimes(1);
       expect(setAlert).toHaveBeenCalledWith({
-        heading: "Well, this is embarassing...",
+        heading: 'Well, this is embarassing...',
         message: (
           <>
-            <strong>{task} </strong>
-            {"was not updated"}
+            <strong>
+              {task}
+              {' '}
+            </strong>
+            was not updated
           </>
         ),
       });
 
-      expect(doneNotification).toHaveBeenCalledTimes(0)
-    })
-  })
-})
+      expect(doneNotification).toHaveBeenCalledTimes(0);
+    });
+  });
+});

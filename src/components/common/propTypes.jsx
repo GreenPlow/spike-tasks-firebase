@@ -1,4 +1,4 @@
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 
 export const taskObjPropTypes = PropTypes.exact({
   _id: PropTypes.string.isRequired,

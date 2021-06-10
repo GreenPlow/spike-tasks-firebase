@@ -1,14 +1,14 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
-import { taskObjPropTypes } from "components/common/propTypes";
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import { taskObjPropTypes } from 'components/common/propTypes';
 
-import { Card, Button } from "react-bootstrap";
-import { Icon } from "semantic-ui-react";
-import { SizeSelector } from "components/common/SizeSelector";
+import { Card, Button } from 'react-bootstrap';
+import { Icon } from 'semantic-ui-react';
+import { SizeSelector } from 'components/common/SizeSelector';
 
-import moment from "moment";
+import moment from 'moment';
 
-import { deleteTask, patchTask } from "app/api/taskActions";
+import { deleteTask, patchTask } from 'app/api/taskActions';
 
 export default function Preview({
   taskObj,
@@ -16,7 +16,9 @@ export default function Preview({
   onModification,
   styleAttributes,
 }) {
-  const { _id, task, size, startDateTime } = taskObj;
+  const {
+    _id, task, size, startDateTime,
+  } = taskObj;
   const { cardBorderColor, toggleDoneButton } = styleAttributes;
   const [statefulTaskSize, setStatefulTaskSize] = useState(size);
 
@@ -52,7 +54,7 @@ export default function Preview({
     <Card key={_id} border={cardBorderColor} className="my-2">
       <Card.Body textalign="left" onClick={onClick}>
         <Card.Title>{task}</Card.Title>
-        <Card.Subtitle>{moment(startDateTime).format("LTS")}</Card.Subtitle>
+        <Card.Subtitle>{moment(startDateTime).format('LTS')}</Card.Subtitle>
         <Card.Text className="d-inline-flex">
           {toggleDoneButton ? (
             <Button variant="link" onClick={(e) => onDone(e)}>
@@ -76,7 +78,7 @@ export default function Preview({
             onSizeChange={(value) => {
               changeTaskSize(value);
             }}
-            styleAttributes={{ position: "absolute", top: 0, right: 0 }}
+            styleAttributes={{ position: 'absolute', top: 0, right: 0 }}
           />
         </div>
       </Card.Body>

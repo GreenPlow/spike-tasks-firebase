@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
-import DropdownItem from "react-bootstrap/DropdownItem";
+import DropdownItem from 'react-bootstrap/DropdownItem';
 import {
   Button,
   ButtonGroup,
@@ -9,27 +9,27 @@ import {
   Col,
   DropdownButton,
   Row,
-} from "react-bootstrap";
+} from 'react-bootstrap';
 
-import { SingleDatePicker } from "react-dates";
-import "react-dates/initialize";
-import "react-dates/lib/css/_datepicker.css";
+import { SingleDatePicker } from 'react-dates';
+import 'react-dates/initialize';
+import 'react-dates/lib/css/_datepicker.css';
 
-import moment from "moment";
+import moment from 'moment';
 
-import AlertDismissible from "components/common/AlertDismissible";
-import ListOfTasks from "components/tasks/ListOfTasks";
-import NewTask from "components/tasks/NewTask";
-import Time from "components/common/Time";
+import AlertDismissible from 'components/common/AlertDismissible';
+import ListOfTasks from 'components/tasks/ListOfTasks';
+import NewTask from 'components/tasks/NewTask';
+import Time from 'components/common/Time';
 
-import { init } from "app/api/errorMessage";
-import { firebase } from "app/config/fire";
+import { init } from 'app/api/errorMessage';
+import { firebase } from 'app/config/fire';
 
-import { getLatestTasksFromServer } from "app/api/taskActions";
+import { getLatestTasksFromServer } from 'app/api/taskActions';
 
 function seperateTasks({ latestTasks }) {
-  let completeTasks = [];
-  let incompleteTasks = [];
+  const completeTasks = [];
+  const incompleteTasks = [];
   for (let i = 0; i < latestTasks.length; i++) {
     if (latestTasks[i].status === true) {
       completeTasks.push(latestTasks[i]);
@@ -65,11 +65,11 @@ export default function AppLanding({ user, cbSetUser }) {
       completeTasks,
       incompleteTasks,
     } = await getLatestTasksFromServerAndUpdateState(
-      calendarDate.clone().add(1, "days")
+      calendarDate.clone().add(1, 'days'),
     );
     setCompleteTasks(completeTasks);
     setIncompleteTasks(incompleteTasks);
-    setCalendarDate(calendarDate.clone().add(1, "days"));
+    setCalendarDate(calendarDate.clone().add(1, 'days'));
   }
 
   async function previousDay() {
@@ -77,11 +77,11 @@ export default function AppLanding({ user, cbSetUser }) {
       completeTasks,
       incompleteTasks,
     } = await getLatestTasksFromServerAndUpdateState(
-      calendarDate.clone().subtract(1, "days")
+      calendarDate.clone().subtract(1, 'days'),
     );
     setCompleteTasks(completeTasks);
     setIncompleteTasks(incompleteTasks);
-    setCalendarDate(calendarDate.clone().subtract(1, "days"));
+    setCalendarDate(calendarDate.clone().subtract(1, 'days'));
   }
 
   const [incompleteTasks, setIncompleteTasks] = useState();
@@ -95,7 +95,7 @@ export default function AppLanding({ user, cbSetUser }) {
       return seperateTasks({ latestTasks });
     } catch (error) {
       setIncompleteTasks(null);
-      console.log("this error");
+      console.log('this error');
       throw error;
     }
   }
@@ -177,7 +177,7 @@ export default function AppLanding({ user, cbSetUser }) {
       </Row>
       <Row>
         <Col>
-          <h1>{calendarDate.format("dddd, MMM Do")}</h1>
+          <h1>{calendarDate.format('dddd, MMM Do')}</h1>
         </Col>
       </Row>
       <Row>

@@ -1,9 +1,9 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 
-import { setAlert } from "app/api/errorMessage";
+import { setAlert } from 'app/api/errorMessage';
 
-import { Alert } from "react-bootstrap";
+import { Alert } from 'react-bootstrap';
 
 export default function AlertDismissible({ msgObj }) {
   if (msgObj) {
@@ -13,16 +13,15 @@ export default function AlertDismissible({ msgObj }) {
       <Alert
         variant="danger"
         className="my-2"
-        onClose={() => setAlert("")}
+        onClose={() => setAlert('')}
         dismissible
       >
         <Alert.Heading>{heading}</Alert.Heading>
         <p>{message}</p>
       </Alert>
     );
-  } else {
-    return null;
   }
+  return null;
 }
 
 AlertDismissible.propTypes = {
