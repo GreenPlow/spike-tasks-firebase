@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Chance from 'chance';
 import { createTask, deleteTask, updateTask } from 'app/api/taskActions';
