@@ -7,15 +7,14 @@ const { FieldValue } = firebase.firestore;
 // not a behavior
 // update the database with the object that firebase expects
 function transformForFirebase(data) {
-  // TODO this got around the firebase error, but hard to tell how the objects are different
-  for (const prop in data) {
-    if (Object.prototype.hasOwnProperty.call(data, prop)) {
-      if (data[prop] instanceof moment) {
-        data[prop] = Timestamp.fromDate(data[prop].toDate());
-      }
+  // TODO this got around the firebase error, how the objects are different?
+  const transformedData = {};
+  Object.keys(data).forEach((prop) => {
+    if (data[prop] instanceof moment) {
+      transformedData[prop] = Timestamp.fromDate(data[prop].toDate());
     }
-  }
-  return data;
+  });
+  return transformedData;
 }
 
 async function addTask(user, taskObj) {
