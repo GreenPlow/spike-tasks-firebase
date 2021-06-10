@@ -23,7 +23,7 @@ export function dataFromSnapshot(snapshot) {
     ...data,
     // underscore _ is a carryover from mongodb.
     // To refactor, _ will need to be removed from all components
-    _id: snapshot.id,
+    id: snapshot.id,
   };
 }
 
@@ -78,9 +78,9 @@ async function createTask(input, afterSuccess) {
   }
 }
 
-async function patchTask({ _id, property }, afterSuccess) {
+async function patchTask({ id, property }, afterSuccess) {
   try {
-    await getCollectionRef().doc(_id).update(property);
+    await getCollectionRef().doc(id).update(property);
     afterSuccess();
   } catch (errorObj) {
     setAlert({
@@ -98,9 +98,9 @@ async function patchTask({ _id, property }, afterSuccess) {
   }
 }
 
-async function deleteTask({ _id }, afterSuccess) {
+async function deleteTask({ id }, afterSuccess) {
   try {
-    await deleteTaskFromDB(firebase.auth().currentUser.uid, { _id });
+    await deleteTaskFromDB(firebase.auth().currentUser.uid, { id });
     afterSuccess();
   } catch (errorObj) {
     setAlert({
@@ -108,7 +108,7 @@ async function deleteTask({ _id }, afterSuccess) {
       message: (
         <>
           <strong>
-            {_id}
+            {id}
             {' '}
           </strong>
           was not deleted

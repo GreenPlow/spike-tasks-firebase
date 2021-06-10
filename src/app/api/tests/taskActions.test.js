@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Chance from 'chance';
 import { createTask, deleteTask, updateTask } from 'app/api/taskActions';
@@ -126,18 +127,18 @@ describe('taskActions', () => {
   describe('deleteTask', () => {
     test('should delete a task for a user', async () => {
       // given a task Id
-      const _id = chance.guid();
+      const id = chance.guid();
       const afterNotification = jest.fn();
 
       deleteTaskFromDB.mockResolvedValue();
 
       // when I try to delete a task
-      await deleteTask({ _id }, afterNotification);
+      await deleteTask({ id }, afterNotification);
 
       // then I should
       expect(deleteTaskFromDB).toHaveBeenCalledTimes(1);
       expect(deleteTaskFromDB).toHaveBeenCalledWith(
-        expectedUserId, { _id },
+        expectedUserId, { id },
       );
 
       expect(setAlert).toHaveBeenCalledTimes(0);
@@ -146,7 +147,7 @@ describe('taskActions', () => {
 
     test('should throw an error and set an alert if deleting a task fails', async () => {
       // given
-      const _id = chance.guid();
+      const id = chance.guid();
       const afterNotification = jest.fn();
       const fakeError = new Error(chance.string());
 
@@ -154,7 +155,7 @@ describe('taskActions', () => {
 
       // when
       await expect(
-        () => deleteTask({ _id }, afterNotification),
+        () => deleteTask({ id }, afterNotification),
       ).rejects.toThrow(fakeError);
 
       // then
@@ -164,7 +165,7 @@ describe('taskActions', () => {
         message: (
           <>
             <strong>
-              {_id}
+              {id}
               {' '}
             </strong>
             was not deleted
