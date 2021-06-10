@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 
-import firebase from 'app/config/fire';
+import { firebase } from 'app/config/fire';
 
 export default function LoginScreen({ user }) {
   return (
