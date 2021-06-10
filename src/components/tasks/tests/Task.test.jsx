@@ -12,7 +12,7 @@ const chance = new Chance();
 describe('tests for task component', () => {
   const itemId = chance.string({ pool: '1234567890' });
   const testTaskObj = {
-    _id: itemId,
+    id: itemId,
     task: chance.string(),
     status: chance.bool(),
     size: chance.pickone(['small', 'medium', 'large']),

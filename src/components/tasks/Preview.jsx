@@ -17,41 +17,41 @@ export default function Preview({
   styleAttributes,
 }) {
   const {
-    _id, task, size, startDateTime,
+    id, task, size, startDateTime,
   } = taskObj;
   const { cardBorderColor, toggleDoneButton } = styleAttributes;
   const [statefulTaskSize, setStatefulTaskSize] = useState(size);
 
   async function onDelete(e) {
     e.stopPropagation();
-    await deleteTask({ _id }, async () => {
+    await deleteTask({ id }, async () => {
       await onModification();
     });
   }
 
   async function onDone(e) {
     e.stopPropagation();
-    await patchTask({ _id, property: { status: true } }, async () => {
+    await patchTask({ id, property: { status: true } }, async () => {
       await onModification();
     });
   }
 
   async function onUndo(e) {
     e.stopPropagation();
-    await patchTask({ _id, property: { status: false } }, async () => {
+    await patchTask({ id, property: { status: false } }, async () => {
       await onModification();
     });
   }
 
   async function changeTaskSize(value) {
-    await patchTask({ _id, property: { size: value } }, async () => {
+    await patchTask({ id, property: { size: value } }, async () => {
       await onModification();
       setStatefulTaskSize(value);
     });
   }
 
   return (
-    <Card key={_id} border={cardBorderColor} className="my-2">
+    <Card key={id} border={cardBorderColor} className="my-2">
       <Card.Body textalign="left" onClick={onClick}>
         <Card.Title>{task}</Card.Title>
         <Card.Subtitle>{moment(startDateTime).format('LTS')}</Card.Subtitle>
