@@ -3,12 +3,10 @@
     "browser": true,
     "es2021": true
   },
-  "plugins": ["react", "react-hooks", "jest", "testing-library", "jest-dom"],
+  "plugins": ["jest", "testing-library", "jest-dom"],
   "extends": [
-    "eslint:recommended",
-    "react-app",
-    "react-app/jest",
-    "plugin:react/recommended",
+    "airbnb",
+    "airbnb/hooks",
     "plugin:testing-library/recommended",
     "plugin:testing-library/react",
     "plugin:jest-dom/recommended"
@@ -26,10 +24,5 @@
     },
     "ecmaVersion": 12,
     "sourceType": "module"
-  },
-  "rules": {
-    "react-hooks/rules-of-hooks": "warn", // Checks rules of Hooks
-    "react-hooks/exhaustive-deps": "warn" // Checks effect dependencies
-    //     "plugin:jest/recommended" this causes an error that a specific version of jest is not outlined
   }
 }
