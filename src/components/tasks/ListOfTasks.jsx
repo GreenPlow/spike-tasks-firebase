@@ -13,10 +13,6 @@ export default function ListOfTasks({
   incompleteTasks,
 }) {
   function renderCompleteTasks() {
-    if (completeTasks === undefined || completeTasks.length === 0) {
-      return;
-    }
-
     return (
       <>
         <Accordion>
@@ -29,7 +25,7 @@ export default function ListOfTasks({
             <Accordion.Collapse eventKey="0">
               <div>
                 {completeTasks.map((item) => (
-                  <Task key={item._id} taskObj={item} onModification={cb} />
+                  <Task key={item.id} taskObj={item} onModification={cb} />
                 ))}
               </div>
             </Accordion.Collapse>
@@ -40,9 +36,6 @@ export default function ListOfTasks({
   }
 
   function renderIncompleteTasks() {
-    if (incompleteTasks === undefined) {
-      return;
-    }
     if (incompleteTasks === null) {
       return (
         <Alert key="warning" variant="warning" style={{ height: '300px' }}>
@@ -81,7 +74,7 @@ export default function ListOfTasks({
               <div>
                 {incompleteTasks.map((item) => (
                   <Task
-                    key={item._id}
+                    key={item.id}
                     taskObj={item}
                     onModification={cb}
                     styleAttributes={{ toggleDoneButton: true }}
@@ -97,8 +90,9 @@ export default function ListOfTasks({
 
   return (
     <>
-      {renderCompleteTasks()}
-      {renderIncompleteTasks()}
+      {completeTasks === undefined || completeTasks.length === 0 ? undefined
+        : renderCompleteTasks()}
+      {incompleteTasks === undefined ? undefined : renderIncompleteTasks()}
     </>
   );
 }

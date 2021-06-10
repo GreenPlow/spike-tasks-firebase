@@ -47,7 +47,7 @@ export default function Edit({ taskObj, afterUpdate, handleCancel }) {
   }
 
   return (
-    <Card key={taskObj._id} border={color} className="my-2">
+    <Card key={taskObj.id} border={color} className="my-2">
       <Card.Body textalign="left">
         <Form onSubmit={onSubmit}>
           <Form.Group controlId="formBasicTask">

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 
 const taskObjPropTypes = PropTypes.exact({
-  _id: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
   task: PropTypes.string.isRequired,
   status: PropTypes.bool.isRequired,
   size: PropTypes.string,

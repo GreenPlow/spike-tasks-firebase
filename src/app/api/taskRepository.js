@@ -26,18 +26,18 @@ async function addTask(user, taskObj) {
   });
 }
 
-async function deleteTaskFromDB(user, { _id }) {
+async function deleteTaskFromDB(user, { id }) {
   const ref = firebase.firestore().collection(`users/${user}/tasklist`);
-  await ref.doc(_id).delete();
+  await ref.doc(id).delete();
 }
 
 async function updateTaskFromDB(user, taskObj) {
   const transformedObj = transformForFirebase(taskObj);
   const ref = firebase.firestore().collection(`users/${user}/tasklist`);
-  // This is writing the _id back to the document when it was not previously there
+  // This is writing the id back to the document when it was not previously there
   const deepCopy = { ...transformedObj };
-  delete deepCopy._id;
-  await ref.doc(transformedObj._id).update(deepCopy);
+  delete deepCopy.id;
+  await ref.doc(transformedObj.id).update(deepCopy);
 }
 
 export { addTask, deleteTaskFromDB, updateTaskFromDB };
