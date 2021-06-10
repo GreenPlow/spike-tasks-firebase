@@ -25,5 +25,16 @@
     },
     "ecmaVersion": 12,
     "sourceType": "module"
+  },
+  "rules": {
+    "no-unused-vars": "warn",
+    "jsx-a11y/tabindex-no-positive": "warn",
+    "no-param-reassign": "warn",
+    "react/button-has-type": "warn",
+    "import/prefer-default-export": "warn",
+    "react/jsx-filename-extension": "warn",
+    "react/require-default-props": "warn",
+    "react/forbid-prop-types": "warn",
+    "no-shadow": "warn"
   }
 }
