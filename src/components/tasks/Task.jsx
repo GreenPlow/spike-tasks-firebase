@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { taskObjPropTypes } from 'components/common/propTypes';
+import taskObjPropTypes from 'components/common/propTypes';
 
 import Edit from 'components/tasks/Edit';
 import Preview from 'components/tasks/Preview';

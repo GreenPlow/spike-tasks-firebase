@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { taskObjPropTypes } from 'components/common/propTypes';
+import taskObjPropTypes from 'components/common/propTypes';
 
 import { Card, Form, Button } from 'react-bootstrap';
 
@@ -24,7 +24,6 @@ export default function Edit({ taskObj, afterUpdate, handleCancel }) {
   const inputRef = useRef(null);
 
   function handleEdit(e) {
-    console.log(e.target.value);
     setTask(e.target.value);
   }
 

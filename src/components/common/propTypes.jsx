@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-export const taskObjPropTypes = PropTypes.exact({
+const taskObjPropTypes = PropTypes.exact({
   _id: PropTypes.string.isRequired,
   task: PropTypes.string.isRequired,
   status: PropTypes.bool.isRequired,
@@ -8,3 +8,5 @@ export const taskObjPropTypes = PropTypes.exact({
   startDateTime: PropTypes.object.isRequired,
   createdAt: PropTypes.object,
 });
+
+export default taskObjPropTypes;
