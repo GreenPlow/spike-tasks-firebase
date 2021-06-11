@@ -27,14 +27,14 @@
     "sourceType": "module"
   },
   "rules": {
-    "no-unused-vars": "warn",
-    "jsx-a11y/tabindex-no-positive": "warn",
-    "no-param-reassign": "warn",
-    "react/button-has-type": "warn",
-    "import/prefer-default-export": "warn",
-    "react/jsx-filename-extension": "warn",
-    "react/require-default-props": "warn",
-    "react/forbid-prop-types": "warn",
-    "no-shadow": "warn"
+    "no-unused-vars": "off",
+    "jsx-a11y/tabindex-no-positive": "off",
+    "no-param-reassign": "off",
+    "react/button-has-type": "off",
+    "import/prefer-default-export": "off",
+    "react/jsx-filename-extension": "off",
+    "react/require-default-props": "off",
+    "react/forbid-prop-types": "off",
+    "no-shadow": "off"
   }
 }
