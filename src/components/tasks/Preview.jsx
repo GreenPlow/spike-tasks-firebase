@@ -74,7 +74,7 @@ export default function Preview({
         </Card.Text>
         <div className="d-flex justify-content-end">
           <SizeSelector
-            value={statefulTaskSize}
+            selectedValue={statefulTaskSize}
             onSizeChange={(value) => {
               changeTaskSize(value);
             }}
