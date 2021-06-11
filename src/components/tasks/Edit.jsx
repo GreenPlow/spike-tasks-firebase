@@ -1,17 +1,17 @@
-import React, { useEffect, useState, useRef } from "react";
-import PropTypes from "prop-types";
-import { taskObjPropTypes } from "components/common/propTypes";
+import React, { useEffect, useState, useRef } from 'react';
+import PropTypes from 'prop-types';
+import taskObjPropTypes from 'components/common/propTypes';
 
-import { Card, Form, Button } from "react-bootstrap";
+import { Card, Form, Button } from 'react-bootstrap';
 
-import { SingleDatePicker } from "react-dates";
-import "react-dates/initialize";
-import "react-dates/lib/css/_datepicker.css";
+import { SingleDatePicker } from 'react-dates';
+import 'react-dates/initialize';
+import 'react-dates/lib/css/_datepicker.css';
 
-import moment from "moment";
+import moment from 'moment';
 
-import { updateTask } from "app/api/taskActions";
-import { setAlert } from "app/api/errorMessage";
+import { updateTask } from 'app/api/taskActions';
+import { setAlert } from 'app/api/errorMessage';
 
 export default function Edit({ taskObj, afterUpdate, handleCancel }) {
   // https://stackoverflow.com/questions/22573494/react-js-input-losing-focus-when-rerendering
@@ -24,7 +24,6 @@ export default function Edit({ taskObj, afterUpdate, handleCancel }) {
   const inputRef = useRef(null);
 
   function handleEdit(e) {
-    console.log(e.target.value);
     setTask(e.target.value);
   }
 
@@ -37,18 +36,18 @@ export default function Edit({ taskObj, afterUpdate, handleCancel }) {
     // TODO should date be refactored to startDateTime?
     await updateTask({ ...taskObj, task, startDateTime: date }, async () => {
       await afterUpdate();
-      setAlert("");
+      setAlert('');
     });
   }
 
-  let color = "warning";
+  let color = 'warning';
 
   if (taskObj.status) {
-    color = "success";
+    color = 'success';
   }
 
   return (
-    <Card key={taskObj._id} border={color} className="my-2">
+    <Card key={taskObj.id} border={color} className="my-2">
       <Card.Body textalign="left">
         <Form onSubmit={onSubmit}>
           <Form.Group controlId="formBasicTask">

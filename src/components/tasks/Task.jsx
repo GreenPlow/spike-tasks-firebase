@@ -1,18 +1,18 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
-import { taskObjPropTypes } from "components/common/propTypes";
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import taskObjPropTypes from 'components/common/propTypes';
 
-import Edit from "components/tasks/Edit";
-import Preview from "components/tasks/Preview";
+import Edit from 'components/tasks/Edit';
+import Preview from 'components/tasks/Preview';
 
 export default function Task({ taskObj, onModification, styleAttributes }) {
   const { status } = taskObj;
   const [showEdit, setShowEdit] = useState(false);
 
-  let cardBorderColor = "warning";
+  let cardBorderColor = 'warning';
 
   if (status) {
-    cardBorderColor = "success";
+    cardBorderColor = 'success';
   }
 
   return (

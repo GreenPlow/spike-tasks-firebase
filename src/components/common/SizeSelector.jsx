@@ -1,7 +1,7 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 
-import { ToggleButtonGroup, ToggleButton } from "react-bootstrap";
+import { ToggleButtonGroup, ToggleButton } from 'react-bootstrap';
 
 export function SizeSelector({
   disabled,
@@ -21,12 +21,12 @@ export function SizeSelector({
       style={styleAttributes}
     >
       {[
-        { value: "small", label: "S" },
-        { value: "medium", label: "M" },
-        { value: "large", label: "L" },
+        { value: 'small', label: 'S' },
+        { value: 'medium', label: 'M' },
+        { value: 'large', label: 'L' },
       ].map((sizeOption, index) => (
         <ToggleButton
-          key={`formField${index}`}
+          key={`formField${sizeOption.value}`}
           tabIndex={index + 2}
           name={sizeOption.value}
           label={sizeOption.label}
@@ -41,7 +41,7 @@ export function SizeSelector({
 }
 
 SizeSelector.propTypes = {
-  value: PropTypes.oneOf(["small", "medium", "large", ""]),
+  value: PropTypes.oneOf(['small', 'medium', 'large', '']),
   onSizeChange: PropTypes.func.isRequired,
   disabled: PropTypes.bool,
   styleAttributes: PropTypes.object,
