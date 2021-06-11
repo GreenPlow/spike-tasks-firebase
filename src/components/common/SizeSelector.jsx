@@ -6,14 +6,14 @@ import { ToggleButtonGroup, ToggleButton } from 'react-bootstrap';
 export function SizeSelector({
   disabled,
   onSizeChange,
-  value,
+  selectedValue,
   styleAttributes,
 }) {
   return (
     <ToggleButtonGroup
       type="radio"
       name="options"
-      value={value}
+      value={selectedValue}
       onChange={onSizeChange}
       onClick={(e) => {
         e.stopPropagation();
@@ -41,8 +41,12 @@ export function SizeSelector({
 }
 
 SizeSelector.propTypes = {
-  value: PropTypes.oneOf(['small', 'medium', 'large', '']),
+  selectedValue: PropTypes.oneOf(['small', 'medium', 'large', '']),
   onSizeChange: PropTypes.func.isRequired,
   disabled: PropTypes.bool,
   styleAttributes: PropTypes.object,
+};
+
+SizeSelector.defaultProps = {
+  selectedValue: '',
 };
