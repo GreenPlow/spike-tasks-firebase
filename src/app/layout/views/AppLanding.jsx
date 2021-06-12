@@ -7,7 +7,7 @@ import {
   ButtonGroup,
   ButtonToolbar,
   Col,
-  DropdownButton, Nav, NavDropdown,
+  Nav, NavDropdown,
   Row,
 } from 'react-bootstrap';
 
@@ -27,8 +27,7 @@ import { firebase } from 'app/config/fire';
 
 import { getLatestTasksFromServer } from 'app/api/taskActions';
 
-function seperateTasks({ latestTasks }) {
-  console.log(latestTasks);
+function separateTasks({ latestTasks }) {
   const completeTasks = [];
   const incompleteTasks = [];
   for (let i = 0; i < latestTasks.length; i += 1) {
@@ -58,8 +57,7 @@ export default function AppLanding({ cbSetUser }) {
       const latestTasks = await getLatestTasksFromServer({
         momentjsObj: calendarDate,
       });
-      console.log('horse', latestTasks);
-      return seperateTasks({ latestTasks });
+      return separateTasks({ latestTasks });
     } catch (error) {
       setIncompleteTasks(null);
       throw error;
@@ -115,10 +113,12 @@ export default function AppLanding({ cbSetUser }) {
   return (
     <>
       <Row>
-        <Time />
+        <Col fluid className="d-flex justify-content-end">
+          <Time />
+        </Col>
       </Row>
-      <Row className="border">
-        <Col lg={4} className="bg-success justify-content-end order-lg-2 mb-2">
+      <Row>
+        <Col lg={4} className="justify-content-end order-lg-2 mb-2">
           <Nav className="justify-content-end">
             <NavDropdown
               id="bg-nested-dropdown"
@@ -136,7 +136,7 @@ export default function AppLanding({ cbSetUser }) {
             </NavDropdown>
           </Nav>
         </Col>
-        <Col md={5} lg={4} className="bg-info mb-2">
+        <Col md={5} lg={4} className="mb-2">
           <ButtonToolbar
             aria-label="Toolbar with button groups"
           >
@@ -157,7 +157,7 @@ export default function AppLanding({ cbSetUser }) {
             </ButtonGroup>
           </ButtonToolbar>
         </Col>
-        <Col md={7} lg={4} className="bg-danger mb-2">
+        <Col md={7} lg={4} className="mb-2">
           <NewTask
             momentjsObj={calendarDate}
             onCreateFinish={async () => {
