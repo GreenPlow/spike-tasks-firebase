@@ -7,7 +7,7 @@ import {
   ButtonGroup,
   ButtonToolbar,
   Col,
-  DropdownButton,
+  DropdownButton, Nav, NavDropdown,
   Row,
 } from 'react-bootstrap';
 
@@ -28,6 +28,7 @@ import { firebase } from 'app/config/fire';
 import { getLatestTasksFromServer } from 'app/api/taskActions';
 
 function seperateTasks({ latestTasks }) {
+  console.log(latestTasks);
   const completeTasks = [];
   const incompleteTasks = [];
   for (let i = 0; i < latestTasks.length; i += 1) {
@@ -57,6 +58,7 @@ export default function AppLanding({ cbSetUser }) {
       const latestTasks = await getLatestTasksFromServer({
         momentjsObj: calendarDate,
       });
+      console.log('horse', latestTasks);
       return seperateTasks({ latestTasks });
     } catch (error) {
       setIncompleteTasks(null);
@@ -115,10 +117,30 @@ export default function AppLanding({ cbSetUser }) {
       <Row>
         <Time />
       </Row>
-      <Row>
-        <Col md="auto">
-          <ButtonToolbar aria-label="Toolbar with button groups">
-            <ButtonGroup>
+      <Row className="border">
+        <Col lg={4} className="bg-success justify-content-end order-lg-2 mb-2">
+          <Nav className="justify-content-end">
+            <NavDropdown
+              id="bg-nested-dropdown"
+              title={`Hi ${firebase.auth().currentUser.displayName}!`}
+              className="d-flex justify-content-end"
+            >
+              <NavDropdown.Item onClick={() => {
+                // TODO is there any necessary error handling?
+                firebase.auth().signOut();
+                cbSetUser(undefined);
+              }}
+              >
+                Logout
+              </NavDropdown.Item>
+            </NavDropdown>
+          </Nav>
+        </Col>
+        <Col md={5} lg={4} className="bg-info mb-2">
+          <ButtonToolbar
+            aria-label="Toolbar with button groups"
+          >
+            <ButtonGroup className="flex-fill">
               <Button onClick={today}>Today</Button>
               <Button onClick={previousDay}>Previous</Button>
               <SingleDatePicker
@@ -135,31 +157,7 @@ export default function AppLanding({ cbSetUser }) {
             </ButtonGroup>
           </ButtonToolbar>
         </Col>
-        <Col>
-          <DropdownButton
-            title={`Hi ${firebase.auth().currentUser.displayName}!`}
-            id="bg-nested-dropdown"
-            className="d-flex justify-content-end"
-          >
-            <DropdownItem
-              onClick={() => {
-                // TODO is there any necessary error handling?
-                firebase.auth().signOut();
-                cbSetUser(undefined);
-              }}
-            >
-              Logout
-            </DropdownItem>
-          </DropdownButton>
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <AlertDismissible msgObj={errorMessage} />
-        </Col>
-      </Row>
-      <Row>
-        <Col>
+        <Col md={7} lg={4} className="bg-danger mb-2">
           <NewTask
             momentjsObj={calendarDate}
             onCreateFinish={async () => {
@@ -171,6 +169,11 @@ export default function AppLanding({ cbSetUser }) {
               setIncompleteTasks(incompleteTasks);
             }}
           />
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <AlertDismissible msgObj={errorMessage} />
         </Col>
       </Row>
       <Row>
