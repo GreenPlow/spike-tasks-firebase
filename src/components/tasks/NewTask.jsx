@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-import { Form } from 'react-bootstrap';
+import {
+  InputGroup, FormControl,
+} from 'react-bootstrap';
 
 import { createTask } from 'app/api/taskActions';
 import { SizeSelector } from 'components/common/SizeSelector';
@@ -21,36 +23,27 @@ function NewTask({ onCreateFinish, momentjsObj }) {
 
   return (
     <>
-      <Form
-        className="d-flex"
-        onSubmit={(e) => {
-          e.preventDefault();
-          onSubmit();
-        }}
-      >
-        <Form.Row className="d-flex align-items-center">
-          <Form.Group>
-            <Form.Control
-              tabIndex={1}
-              type="text"
-              name="task"
-              placeholder="Create Task"
-              value={task}
-              onChange={(e) => {
-                setTask(e.target.value);
-              }}
-            />
-          </Form.Group>
-          <Form.Group className="justify-content-end">
-            <SizeSelector
-              onSizeChange={(value) => {
-                onSubmit(value);
-              }}
-              disabled={isTaskNameEmpty}
-            />
-          </Form.Group>
-        </Form.Row>
-      </Form>
+      <InputGroup>
+        <FormControl
+          tabIndex={1}
+          type="text"
+          name="task"
+          placeholder="Create Task"
+          value={task}
+          onChange={(e) => {
+            setTask(e.target.value);
+          }}
+        />
+        <InputGroup.Append>
+          <SizeSelector
+            onSizeChange={(value) => {
+              onSubmit(value);
+            }}
+            disabled={isTaskNameEmpty}
+          />
+        </InputGroup.Append>
+      </InputGroup>
+
     </>
   );
 }

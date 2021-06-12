@@ -13,9 +13,9 @@ function Time() {
   });
 
   return (
-    <div>
+    <>
       {time.toLocaleTimeString('default', { month: 'long', day: '2-digit' })}
-    </div>
+    </>
   );
 }
 
