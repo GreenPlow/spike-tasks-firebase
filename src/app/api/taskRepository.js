@@ -7,7 +7,6 @@ const { FieldValue } = firebase.firestore;
 // not a behavior
 // update the database with the object that firebase expects
 function transformForFirebase(data) {
-  // TODO this got around the firebase error, how the objects are different?
   const transformedData = {};
   Object.keys(data).forEach((prop) => {
     if (data[prop] instanceof moment) {
@@ -34,7 +33,7 @@ async function deleteTaskFromDB(user, { id }) {
 async function updateTaskFromDB(user, taskObj) {
   const transformedObj = transformForFirebase(taskObj);
   const ref = firebase.firestore().collection(`users/${user}/tasklist`);
-  // This is writing the id back to the document when it was not previously there
+  // the id was being written back to the document when it was not previously there
   const deepCopy = { ...transformedObj };
   delete deepCopy.id;
   await ref.doc(transformedObj.id).update(deepCopy);

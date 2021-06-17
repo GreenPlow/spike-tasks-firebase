@@ -14,8 +14,6 @@ const config = {
   measurementId: 'G-TX1BXW63EW',
 };
 
-// TODO Should these sdk calls be handled for errors? They occur before react is rendered.
-
 const app = firebase.initializeApp(config);
 
 // Initialize firestore

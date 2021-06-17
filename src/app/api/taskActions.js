@@ -21,8 +21,6 @@ export function dataFromSnapshot(snapshot) {
 
   return {
     ...data,
-    // underscore _ is a carryover from mongodb.
-    // To refactor, _ will need to be removed from all components
     id: snapshot.id,
   };
 }
