@@ -14,10 +14,7 @@ import { updateTask } from 'app/api/taskActions';
 import { setAlert } from 'app/api/errorMessage';
 
 export default function Edit({ taskObj, afterUpdate, handleCancel }) {
-  // https://stackoverflow.com/questions/22573494/react-js-input-losing-focus-when-rerendering
-
   const [task, setTask] = useState(taskObj.task);
-  // const [date, setDate] = useState(moment(editObj.date).format("L"));
   const [date, setDate] = useState(moment(taskObj.startDateTime));
   const [isFocused, setFocused] = useState(false);
 
@@ -33,7 +30,6 @@ export default function Edit({ taskObj, afterUpdate, handleCancel }) {
 
   async function onSubmit(event) {
     event.preventDefault();
-    // TODO should date be refactored to startDateTime?
     await updateTask({ ...taskObj, task, startDateTime: date }, async () => {
       await afterUpdate();
       setAlert('');
