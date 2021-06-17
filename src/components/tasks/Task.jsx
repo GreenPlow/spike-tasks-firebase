@@ -52,5 +52,5 @@ Task.propTypes = {
 };
 
 // 1 test for the structure: assert is a card, icons, header
-// one test for each action and that they call their action creator properly
+// 1 test for each action and that they call their action creator properly
 // 2 tests for either status color
