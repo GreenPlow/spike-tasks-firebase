@@ -9,5 +9,5 @@ http://localhost:3000/
 
 
 # eslint
-To use eslint ensure your node packages have the necessary peerdeps. The airbnb styleguide is utilized.
+To use eslint ensure your node packages have the necessary peerdeps. The airbnb style guide is utilized.
 See the package.json for linting and other commands. Note that eslint must be told to lint .jsx files.
