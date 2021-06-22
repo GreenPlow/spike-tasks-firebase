@@ -11,6 +11,8 @@ function transformForFirebase(data) {
   Object.keys(data).forEach((prop) => {
     if (data[prop] instanceof moment) {
       transformedData[prop] = Timestamp.fromDate(data[prop].toDate());
+    } else {
+      transformedData[prop] = data[prop];
     }
   });
   return transformedData;
