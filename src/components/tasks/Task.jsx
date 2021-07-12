@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import taskObjPropTypes from 'components/common/propTypes';
 
-import Edit from 'components/tasks/Edit';
-import Preview from 'components/tasks/Preview';
+import TaskEdit from 'components/tasks/TaskEdit';
+import TaskPreview from 'components/tasks/TaskPreview';
 
 export default function Task({ taskObj, onModification, styleAttributes }) {
   const { status } = taskObj;
@@ -18,7 +18,7 @@ export default function Task({ taskObj, onModification, styleAttributes }) {
   return (
     <>
       {showEdit ? (
-        <Edit
+        <TaskEdit
           styleAttributes={{ cardBorderColor }}
           taskObj={taskObj}
           afterUpdate={() => {
@@ -30,7 +30,7 @@ export default function Task({ taskObj, onModification, styleAttributes }) {
           }}
         />
       ) : (
-        <Preview
+        <TaskPreview
           styleAttributes={{ ...styleAttributes, cardBorderColor }}
           taskObj={taskObj}
           onClick={() => {

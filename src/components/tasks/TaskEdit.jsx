@@ -13,7 +13,7 @@ import moment from 'moment';
 import { updateTask } from 'app/api/taskActions';
 import { setAlert } from 'app/api/errorMessage';
 
-export default function Edit({ taskObj, afterUpdate, handleCancel }) {
+export default function TaskEdit({ taskObj, afterUpdate, handleCancel }) {
   const [task, setTask] = useState(taskObj.task);
   const [date, setDate] = useState(moment(taskObj.startDateTime));
   const [isFocused, setFocused] = useState(false);
@@ -79,7 +79,7 @@ export default function Edit({ taskObj, afterUpdate, handleCancel }) {
   );
 }
 
-Edit.propTypes = {
+TaskEdit.propTypes = {
   taskObj: taskObjPropTypes,
   afterUpdate: PropTypes.func.isRequired,
   handleCancel: PropTypes.func.isRequired,

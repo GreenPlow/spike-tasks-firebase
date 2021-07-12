@@ -10,7 +10,7 @@ import moment from 'moment';
 
 import { deleteTask, patchTask } from 'app/api/taskActions';
 
-export default function Preview({
+export default function TaskPreview({
   taskObj,
   onClick,
   onModification,
@@ -86,7 +86,7 @@ export default function Preview({
   );
 }
 
-Preview.propTypes = {
+TaskPreview.propTypes = {
   taskObj: taskObjPropTypes,
   onModification: PropTypes.func.isRequired,
   styleAttributes: PropTypes.object,
