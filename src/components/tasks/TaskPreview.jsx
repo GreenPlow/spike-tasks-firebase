@@ -87,8 +87,13 @@ export default function TaskPreview({
 }
 
 TaskPreview.propTypes = {
-  taskObj: taskObjPropTypes,
+  taskObj: taskObjPropTypes.isRequired,
   onModification: PropTypes.func.isRequired,
-  styleAttributes: PropTypes.object,
+  styleAttributes: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   onClick: PropTypes.func,
+};
+
+TaskPreview.defaultProps = {
+  styleAttributes: {},
+  onClick: () => {},
 };

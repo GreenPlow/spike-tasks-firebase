@@ -46,9 +46,13 @@ export default function Task({ taskObj, onModification, styleAttributes }) {
 }
 
 Task.propTypes = {
-  taskObj: taskObjPropTypes,
+  taskObj: taskObjPropTypes.isRequired,
   onModification: PropTypes.func.isRequired,
-  styleAttributes: PropTypes.object,
+  styleAttributes: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+};
+
+Task.defaultProps = {
+  styleAttributes: {},
 };
 
 // 1 test for the structure: assert is a card, icons, header

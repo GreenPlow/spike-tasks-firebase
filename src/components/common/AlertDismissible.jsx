@@ -30,3 +30,7 @@ AlertDismissible.propTypes = {
     message: PropTypes.element,
   }),
 };
+
+AlertDismissible.defaultProps = {
+  msgObj: undefined,
+};

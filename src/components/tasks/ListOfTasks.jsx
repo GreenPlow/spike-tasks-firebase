@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import taskObjPropTypes from 'components/common/propTypes';
 
 import { Accordion, Alert, Card } from 'react-bootstrap';
 import moment from 'moment';
@@ -99,7 +100,12 @@ export default function ListOfTasks({
 
 ListOfTasks.propTypes = {
   cb: PropTypes.func.isRequired,
-  calendarDate: PropTypes.object.isRequired,
-  completeTasks: PropTypes.array,
-  incompleteTasks: PropTypes.array,
+  calendarDate: PropTypes.instanceOf(moment).isRequired,
+  completeTasks: PropTypes.arrayOf(taskObjPropTypes),
+  incompleteTasks: PropTypes.arrayOf(taskObjPropTypes),
+};
+
+ListOfTasks.defaultProps = {
+  completeTasks: [],
+  incompleteTasks: [],
 };

@@ -80,7 +80,7 @@ export default function TaskEdit({ taskObj, afterUpdate, handleCancel }) {
 }
 
 TaskEdit.propTypes = {
-  taskObj: taskObjPropTypes,
+  taskObj: taskObjPropTypes.isRequired,
   afterUpdate: PropTypes.func.isRequired,
   handleCancel: PropTypes.func.isRequired,
 };

@@ -44,9 +44,11 @@ SizeSelector.propTypes = {
   selectedValue: PropTypes.oneOf(['small', 'medium', 'large', '']),
   onSizeChange: PropTypes.func.isRequired,
   disabled: PropTypes.bool,
-  styleAttributes: PropTypes.object,
+  styleAttributes: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
 SizeSelector.defaultProps = {
   selectedValue: '',
+  disabled: false,
+  styleAttributes: {},
 };
