@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-import DropdownItem from 'react-bootstrap/DropdownItem';
 import {
   Button,
   ButtonGroup,
@@ -27,18 +26,18 @@ import { firebase } from 'app/config/fire';
 import { getLatestTasksFromServer } from 'app/api/taskActions';
 
 function separateTasks({ latestTasks }) {
-  const completeTasks = [];
-  const incompleteTasks = [];
+  const complete = [];
+  const incomplete = [];
   for (let i = 0; i < latestTasks.length; i += 1) {
     if (latestTasks[i].status === true) {
-      completeTasks.push(latestTasks[i]);
+      complete.push(latestTasks[i]);
     } else {
-      incompleteTasks.push(latestTasks[i]);
+      incomplete.push(latestTasks[i]);
     }
   }
   return {
-    completeTasks,
-    incompleteTasks,
+    complete,
+    incomplete,
   };
 }
 
@@ -51,10 +50,10 @@ export default function AppLanding({ cbSetUser }) {
 
   init(setErrorMessage);
 
-  async function getLatestTasksFromServerAndUpdateState(calendarDate) {
+  async function getLatestTasksFromServerAndUpdateState(date) {
     try {
       const latestTasks = await getLatestTasksFromServer({
-        momentjsObj: calendarDate,
+        momentjsObj: date,
       });
       return separateTasks({ latestTasks });
     } catch (error) {
@@ -65,46 +64,46 @@ export default function AppLanding({ cbSetUser }) {
 
   async function today() {
     const {
-      completeTasks,
-      incompleteTasks,
+      complete,
+      incomplete,
     } = await getLatestTasksFromServerAndUpdateState(moment());
-    setCompleteTasks(completeTasks);
-    setIncompleteTasks(incompleteTasks);
+    setCompleteTasks(complete);
+    setIncompleteTasks(incomplete);
     setCalendarDate(moment());
   }
 
   async function nextDay() {
     const {
-      completeTasks,
-      incompleteTasks,
+      complete,
+      incomplete,
     } = await getLatestTasksFromServerAndUpdateState(
       calendarDate.clone().add(1, 'days'),
     );
-    setCompleteTasks(completeTasks);
-    setIncompleteTasks(incompleteTasks);
+    setCompleteTasks(complete);
+    setIncompleteTasks(incomplete);
     setCalendarDate(calendarDate.clone().add(1, 'days'));
   }
 
   async function previousDay() {
     const {
-      completeTasks,
-      incompleteTasks,
+      complete,
+      incomplete,
     } = await getLatestTasksFromServerAndUpdateState(
       calendarDate.clone().subtract(1, 'days'),
     );
-    setCompleteTasks(completeTasks);
-    setIncompleteTasks(incompleteTasks);
+    setCompleteTasks(complete);
+    setIncompleteTasks(incomplete);
     setCalendarDate(calendarDate.clone().subtract(1, 'days'));
   }
 
   useEffect(() => {
     async function getLatest() {
       const {
-        completeTasks,
-        incompleteTasks,
+        complete,
+        incomplete,
       } = await getLatestTasksFromServerAndUpdateState(calendarDate);
-      setCompleteTasks(completeTasks);
-      setIncompleteTasks(incompleteTasks);
+      setCompleteTasks(complete);
+      setIncompleteTasks(incomplete);
     }
     getLatest();
   }, [calendarDate]);
@@ -145,7 +144,7 @@ export default function AppLanding({ cbSetUser }) {
               <SingleDatePicker
                 small
                 date={calendarDate} // momentPropTypes.momentObj or null
-                onDateChange={(calendarDate) => setCalendarDate(calendarDate)}
+                onDateChange={(date) => setCalendarDate(date)}
                   // PropTypes.func.isRequired
                 focused={isFocused} // PropTypes.bool
                 onFocusChange={({ focused }) => setFocused(focused)} // PropTypes.func.isRequired
@@ -163,11 +162,11 @@ export default function AppLanding({ cbSetUser }) {
             momentjsObj={calendarDate}
             onCreateFinish={async () => {
               const {
-                completeTasks,
-                incompleteTasks,
+                complete,
+                incomplete,
               } = await getLatestTasksFromServerAndUpdateState(calendarDate);
-              setCompleteTasks(completeTasks);
-              setIncompleteTasks(incompleteTasks);
+              setCompleteTasks(complete);
+              setIncompleteTasks(incomplete);
             }}
           />
         </Col>
@@ -187,11 +186,11 @@ export default function AppLanding({ cbSetUser }) {
           <ListOfTasks
             cb={async () => {
               const {
-                completeTasks,
-                incompleteTasks,
+                complete,
+                incomplete,
               } = await getLatestTasksFromServerAndUpdateState(calendarDate);
-              setCompleteTasks(completeTasks);
-              setIncompleteTasks(incompleteTasks);
+              setCompleteTasks(complete);
+              setIncompleteTasks(incomplete);
             }}
             calendarDate={calendarDate}
             completeTasks={completeTasks}
