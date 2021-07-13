@@ -12,12 +12,12 @@ function App() {
   const [user, setUser] = useState(undefined);
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
+    firebase.auth().onAuthStateChanged((firebaseUser) => {
+      if (firebaseUser) {
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/firebase.User
-        setUser(user.uid);
-        setLocal(user.uid);
+        setUser(firebaseUser.uid);
+        setLocal(firebaseUser.uid);
       } else {
         // User is signed out
         setUser(null);
