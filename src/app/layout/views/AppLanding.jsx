@@ -13,7 +13,6 @@ import {
 
 import { SingleDatePicker } from 'react-dates';
 import 'react-dates/initialize';
-import 'react-dates/lib/css/_datepicker.css';
 
 import moment from 'moment';
 
@@ -152,6 +151,8 @@ export default function AppLanding({ cbSetUser }) {
                 onFocusChange={({ focused }) => setFocused(focused)} // PropTypes.func.isRequired
                 id="your_unique_id" // PropTypes.string.isRequired //why is this required and what should it be?
                 isOutsideRange={() => false}
+                numberOfMonths={1}
+                withPortal={true} // eslint-disable-line
               />
               <Button onClick={nextDay}>Next</Button>
             </ButtonGroup>
