@@ -13,7 +13,8 @@ export default function SwitchUser({ cbSetUser }) {
     if (form.checkValidity()) {
       setValidated(false);
       cbSetUser(event.target[0].value);
-      event.target[0].value = '';
+      event.target[0].value = ''; // eslint-disable-line no-param-reassign
+      // eslint thinks event is a parameter from static analysis
     } else {
       event.stopPropagation();
       setValidated(true);
