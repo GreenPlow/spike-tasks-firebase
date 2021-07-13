@@ -15,7 +15,7 @@ import { setAlert } from 'app/api/errorMessage';
 
 export default function TaskEdit({ taskObj, afterUpdate, handleCancel }) {
   const [task, setTask] = useState(taskObj.task);
-  const [date, setDate] = useState(moment(taskObj.startDateTime));
+  const [taskDate, setTaskDate] = useState(moment(taskObj.startDateTime));
   const [isFocused, setFocused] = useState(false);
 
   const inputRef = useRef(null);
@@ -30,7 +30,7 @@ export default function TaskEdit({ taskObj, afterUpdate, handleCancel }) {
 
   async function onSubmit(event) {
     event.preventDefault();
-    await updateTask({ ...taskObj, task, startDateTime: date }, async () => {
+    await updateTask({ ...taskObj, task, startDateTime: taskDate }, async () => {
       await afterUpdate();
       setAlert('');
     });
@@ -61,8 +61,8 @@ export default function TaskEdit({ taskObj, afterUpdate, handleCancel }) {
             <Form.Label>Date</Form.Label>
             <SingleDatePicker
               small
-              date={date} // momentPropTypes.momentObj or null
-              onDateChange={(date) => setDate(date)} // PropTypes.func.isRequired
+              date={taskDate} // momentPropTypes.momentObj or null
+              onDateChange={(date) => setTaskDate(date)} // PropTypes.func.isRequired
               focused={isFocused} // PropTypes.bool
               onFocusChange={({ focused }) => setFocused(focused)} // PropTypes.func.isRequired
               id="your_unique_id" // PropTypes.string.isRequired //why is this required and what should it be?
@@ -80,7 +80,7 @@ export default function TaskEdit({ taskObj, afterUpdate, handleCancel }) {
 }
 
 TaskEdit.propTypes = {
-  taskObj: taskObjPropTypes,
+  taskObj: taskObjPropTypes.isRequired,
   afterUpdate: PropTypes.func.isRequired,
   handleCancel: PropTypes.func.isRequired,
 };

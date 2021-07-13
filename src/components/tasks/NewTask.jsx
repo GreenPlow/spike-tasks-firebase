@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import {
   InputGroup, FormControl,
 } from 'react-bootstrap';
+import moment from 'moment';
 
 import { createTask } from 'app/api/taskActions';
 import { SizeSelector } from 'components/common/SizeSelector';
@@ -56,7 +57,7 @@ function NewTask({ onCreateFinish, momentjsObj }) {
 
 NewTask.propTypes = {
   onCreateFinish: PropTypes.func.isRequired,
-  momentjsObj: PropTypes.object,
+  momentjsObj: PropTypes.instanceOf(moment).isRequired,
 };
 
 export default NewTask;
