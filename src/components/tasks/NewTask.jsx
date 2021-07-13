@@ -23,27 +23,33 @@ function NewTask({ onCreateFinish, momentjsObj }) {
 
   return (
     <>
-      <InputGroup>
-        <FormControl
-          tabIndex={1}
-          type="text"
-          name="task"
-          placeholder="Create Task"
-          value={task}
-          onChange={(e) => {
-            setTask(e.target.value);
-          }}
-        />
-        <InputGroup.Append>
-          <SizeSelector
-            onSizeChange={(value) => {
-              onSubmit(value);
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          onSubmit();
+        }}
+      >
+        <InputGroup>
+          <FormControl
+            tabIndex={1}
+            type="text"
+            name="task"
+            placeholder="Create Task"
+            value={task}
+            onChange={(e) => {
+              setTask(e.target.value);
             }}
-            disabled={isTaskNameEmpty}
           />
-        </InputGroup.Append>
-      </InputGroup>
-
+          <InputGroup.Append>
+            <SizeSelector
+              onSizeChange={(value) => {
+                onSubmit(value);
+              }}
+              disabled={isTaskNameEmpty}
+            />
+          </InputGroup.Append>
+        </InputGroup>
+      </form>
     </>
   );
 }
