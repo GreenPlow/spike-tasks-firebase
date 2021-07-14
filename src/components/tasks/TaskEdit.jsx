@@ -67,6 +67,8 @@ export default function TaskEdit({ taskObj, afterUpdate, handleCancel }) {
               onFocusChange={({ focused }) => setFocused(focused)} // PropTypes.func.isRequired
               id="your_unique_id" // PropTypes.string.isRequired //why is this required and what should it be?
               isOutsideRange={() => false}
+              numberOfMonths={1}
+              withPortal={true} // eslint-disable-line
             />
           </Form.Group>
           <Button variant="primary" type="submit">
