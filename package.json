@@ -11,12 +11,12 @@
     "moment": "^2.29.1",
     "prop-types": "^15.7.2",
     "react": "^17.0.1",
-    "react-bootstrap": "^1.5.1",
+    "react-bootstrap": "^1.6.1",
     "react-dates": "^21.8.0",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.3",
     "semantic-ui-react": "^2.0.1",
-    "web-vitals": "^1.1.0"
+    "web-vitals": "^2.1.0"
   },
   "scripts": {
     "start": "react-scripts start",
