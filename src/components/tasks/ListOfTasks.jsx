@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import taskObjPropTypes from 'components/common/propTypes';
 
-import { Accordion, Alert, Card } from 'react-bootstrap';
+import { Accordion, Alert } from 'react-bootstrap';
 import moment from 'moment';
 
 import Task from 'components/tasks/Task';
@@ -17,20 +17,18 @@ export default function ListOfTasks({
     return (
       <>
         <Accordion>
-          <Card className="border-0 my-2" style={{ overflow: 'visible' }}>
-            <Accordion.Toggle className="border" as={Card.Header} eventKey="0">
+          <Accordion.Item eventKey="0">
+            <Accordion.Header>
               {completeTasks.length}
               {' '}
               Complete!
-            </Accordion.Toggle>
-            <Accordion.Collapse eventKey="0">
-              <div>
-                {completeTasks.map((item) => (
-                  <Task key={item.id} taskObj={item} onModification={cb} />
-                ))}
-              </div>
-            </Accordion.Collapse>
-          </Card>
+            </Accordion.Header>
+            <Accordion.Body>
+              {completeTasks.map((item) => (
+                <Task key={item.id} taskObj={item} onModification={cb} />
+              ))}
+            </Accordion.Body>
+          </Accordion.Item>
         </Accordion>
       </>
     );
@@ -62,28 +60,26 @@ export default function ListOfTasks({
 
     return (
       <>
-        <Accordion defaultActiveKey="0">
-          <Card className="border-0 my-2" style={{ overflow: 'visible' }}>
-            <Accordion.Toggle className="border" as={Card.Header} eventKey="0">
+        <Accordion defaultActiveKey="1">
+          <Accordion.Item eventKey="1">
+            <Accordion.Header>
               {incompleteTasks.length}
               {' '}
               Tasks left for
               {' '}
               {moment(calendarDate).format('dddd')}
-            </Accordion.Toggle>
-            <Accordion.Collapse eventKey="0">
-              <div>
-                {incompleteTasks.map((item) => (
-                  <Task
-                    key={item.id}
-                    taskObj={item}
-                    onModification={cb}
-                    styleAttributes={{ toggleDoneButton: true }}
-                  />
-                ))}
-              </div>
-            </Accordion.Collapse>
-          </Card>
+            </Accordion.Header>
+            <Accordion.Body>
+              {incompleteTasks.map((item) => (
+                <Task
+                  key={item.id}
+                  taskObj={item}
+                  onModification={cb}
+                  styleAttributes={{ toggleDoneButton: true }}
+                />
+              ))}
+            </Accordion.Body>
+          </Accordion.Item>
         </Accordion>
       </>
     );
