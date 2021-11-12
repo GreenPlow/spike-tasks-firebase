@@ -37,14 +37,14 @@ export default function ListOfTasks({
   function renderIncompleteTasks() {
     if (incompleteTasks === null) {
       return (
-        <Alert key="warning" variant="warning" style={{ height: '300px' }}>
+        <Alert key="warning" variant="warning" style={{ height: '300px' }} className="mt-2">
           Ooops. There was a problem getting tasks from the CLOUD...
         </Alert>
       );
     }
     if (incompleteTasks.length === 0 && completeTasks.length === 0) {
       return (
-        <Alert key="success" variant="info" style={{ height: '300px' }}>
+        <Alert key="success" variant="info" style={{ height: '300px' }} className="mt-2">
           There are no tasks to display for this day. Try creating one!
         </Alert>
       );
@@ -52,7 +52,7 @@ export default function ListOfTasks({
 
     if (incompleteTasks.length === 0 && completeTasks.length > 0) {
       return (
-        <Alert key="success" variant="success" style={{ height: '300px' }}>
+        <Alert key="success" variant="success" style={{ height: '300px' }} className="mt-2">
           Way to go. You completed all of the tasks for today!
         </Alert>
       );
