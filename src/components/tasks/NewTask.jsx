@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import {
-  InputGroup, FormControl,
+  InputGroup,
+  FormControl,
 } from 'react-bootstrap';
 import moment from 'moment';
 
@@ -41,14 +42,13 @@ function NewTask({ onCreateFinish, momentjsObj }) {
               setTask(e.target.value);
             }}
           />
-          <InputGroup.Append>
-            <SizeSelector
-              onSizeChange={(value) => {
-                onSubmit(value);
-              }}
-              disabled={isTaskNameEmpty}
-            />
-          </InputGroup.Append>
+          <SizeSelector
+            id="new-task"
+            onSizeChangeCallBack={(value) => {
+              onSubmit(value);
+            }}
+            disabled={isTaskNameEmpty}
+          />
         </InputGroup>
       </form>
     </>

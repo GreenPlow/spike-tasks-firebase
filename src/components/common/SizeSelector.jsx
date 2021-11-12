@@ -5,16 +5,18 @@ import { ToggleButtonGroup, ToggleButton } from 'react-bootstrap';
 
 export function SizeSelector({
   disabled,
-  onSizeChange,
+  onSizeChangeCallBack,
   selectedValue,
   styleAttributes,
+  id,
 }) {
   return (
     <ToggleButtonGroup
+      key={`formField-${id}`}
       type="radio"
-      name="options"
+      name={`options-${id}`}
       value={selectedValue}
-      onChange={onSizeChange}
+      onChange={onSizeChangeCallBack}
       onClick={(e) => {
         e.stopPropagation();
       }}
@@ -26,9 +28,10 @@ export function SizeSelector({
         { value: 'large', label: 'L' },
       ].map((sizeOption, index) => (
         <ToggleButton
-          key={`formField${sizeOption.value}`}
+          key={`formField-${sizeOption.value}`}
+          id={`formField-${sizeOption.value}-${id}`}
+          name={`formField-${sizeOption.value}-${id}`}
           tabIndex={index + 2}
-          name={sizeOption.value}
           label={sizeOption.label}
           value={sizeOption.value}
           disabled={disabled}
@@ -42,9 +45,10 @@ export function SizeSelector({
 
 SizeSelector.propTypes = {
   selectedValue: PropTypes.oneOf(['small', 'medium', 'large', '']),
-  onSizeChange: PropTypes.func.isRequired,
+  onSizeChangeCallBack: PropTypes.func.isRequired,
   disabled: PropTypes.bool,
   styleAttributes: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+  id: PropTypes.string.isRequired,
 };
 
 SizeSelector.defaultProps = {
