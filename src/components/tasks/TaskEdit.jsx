@@ -47,7 +47,7 @@ export default function TaskEdit({ taskObj, afterUpdate, handleCancel }) {
       <Card.Body textalign="left">
         <Form onSubmit={onSubmit}>
           <Form.Group controlId="formBasicTask">
-            <Form.Label>Edit</Form.Label>
+            <Form.Label>Edit Task</Form.Label>
             <Form.Control
               value={task}
               onChange={handleEdit}
@@ -55,9 +55,13 @@ export default function TaskEdit({ taskObj, afterUpdate, handleCancel }) {
               onFocus={(e) => {
                 e.target.select();
               }}
+              placeholder="Task description..."
             />
           </Form.Group>
-          <Form.Group controlId="formBasicDate">
+          <Form.Group
+            controlId="formBasicDate"
+            className="m-2"
+          >
             <Form.Label>Date</Form.Label>
             <SingleDatePicker
               small

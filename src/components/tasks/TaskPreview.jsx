@@ -74,8 +74,9 @@ export default function TaskPreview({
         </Card.Text>
         <div className="d-flex justify-content-end">
           <SizeSelector
+            id={id}
             selectedValue={statefulTaskSize}
-            onSizeChange={(value) => {
+            onSizeChangeCallBack={(value) => {
               changeTaskSize(value);
             }}
             styleAttributes={{ position: 'absolute', top: 0, right: 0 }}
