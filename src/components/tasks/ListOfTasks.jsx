@@ -16,7 +16,7 @@ export default function ListOfTasks({
   function renderCompleteTasks() {
     return (
       <>
-        <Accordion>
+        <Accordion className="mt-2">
           <Accordion.Item eventKey="0">
             <Accordion.Header>
               {completeTasks.length}
@@ -60,7 +60,7 @@ export default function ListOfTasks({
 
     return (
       <>
-        <Accordion defaultActiveKey="1">
+        <Accordion defaultActiveKey="1" className="mt-2">
           <Accordion.Item eventKey="1">
             <Accordion.Header>
               {incompleteTasks.length}
